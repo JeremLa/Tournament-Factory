@@ -1,0 +1,32 @@
+.home .col-lg-4 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.home h2 {
+    font-weight: 400;
+}
+.home .col-lg-4 p {
+    margin-right: .75rem;
+    margin-left: .75rem;
+}
+
+.carousel {
+    margin-bottom: 4rem;
+}
+
+.carousel-caption {
+    bottom: 3rem;
+    z-index: 10;
+}
+
+.carousel-item {
+    height: 32rem;
+    background-color: #777;
+}
+.carousel-item > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    height: 32rem;
+}
