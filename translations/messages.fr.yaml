@@ -1,0 +1,10 @@
+security:
+    login: Connexion
+    logout: Déconnexion
+    signup: Inscription
+
+form:
+    save: enregistrer
+    username: identifiant
+    mail: e-mail
+    password: password

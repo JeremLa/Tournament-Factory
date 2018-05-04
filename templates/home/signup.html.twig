@@ -1,0 +1,36 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/home/login.css') }}">
+{% endblock %}
+
+{% block title %}
+    {{ 'security.signup' | trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-3">
+        {{ form_start(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email) }}
+                {{ form_errors(form.email) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.username) }}
+                {{ form_widget(form.username) }}
+                {{ form_errors(form.username) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.password) }}
+                {{ form_widget(form.password) }}
+                {{ form_errors(form.password) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">{{ 'form.save' | trans }}</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

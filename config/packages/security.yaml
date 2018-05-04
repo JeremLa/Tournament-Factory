@@ -1,27 +1,35 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: ~ }
+        chain_provider:
+            chain:
+                providers: [in_memory, db_provider]
+        in_memory:
+            memory:
+                users:
+                    TFAdmin:
+                        password: $2y$13$E1cqFNtrm38VUMEpGAoNWu6y5CZAYAfp9h2GcOY2scsinF5ph2lBy
+                        roles: 'ROLE_ADMIN'
+        db_provider:
+            id: App\Security\User\UserProvider
+#            entity: { class: App\Entity\User, property: username }
+    encoders:
+        Symfony\Component\Security\Core\User\User:
+            algorithm: bcrypt
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            provider: chain_provider
             anonymous: ~
             form_login:
                 login_path: login
                 check_path: login
+            logout:
+                path: logout
+                target: /
 
-            # activate different ways to authenticate
-
-            # http_basic: true
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: true
-            # https://symfony.com/doc/current/security/form_login_setup.html
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

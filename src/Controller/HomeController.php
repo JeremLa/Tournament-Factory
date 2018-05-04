@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,6 +31,26 @@ class HomeController extends Controller
         return $this->render('home/login.html.twig', [
             'last_username' => $lastUsername,
             'errors' => $errors
+        ]);
+    }
+
+    /**
+     * @Route("/signup", name="signup")
+     */
+    public function signUp(Request $request) {
+
+        $user = new User();
+
+        $form = $this->createForm('App\Form\SignUpType', $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('home/signup.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 }
