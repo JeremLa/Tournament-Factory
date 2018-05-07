@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface
+class User implements UserInterface, EquatableInterface
 {
     /**
      * @ORM\Id()
@@ -119,15 +120,31 @@ class User implements UserInterface
         $this->email = $email;
     }
 
-
-    /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
-     */
     public function eraseCredentials()
     {
-        $this->setPassword('...');
+    }
+
+
+    /**
+     * @param UserInterface $user
+     * @return bool
+     */
+    public function isEqualTo(UserInterface $user)
+    {
+        $return = true;
+
+        if ($this->password !== $user->getPassword()) {
+            $return = false;
+        }
+
+        if ($this->salt !== $user->getSalt()) {
+            $return = false;
+        }
+
+        if ($this->username !== $user->getUsername()) {
+            $return = false;
+        }
+
+        return $return;
     }
 }

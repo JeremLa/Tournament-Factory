@@ -15,6 +15,7 @@ security:
                 class: App\Entity\User
                 property: username
     encoders:
+#        Symfony\Component\Security\Core\User\User: bcrypt
         App\Entity\User: bcrypt
 
     firewalls:
@@ -23,6 +24,7 @@ security:
             security: false
         main:
             provider: db_provider
+            pattern: "^/"
             anonymous: ~
             form_login:
                 login_path: login
@@ -30,7 +32,10 @@ security:
             logout:
                 path: logout
                 target: /
+            logout_on_user_change: false
+
 
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/.*, roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/profile, roles: ROLE_USER }

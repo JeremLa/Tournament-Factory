@@ -11,12 +11,11 @@
 {% block body %}
 
     <div class="container mt-3">
+        {% if errors %}
+            <div class="alert alert-danger">{{ errors.messageKey|trans(errors.messageData, 'security') }}</div>
+        {% endif %}
+
         <form action="{{ path('login') }}" method="post" class="form-signin">
-
-            {% if errors %}
-                <div class="alert alert-danger">{{ errors.messageKey|trans(errors.messageData, 'security') }}</div>
-            {% endif %}
-
             <label for="username">Username:</label>
             <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}"/>
 
