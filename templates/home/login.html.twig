@@ -9,18 +9,22 @@
 {% endblock %}
 
 {% block body %}
-    {% for error in errors %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endfor %}
 
-    <form action="{{ path('login') }}" method="post" class="form-signin">
-        <label for="username">Username:</label>
-        <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" />
+    <div class="container mt-3">
+        <form action="{{ path('login') }}" method="post" class="form-signin">
 
-        <label for="password">Password:</label>
-        <input type="password" class="form-control mb-4" id="password" name="_password" />
+            {% if errors %}
+                <div class="alert alert-danger">{{ errors.messageKey|trans(errors.messageData, 'security') }}</div>
+            {% endif %}
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">login</button>
-        <a href="{{ path('signup') }}">Créer un compte</a>
-    </form>
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}"/>
+
+            <label for="password">Password:</label>
+            <input type="password" class="form-control mb-4" id="password" name="_password"/>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">login</button>
+            <a href="{{ path('signup') }}">Créer un compte</a>
+        </form>
+    </div>
 {% endblock %}

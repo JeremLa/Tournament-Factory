@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\VarDumper\VarDumper;
 
 class HomeController extends Controller
 {
@@ -37,7 +40,7 @@ class HomeController extends Controller
     /**
      * @Route("/signup", name="signup")
      */
-    public function signUp(Request $request) {
+    public function signUp(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder) {
 
         $user = new User();
 
@@ -46,7 +49,14 @@ class HomeController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->redirectToRoute('home');
+            $password = $encoder->encodePassword($user, $user->getPassword());
+
+            $user->setPassword($password);
+
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute('login');
         }
 
         return $this->render('home/signup.html.twig', [

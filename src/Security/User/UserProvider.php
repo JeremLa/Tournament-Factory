@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\VarDumper\VarDumper;
 
 class UserProvider implements UserProviderInterface
 {
@@ -38,8 +39,6 @@ class UserProvider implements UserProviderInterface
         $user = $this->em->getRepository('App:User')->findOneBy(['username' => $username]);
 
         if ($user) {
-            $user->eraseCredentials();
-
             return $user;
         }
 

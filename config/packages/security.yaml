@@ -1,27 +1,28 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        chain_provider:
-            chain:
-                providers: [in_memory, db_provider]
-        in_memory:
-            memory:
-                users:
-                    TFAdmin:
-                        password: $2y$13$E1cqFNtrm38VUMEpGAoNWu6y5CZAYAfp9h2GcOY2scsinF5ph2lBy
-                        roles: 'ROLE_ADMIN'
+#        chain_provider:
+#            chain:
+#                providers: [in_memory, db_provider]
+#        in_memory:
+#            memory:
+#                users:
+#                    TFAdmin:
+#                        password: $2y$13$E1cqFNtrm38VUMEpGAoNWu6y5CZAYAfp9h2GcOY2scsinF5ph2lBy
+#                        roles: 'ROLE_ADMIN'
         db_provider:
-            id: App\Security\User\UserProvider
-#            entity: { class: App\Entity\User, property: username }
+            entity:
+                class: App\Entity\User
+                property: username
     encoders:
-        Symfony\Component\Security\Core\User\User:
-            algorithm: bcrypt
+        App\Entity\User: bcrypt
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            provider: chain_provider
+            provider: db_provider
             anonymous: ~
             form_login:
                 login_path: login
