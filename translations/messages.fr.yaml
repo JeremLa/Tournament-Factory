@@ -5,6 +5,16 @@ security:
 
 form:
     save: enregistrer
-    username: identifiant
-    mail: e-mail
-    password: password
+    username: Identifiant
+    email: Courriel
+    password:
+        name: Mot de passe
+        repeat: Confirmez le mot de passe
+
+    remember_me: 'Se souvenir de moi'
+
+tournament:
+  create: 'Nouveau tournoi'
+  menu:
+      title: 'Tournois'
+      list: 'Mes tournois'

@@ -13,21 +13,15 @@
         {{ form_start(form) }}
 
             <div class="form-group">
-                {{ form_label(form.email) }}
-                {{ form_widget(form.email) }}
-                {{ form_errors(form.email) }}
+                {{ form_row(form.email) }}
             </div>
 
             <div class="form-group">
-                {{ form_label(form.username) }}
-                {{ form_widget(form.username) }}
-                {{ form_errors(form.username) }}
+                {{ form_row(form.username) }}
             </div>
 
             <div class="form-group">
-                {{ form_label(form.password) }}
-                {{ form_widget(form.password) }}
-                {{ form_errors(form.password) }}
+                {{ form_row(form.password) }}
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">{{ 'form.save' | trans }}</button>

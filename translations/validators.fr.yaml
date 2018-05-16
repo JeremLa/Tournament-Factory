@@ -1,0 +1,3 @@
+form:
+    password:
+        no_match: Les deux mots de passe doivent être identique

@@ -3,10 +3,24 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @UniqueEntity(
+ *     fields="email",
+ *     errorPath="email",
+ *     message="Cet email est déjà utilisé."
+ * )
+ *
+ * @UniqueEntity(
+ *     fields="username",
+ *     errorPath="username",
+ *     message="Cet identifiant est déjà utilisé."
+ * )
+ *
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface, EquatableInterface
@@ -20,11 +34,15 @@ class User implements UserInterface, EquatableInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Assert\NotBlank()
      */
     private $username;
 
     /**
      * @ORM\Column(type="text")
+     *
+     * @Assert\NotBlank()
      */
     private $password;
 
@@ -40,6 +58,8 @@ class User implements UserInterface, EquatableInterface
 
     /**
      * @ORM\Column(type="string", unique=true)
+     *
+     * @Assert\NotBlank()
      */
     private $email;
 

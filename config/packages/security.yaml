@@ -29,13 +29,22 @@ security:
             form_login:
                 login_path: login
                 check_path: login
+                default_target_path: my_tournament
+                always_use_default_target_path: true
             logout:
                 path: logout
                 target: /
             logout_on_user_change: false
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
 
 
     access_control:
-         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-         - { path: ^/.*, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/signup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin.*, roles: [ROLE_ADMIN, IS_AUTHENTICATED_FULLY] }
+        - { path: ^/.*, roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/profile, roles: ROLE_USER }
