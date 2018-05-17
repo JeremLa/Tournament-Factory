@@ -1,3 +1,5 @@
+{% set current_path = app.request.get('_route') %}
+
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     {% if  app.user %}
         <a class="navbar-brand" href="{{ path('my_tournament') }}">Tournament Factory</a>
@@ -7,13 +9,48 @@
     <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="navbar-collapse collapse" id="navbarCollapse">
+    {#<div class="navbar-collapse collapse" id="navbarCollapse">#}
+        {#<ul class="navbar-nav mr-auto">#}
+
+
+
+            {#{% if app.user %}#}
+
+                {#{% set active = current_path == 'my_tournament' or current_path == 'add_tournament' ? 'active' : '' %}#}
+
+                {#<li class="nav-item dropdown">#}
+                    {#<a class="nav-link dropdown-toggle {{ active }}" href="" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ "tournament.menu.title" | trans }}</a>#}
+                    {#<div class="dropdown-menu" aria-labelledby="dropdown01">#}
+                        {#<a class="dropdown-item" href="{{ path('my_tournament') }}">{{ 'tournament.menu.list' | trans }}</a>#}
+                        {#<a class="dropdown-item" href="{{ path('add_tournament') }}">{{ 'tournament.create' | trans }}</a>#}
+                    {#</div>#}
+                {#</li>#}
+
+                {#{% if is_granted('ROLE_ADMIN') %}#}
+                    {#{% set active = current_path == 'admin' ? 'active' : '' %}#}
+
+                    {#<li class="nav-item">#}
+                        {#<a class="nav-link {{ active }}" href="{{ path('admin') }}">Admin</a>#}
+                    {#</li>#}
+                {#{% endif %}#}
+
+                {#<li class="nav-item">#}
+                    {#<a class="nav-link" href="{{ path('logout') }}">{{ 'security.logout' | trans }}</a>#}
+                {#</li>#}
+
+
+            {#{% else %}#}
+                {#{% set active = current_path == 'login' ? 'active' : ''%}#}
+
+                {#<li class="nav-item">#}
+                    {#<a class="nav-link {{ active }}" href="{{ path('login') }}">{{ 'security.login' | trans }}</a>#}
+                {#</li>#}
+            {#{% endif %}#}
+        {#</ul>#}
+    {#</div>#}
+    <div class="navbar-collapse collapse" id="navbarsExample03" style="">
         <ul class="navbar-nav mr-auto">
-
-            {% set current_path = app.request.get('_route') %}
-
             {% if app.user %}
-
                 {% set active = current_path == 'my_tournament' or current_path == 'add_tournament' ? 'active' : '' %}
 
                 <li class="nav-item dropdown">
@@ -22,6 +59,16 @@
                         <a class="dropdown-item" href="{{ path('my_tournament') }}">{{ 'tournament.menu.list' | trans }}</a>
                         <a class="dropdown-item" href="{{ path('add_tournament') }}">{{ 'tournament.create' | trans }}</a>
                     </div>
+                </li>
+            {% endif %}
+        </ul>
+        <ul class="navbar-nav my-2 my-md-0">
+            {% if app.user %}
+
+                {% set active = current_path == 'profile' ? 'active' : ''%}
+
+                <li class="nav-item">
+                    <a href="{{ path('profile') }}" class="nav-link  {{ active }}">{{ 'user.profile' | trans }}</a>
                 </li>
 
                 {% if is_granted('ROLE_ADMIN') %}
@@ -32,11 +79,11 @@
                     </li>
                 {% endif %}
 
+
+
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('logout') }}">{{ 'security.logout' | trans }}</a>
                 </li>
-
-
             {% else %}
                 {% set active = current_path == 'login' ? 'active' : ''%}
 

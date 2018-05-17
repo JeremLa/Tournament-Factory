@@ -18,3 +18,5 @@ tournament:
   menu:
       title: 'Tournois'
       list: 'Mes tournois'
+user:
+  profile: 'Profile'
