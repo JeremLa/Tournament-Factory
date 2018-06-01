@@ -4,16 +4,6 @@
     <link rel="stylesheet" href="{{ asset('css/user/profile.css') }}">
 {% endblock %}
 
-{% block javascripts %}
-    <script>
-      $(function() {
-        $('#profile-image1').on('click', function() {
-          $('#profile-image-upload').click();
-        });
-      });
-    </script>
-{% endblock %}
-
 {% block title %}
     {{ 'user.profile' | trans }}
 {% endblock %}
@@ -21,30 +11,19 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <h2>Create your snippet's HTML, CSS and Javascript in the editor tabs</h2>
-
-
-            <div class="col-md-7 ">
+            <div class="col-sm-12 mt-5">
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">  <h4 >User Profile</h4></div>
+                    <div class="panel-heading"></div>
                     <div class="panel-body">
 
                         <div class="box box-info">
 
                             <div class="box-body">
                                 <div class="col-sm-6">
-                                    <div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="img-circle img-responsive">
-
-                                        <input id="profile-image-upload" class="hidden" type="file">
-                                        <div style="color:#999;" >click here to change profile image</div>
-                                        <!--Upload Image Js And Css-->
-
-                                    </div>
-
+                                    {% set URL = 'http://tinygraphs.com/spaceinvaders/' ~ app.user.username ~ '?theme=seascape&numcolors=4&size=220&fmt=svg' %}
+                                    <img alt="User Pic" src="{{ URL }}" id="profile-image1" class="img-circle img-responsive" style="cursor: initial;">
                                     <br>
-
-                                    <!-- /input-group -->
                                 </div>
                                 <div class="col-sm-6">
                                     <h4 style="color:#00b1b1;">Prasad Shankar Huddedar </h4>
