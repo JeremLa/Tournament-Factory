@@ -1,7 +1,6 @@
 #!/bin/bash
 echo "start deployment"
-pwd
-find $(pwd) -name \*
+current_path=$(pwd)
 gitLastCommit=$(git show --summary --grep="Merge pull request")
 echo "git last commit :"
 echo "$gitLastCommit"
@@ -23,14 +22,29 @@ echo "$filesChanged"
 if [ ${#filesChanged[@]} -eq 0 ]; then
     echo "No files to update"
 else
+    hasComposer="false"
     for f in $filesChanged
 	do
-		echo $f
-		#do not upload these files that aren't necessary to the site
-		if [ "$f" != ".travis.yml" ] && [ "$f" != "deploy.sh" ] && [ "$f" != "test.js" ] && [ "$f" != "package.json" ]
+		if [ "$f" == "composer.json" ]
 		then
-	 		echo "Uploading $f"
-	 		curl --ftp-create-dirs -T $f -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/public_html/$f
+		    hasComposer="true"
 		fi
 	done
+    hasComposer="true"
+	if [ "$hasComposer" == "true" ]
+	then
+	    for file in "$current_path"/*
+        do
+            curl --ftp-create-dirs -T $file -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/public_html/$file
+        done
+	else
+        for f in $filesChanged
+        do
+            if [ "$f" != ".travis.yml" ] && [ "$f" != "deploy.sh" ] && [ "$f" != "test.js" ] && [ "$f" != "composer.json" ]
+            then
+                echo "Uploading $f"
+                curl --ftp-create-dirs -T $f -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/public_html/$f
+            fi
+        done
+    fi
 fi
