@@ -35,7 +35,7 @@ else
 	then
 	    for file in $current_path
         do
-            file= "$file | cut -d'/' -f7-"
+            file=$file | cut -d'/' -f7-
             curl --ftp-create-dirs -T $file -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/public_html/$file
         done
 	else
