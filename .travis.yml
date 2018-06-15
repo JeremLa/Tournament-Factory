@@ -3,3 +3,6 @@ php:
     - '7.1'
 
 sudo: false
+
+install:
+    - composer install
