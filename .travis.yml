@@ -8,6 +8,8 @@ cache:
   directories:
     - $HOME/.composer/cache/files
 
+before_install:
+  - chmod +x ./deploy.sh
 install:
     - composer install
 
