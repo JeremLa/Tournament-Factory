@@ -33,7 +33,14 @@ else
     hasComposer="true"
 	if [ "$hasComposer" == "true" ]
 	then
-	    lftp -e "mirror -R $current_path public_html" -u $FTP_USER,$FTP_PASS $FTP_HOST
+	    lftp -f "
+	    set dns:order 'inet'
+	    open ftp://$FPT_HOST
+	    user $FTP_USER $FTP_PASS
+	    mirror --continue --reverse --delete $current_path '/public_html'
+	    bye
+	    "
+# 	    lftp -e "mirror -R $current_path public_html" -u $FTP_USER,$FTP_PASS $FTP_HOST
 #	    for file in "$current_path"/*
 #        do
 #            # file= "$file | cut -d'/' -f7-"
