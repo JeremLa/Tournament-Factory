@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "start deployment"
-current_path=find $(pwd) -name \*
+current_path=$(pwd)
 gitLastCommit=$(git show --summary --grep="Merge pull request")
 echo "git last commit :"
 echo "$gitLastCommit"
@@ -33,11 +33,13 @@ else
     hasComposer="true"
 	if [ "$hasComposer" == "true" ]
 	then
-	    for file in $current_path
-        do
-            file=$file | cut -d'/' -f7-
-            curl --ftp-create-dirs -T $file -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/public_html/$file
-        done
+	    lftp -e "mirror -R $current_path public_html" -u $FTP_USER,$FTP_PASS ftp://$FTP_HOST
+#	    for file in "$current_path"/*
+#        do
+#            # file= "$file | cut -d'/' -f7-"
+##             curl --ftp-create-dirs -T $file -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/public_html/$file
+#
+#        done
 	else
         for f in $filesChanged
         do
