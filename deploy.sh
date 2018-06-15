@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "start deployment"
 gitLastCommit=$(git show --summary --grep="Merge pull request")
 if [[ -z "$gitLastCommit" ]]
 then
@@ -22,7 +23,7 @@ else
 		if [ "$f" != ".travis.yml" ] && [ "$f" != "deploy.sh" ] && [ "$f" != "test.js" ] && [ "$f" != "package.json" ]
 		then
 	 		echo "Uploading $f"
-	 		curl --ftp-create-dirs -T $f -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/$f
+	 		curl --ftp-create-dirs -T $f -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/public_html/$f
 		fi
 	done
 fi
