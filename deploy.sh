@@ -2,6 +2,8 @@
 echo "start deployment"
 pwd
 gitLastCommit=$(git show --summary --grep="Merge pull request")
+echo "git last commit :"
+echo $gitLastCommit
 if [[ -z "$gitLastCommit" ]]
 then
 	lastCommit=$(git log --format="%H" -n 1)
@@ -15,6 +17,8 @@ fi
 echo $lastCommit
 
 filesChanged=$(git diff-tree --no-commit-id --name-only -r $lastCommit)
+echo "files changed:"
+echo $filesChanged
 if [ ${#filesChanged[@]} -eq 0 ]; then
     echo "No files to update"
 else
