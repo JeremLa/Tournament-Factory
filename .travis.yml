@@ -4,6 +4,10 @@ php:
 
 sudo: false
 
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
 install:
     - composer install
 
