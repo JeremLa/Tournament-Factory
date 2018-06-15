@@ -3,7 +3,7 @@ echo "start deployment"
 pwd
 gitLastCommit=$(git show --summary --grep="Merge pull request")
 echo "git last commit :"
-echo $gitLastCommit
+echo "$gitLastCommit"
 if [[ -z "$gitLastCommit" ]]
 then
 	lastCommit=$(git log --format="%H" -n 1)
@@ -18,12 +18,12 @@ echo $lastCommit
 
 filesChanged=$(git diff-tree --no-commit-id --name-only -r $lastCommit)
 echo "files changed:"
-echo $filesChanged
+echo "$filesChanged"
 if [ ${#filesChanged[@]} -eq 0 ]; then
     echo "No files to update"
 else
     for f in $filesChanged
-    echo $f
+    echo "$f"
 	do
 		#do not upload these files that aren't necessary to the site
 		if [ "$f" != ".travis.yml" ] && [ "$f" != "deploy.sh" ] && [ "$f" != "test.js" ] && [ "$f" != "package.json" ]
