@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "start deployment"
 pwd
+find $(pwd) -name \*
 gitLastCommit=$(git show --summary --grep="Merge pull request")
 echo "git last commit :"
 echo "$gitLastCommit"
