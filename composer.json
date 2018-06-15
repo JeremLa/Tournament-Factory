@@ -30,6 +30,9 @@
         "preferred-install": {
             "*": "dist"
         },
+        "platform": {
+            "php": "7.1.5"
+        },
         "sort-packages": true
     },
     "autoload": {
