@@ -4,5 +4,15 @@ php:
 
 sudo: false
 
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+before_install:
+  - chmod +x ./deploy.sh
+  - sudo apt-get install lftp
 install:
     - composer install
+
+after_success:
+    - ./deploy.sh
