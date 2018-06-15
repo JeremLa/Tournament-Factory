@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "start deployment"
-current_path=$(pwd)
+current_path=find $(pwd) -name \*
 gitLastCommit=$(git show --summary --grep="Merge pull request")
 echo "git last commit :"
 echo "$gitLastCommit"
@@ -33,8 +33,9 @@ else
     hasComposer="true"
 	if [ "$hasComposer" == "true" ]
 	then
-	    for file in "$current_path"/*
+	    for file in $current_path
         do
+            file= "$file | cut -d'/' -f7-"
             curl --ftp-create-dirs -T $file -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/public_html/$file
         done
 	else
