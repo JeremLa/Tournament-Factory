@@ -41,7 +41,7 @@ else
 # 	    bye
 # 	    "
 	    
-	    lftp -c "set dns:order 'inet'" -e "mirror -R $current_path /public_html" -u $FTP_USER,$FTP_PASS ftp://$FTP_HOST
+	    lftp -e "mirror -R $current_path /public_html" -u $FTP_USER,$FTP_PASS ftp://$FTP_HOST:21
 #	    for file in "$current_path"/*
 #        do
 #            # file= "$file | cut -d'/' -f7-"
