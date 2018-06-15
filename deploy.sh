@@ -40,7 +40,8 @@ else
 # 	    mirror --continue --reverse --delete $current_path '/public_html'
 # 	    bye
 # 	    "
-	    lftp -e "mirror -R $current_path /public_html" -u $FTP_USER,$FTP_PASS ftp://$FTP_HOST
+	    
+	    lftp -c "set dns:order 'inet'" -e "mirror -R $current_path /public_html" -u $FTP_USER,$FTP_PASS ftp://$FTP_HOST
 #	    for file in "$current_path"/*
 #        do
 #            # file= "$file | cut -d'/' -f7-"
