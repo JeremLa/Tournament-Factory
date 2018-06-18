@@ -33,11 +33,11 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
         if [ "$hasComposer" == "true" ]
         then
             echo "ssh request with composer install."
-            sshpass -p '$SSHPASS' ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; composer install --no-dev --optimize-autoloader; php bin/console doctrine:migrations:migrate'
+            sshpass -p '$SSH_PASS' ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; composer install --no-dev --optimize-autoloader; php bin/console doctrine:migrations:migrate'
 
         else
             echo "ssh request without composer install."
-            sshpass -p '$SSHPASS' ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; php bin/console doctrine:migrations:migrate'
+            sshpass -p '$SSH_PASS' ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; php bin/console doctrine:migrations:migrate'
         fi
     fi
 fi
