@@ -9,7 +9,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_649a1e2cb581_key -iv $encrypted_649a1e2cb581_iv
   -in client-secret.json.enc -out .\\client-secret.json -d
 - chmod +x ./deploy.sh
-- sudo apt-get install lftp
+- sudo apt-get install lftp openssl
 install:
 - composer install
 
