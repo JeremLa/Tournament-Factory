@@ -19,7 +19,7 @@ class SignUpType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                self::LABEL => 'form.username'
+                self::LABEL => 'form.login'
             ])
             ->add('password', RepeatedType::class, [
                 self::LABEL => '',
