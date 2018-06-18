@@ -36,29 +36,11 @@
                         {% if is_granted('ROLE_ADMIN') %}
                             {% set active = current_path == 'admin' ? 'active' : '' %}
                             <a class="dropdown-item {{ active }}" href="{{ path('admin') }}">Admin</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ path('logout') }}">{{ 'security.logout' | trans }}</a>
                         {% endif %}
-                        {#<a class="dropdown-item" href="{{ path('my_tournament') }}">{{ 'tournament.menu.list' | trans }}</a>#}
-                        {#<a class="dropdown-item" href="{{ path('add_tournament') }}">{{ 'tournament.create' | trans }}</a>#}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ path('logout') }}">{{ 'security.logout' | trans }}</a>
                     </div>
                 </li>
-
-                {#<li class="nav-item">#}
-                    {##}
-                {#</li>#}
-
-                {#{% if is_granted('ROLE_ADMIN') %}#}
-                    {#{% set active = current_path == 'admin' ? 'active' : '' %}#}
-
-                    {#<li class="nav-item">#}
-                        {#<a class="nav-link {{ active }}" href="{{ path('admin') }}">Admin</a>#}
-                    {#</li>#}
-                {#{% endif %}#}
-
-                {#<li class="nav-item">#}
-                    {#<a class="nav-link" href="{{ path('logout') }}">{{ 'security.logout' | trans }}</a>#}
-                {#</li>#}
             {% else %}
                 {% set active = current_path == 'login' ? 'active' : ''%}
 
