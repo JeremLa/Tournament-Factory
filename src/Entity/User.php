@@ -34,8 +34,6 @@ class User implements UserInterface, EquatableInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     *
-     * @Assert\NotBlank()
      */
     private $username;
 
@@ -64,11 +62,17 @@ class User implements UserInterface, EquatableInterface
     private $email;
 
     /**
+     * @ORM\OneToOne(targetEntity="App\Entity\TFUser", cascade={"persist"})
+     */
+    private $tfUser;
+
+    /**
      * User constructor.
      */
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
+        $this->tfUser = new TFUser();
     }
 
     public function getId()
@@ -139,6 +143,23 @@ class User implements UserInterface, EquatableInterface
     {
         $this->email = $email;
     }
+
+    /**
+     * @return TFUser
+     */
+    public function getTfUser() : TFUser
+    {
+        return $this->tfUser;
+    }
+
+    /**
+     * @param mixed $tfUser
+     */
+    public function setTfUser($tfUser): void
+    {
+        $this->tfUser = $tfUser;
+    }
+
 
     public function eraseCredentials()
     {

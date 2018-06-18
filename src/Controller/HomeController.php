@@ -41,17 +41,20 @@ class HomeController extends Controller
      * @Route("/signup", name="signup")
      */
     public function signUp(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder) {
-
         $user = new User();
 
         $form = $this->createForm('App\Form\SignUpType', $user);
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $password = $encoder->encodePassword($user, $user->getPassword());
 
             $user->setPassword($password);
+
+            $user->getTfUser()->setEmail($user->getEmail());
+            $user->setUsername($user->getEmail());
+            $user->getTfUser()->addNickname($request->get('sign_up')['tfuser']['nickname']);
 
             $em->persist($user);
             $em->flush();

@@ -41,6 +41,11 @@ class TFUser
      */
     private $country;
 
+    public function __construct()
+    {
+        $this->nicknames = [];
+    }
+
     public function getId() : int
     {
         return $this->id;
@@ -59,7 +64,7 @@ class TFUser
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getNicknames()
     {
@@ -67,11 +72,28 @@ class TFUser
     }
 
     /**
-     * @param mixed $nicknames
+     * @param array $nicknames
      */
-    public function setNicknames($nicknames): void
+    public function setNicknames(array $nicknames): void
     {
         $this->nicknames = $nicknames;
+    }
+
+    /**
+     * @param string $nickname
+     */
+    public function addNickname(string $nickname) : void
+    {
+        $this->nicknames[] = $nickname;
+    }
+
+    /**
+     * @param string $nickname
+     */
+    public function removeNickname(string $nickname) : void
+    {
+            $index = array_search($nickname, $this->nicknames);
+            unset($this->nicknames[$index]);
     }
 
     /**

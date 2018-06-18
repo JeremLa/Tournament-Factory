@@ -10,7 +10,10 @@ form:
     password:
         name: Mot de passe
         repeat: Confirmez le mot de passe
-
+    firstname: Prénom
+    lastname: Nom
+    nickname: Surnom
+    country: pays
     remember_me: 'Se souvenir de moi'
 
 tournament:

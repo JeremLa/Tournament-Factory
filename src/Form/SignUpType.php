@@ -18,8 +18,8 @@ class SignUpType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', TextType::class, [
-                self::LABEL => 'form.username'
+            ->add('tfuser', TFUserType::class, [
+                'with_email' => false
             ])
             ->add('password', RepeatedType::class, [
                 self::LABEL => '',
