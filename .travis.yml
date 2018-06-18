@@ -12,5 +12,3 @@ install:
   composer install
 after_success:
   - ./deploy.sh
-  on:
-      - master
