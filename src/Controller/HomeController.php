@@ -44,7 +44,7 @@ class HomeController extends Controller
 
         $user = new User();
 
-        $form = $this->createForm('App\Form\SignUpType', $user);
+        $form = $this->createForm('App\Form\Type\SignUpType', $user);
 
         $form->handleRequest($request);
 

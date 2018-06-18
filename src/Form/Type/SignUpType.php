@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Type;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
@@ -19,7 +19,7 @@ class SignUpType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                self::LABEL => 'form.username'
+                self::LABEL => 'form.login'
             ])
             ->add('password', RepeatedType::class, [
                 self::LABEL => '',
