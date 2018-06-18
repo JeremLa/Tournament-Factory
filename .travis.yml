@@ -10,7 +10,6 @@ before_install:
   -in client-secret.json.enc -out .\\client-secret.json -d
 - chmod +x ./deploy.sh
 - sudo apt-get install lftp openssl
-
 install:
 - composer install
 deploy:
