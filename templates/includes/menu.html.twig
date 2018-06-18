@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     {% if  app.user %}
-        <a class="navbar-brand" href="{{ path('my_tournament') }}">Tournament Factory</a>
+        <a class="navbar-brand" href="{{ path('my_tournament') }}">Tournament Factory <small>{{ version }}</small></a>
     {% else %}
         <a class="navbar-brand" href="{{ path('home') }}">Tournament Factory</a>
     {% endif %}
