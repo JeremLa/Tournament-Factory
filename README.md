@@ -1,6 +1,8 @@
 Tournament Factory 
 =========================
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0550211a-a4aa-4e2a-ad14-1e2e35169c78/mini.png)](https://insight.sensiolabs.com/projects/0550211a-a4aa-4e2a-ad14-1e2e35169c78)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/JeremLa/Tournament-Factory.svg?branch=master)](https://travis-ci.org/JeremLa/Tournament-Factory)
 
 Goals
 ---------------

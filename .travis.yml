@@ -5,10 +5,13 @@ sudo: false
 cache:
   directories:
   - "$HOME/.composer/cache/files"
+script:
+  - php bin/phpunit --coverage-clover=coverage.xml
 before_install:
   - chmod +x ./deploy.sh
   - sudo apt-get install lftp sshpass
 install:
   composer install
 after_success:
+  - bash <(curl -s https://codecov.io/bash)
   - ./deploy.sh
