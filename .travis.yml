@@ -1,22 +1,16 @@
 language: php
 php:
-- '7.1'
+  - '7.1'
 sudo: false
 cache:
   directories:
   - "$HOME/.composer/cache/files"
 before_install:
-- openssl aes-256-cbc -k "$super_secret_password" -in credentials.json.enc -out credentials.json -d
-- chmod +x ./deploy.sh
-- sudo apt-get install lftp
+  - chmod +x ./deploy.sh
+  - sudo apt-get install lftp sshpass
 install:
-- composer install
-deploy:
-  provider: gae
-  skip_cleanup: true
-  keyfile: credentials.json
-  project: helical-analogy-207516
-  default: true
-env:
-  global:
-    secure: PqdtwZLn9P51hFRQH55p9C7KUXrQWoUV4UzByA80ImjQOpaoVgwmMzgZJULY8ZAff9DfSfDGxUlGdhDWr1TOpFAmOHhuWeFNP1IR0U8gHBZoWdxCKMCEL6OS+rsStluUdteUQjGjSXu9aLhX3nYpWOdumuBganjKg0HByA/6qXoy9dyFsGK7tkZWb6+TxnLkxK3UJGZXtr7q0jWIpqITRbsmmIZ9HmDH9omnavvrJErQlIslUVqLNdK4r+wbkK5G7AwuAt+CFp0FM7vmcBJr6AUHvzo609zFRaj0vxqLlOYV9yU+uCV9gqieSje0Z0t26XLNfyFbkprsV8kEBz1Z24TlEZDj1VaSWIIZwcMfl5lVuBxWZS1dviA9JlqDvhnc8hS/5SSnZ0B0B/CmPOvkZGRB5JIgPPC4mDzvUZ4peF+aWh/wgwz60CC2JFC3KChh5dKY3//TDmhxQC3HObvb3Y3iK3RTU0GCiPMgBqy9wWU8+I3ffX4lZjaOMxj9vo7/U/8wC1lFWoWSF5OK3zcckB2r+kd/tilXeFe2SWYSdFSsxElbaBMkFEfNpL+ycqVPJfugwY1IkcIGM5INpgbuE0Tc9uc9nFPqjkC+DpiUIbah8c19Iel0bAApV8+x3T71CRi8zEr+gaanNfGAokFOOHXNNU26Kk59hvaH5nNmFWw=
+  composer install
+after_success:
+  - ./deploy.sh
+  on:
+      - master

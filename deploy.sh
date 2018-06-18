@@ -30,9 +30,9 @@ else
 		    hasComposer="true"
 		fi
 	done
-    hasComposer="true"
 	if [ "$hasComposer" == "true" ]
 	then
+        sshpass -e ssh StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory;git pull origin master; composer install --no-dev --optimize-autoloader; php bin/console doctrine:migrations:migrate'
 # 	    lftp -f "
 # 	    set dns:order 'inet'
 # 	    open ftp://$FPT_HOST
@@ -41,7 +41,7 @@ else
 # 	    bye
 # 	    "
 	    
-	    lftp -e "mirror -R $current_path /public_html" -u $FTP_USER,$FTP_PASS ftp://$FTP_HOST:21
+#	    lftp -e "mirror -R $current_path /public_html" -u $FTP_USER,$FTP_PASS ftp://$FTP_HOST:21
 #	    for file in "$current_path"/*
 #        do
 #            # file= "$file | cut -d'/' -f7-"
@@ -49,13 +49,15 @@ else
 #
 #        done
 	else
-        for f in $filesChanged
-        do
-            if [ "$f" != ".travis.yml" ] && [ "$f" != "deploy.sh" ] && [ "$f" != "test.js" ] && [ "$f" != "composer.json" ]
-            then
-                echo "Uploading $f"
-                curl --ftp-create-dirs -T $f -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/public_html/$f
-            fi
-        done
+	  sshpass -e ssh StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory;git pull origin master; composer install --no-dev --optimize-autoloader; php bin/console doctrine:migrations:migrate'
+
+#        for f in $filesChanged
+#        do
+#            if [ "$f" != ".travis.yml" ] && [ "$f" != "deploy.sh" ] && [ "$f" != "test.js" ] && [ "$f" != "composer.json" ]
+#            then
+#                echo "Uploading $f"
+#                curl --ftp-create-dirs -T $f -u $FTP_USER:$FTP_PASS ftp://$FTP_HOST/public_html/$f
+#            fi
+#        done
     fi
 fi
