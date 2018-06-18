@@ -1,7 +1,6 @@
 #!/bin/bash
 if [ "$TRAVIS_BRANCH" == "master" ]; then
     echo "start deployment"
-    current_path=$(pwd)
     gitLastCommit=$(git show --summary --grep="Merge pull request")
     echo "git last commit :"
     echo "$gitLastCommit"
@@ -30,13 +29,15 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
             then
                 hasComposer="true"
             fi
-        done
+        done     
         if [ "$hasComposer" == "true" ]
         then
-            sshpass -e ssh $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; composer install --no-dev --optimize-autoloader; php bin/console doctrine:migrations:migrate'
+            echo "ssh request with composer install."
+            sshpass -p '$SSHPASS' ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; composer install --no-dev --optimize-autoloader; php bin/console doctrine:migrations:migrate'
 
         else
-          sshpass -e ssh $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; php bin/console doctrine:migrations:migrate'
+            echo "ssh request without composer install."
+            sshpass -p '$SSHPASS' ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; php bin/console doctrine:migrations:migrate'
         fi
     fi
 fi
