@@ -33,10 +33,10 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
         done
         if [ "$hasComposer" == "true" ]
         then
-            sshpass -e ssh StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; composer install --no-dev --optimize-autoloader; php bin/console doctrine:migrations:migrate'
+            sshpass -e ssh $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; composer install --no-dev --optimize-autoloader; php bin/console doctrine:migrations:migrate'
 
         else
-          sshpass -e ssh StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; php bin/console doctrine:migrations:migrate'
+          sshpass -e ssh $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; php bin/console doctrine:migrations:migrate'
         fi
     fi
 fi
