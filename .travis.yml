@@ -6,7 +6,7 @@ cache:
   directories:
   - "$HOME/.composer/cache/files"
 script:
-  - bin/phpunit --coverage-clover=coverage.xml
+  - php bin/phpunit --coverage-clover=coverage.xml
 before_install:
   - chmod +x ./deploy.sh
   - sudo apt-get install lftp sshpass
