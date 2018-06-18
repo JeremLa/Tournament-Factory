@@ -14,3 +14,5 @@
 .phpunit
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+###< google cloud plateform secret api> ###
+client-secret.json

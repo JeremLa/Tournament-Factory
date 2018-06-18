@@ -1,17 +1,23 @@
 language: php
 php:
-    - '7.1'
-
+- '7.1'
 sudo: false
-
 cache:
   directories:
-    - $HOME/.composer/cache/files
-
+  - "$HOME/.composer/cache/files"
 before_install:
-  - chmod +x ./deploy.sh
+- openssl aes-256-cbc -K $encrypted_649a1e2cb581_key -iv $encrypted_649a1e2cb581_iv
+  -in client-secret.json.enc -out .\\client-secret.json -d
+- chmod +x ./deploy.sh
+- sudo apt-get install lftp
 install:
-    - composer install
+- composer install
 
-after_success:
-    - ./deploy.sh
+
+deploy:
+  provider: gae
+        # Skip cleanup so api_key.py and vendored dependencies are still there
+  skip_cleanup: true
+  keyfile: client-secret.json
+  project: helical-analogy-207516
+  default: true
