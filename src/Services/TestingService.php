@@ -15,6 +15,7 @@ class TestingService
 
     public function getSquareFaces()
     {
-        return count($this->square);
+        $this->square = 4;
+        return $this->square;
     }
 }

@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class TestingServiceTest extends TestCase
 {
-    public function squareHasFourFaces () {
+    public function testSquareHasFourFaces () {
         $testingService = new TestingService();
 
         $square = $testingService->getSquareFaces();

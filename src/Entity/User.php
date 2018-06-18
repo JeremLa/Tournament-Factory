@@ -75,6 +75,7 @@ class User implements UserInterface, EquatableInterface
         $this->tfUser = new TFUser();
     }
 
+
     public function getId()
     {
         return $this->id;
@@ -85,6 +86,10 @@ class User implements UserInterface, EquatableInterface
         return $this->username;
     }
 
+    /**
+     * @param string $username
+     * @return User
+     */
     public function setUsername(string $username): self
     {
         $this->username = $username;
