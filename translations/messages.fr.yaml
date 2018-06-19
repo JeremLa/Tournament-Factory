@@ -5,7 +5,7 @@ security:
 
 form:
     save: enregistrer
-    username: Identifiant
+    login: Identifiant
     email: Courriel
     password:
         name: Mot de passe

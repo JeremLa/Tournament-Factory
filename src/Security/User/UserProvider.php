@@ -12,11 +12,11 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class UserProvider implements UserProviderInterface
 {
-    private $em;
+    private $entityManager;
 
-    function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->em = $em;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -36,7 +36,7 @@ class UserProvider implements UserProviderInterface
         /**
          * @var User $user
          */
-        $user = $this->em->getRepository('App:User')->findOneBy(['username' => $username]);
+        $user = $this->entityManager->getRepository('App:User')->findOneBy(['username' => $username]);
 
         if ($user) {
             return $user;

@@ -26,7 +26,7 @@ class HomeController extends Controller
     /**
      * @Route("/login", name="login")
      */
-    public function login(Request $request, AuthenticationUtils $authenticationUtils)
+    public function login(AuthenticationUtils $authenticationUtils)
     {
         $errors = $authenticationUtils->getLastAuthenticationError();
 
@@ -40,10 +40,11 @@ class HomeController extends Controller
     /**
      * @Route("/signup", name="signup")
      */
-    public function signUp(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder) {
+    public function signUp(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder) {
+
         $user = new User();
 
-        $form = $this->createForm('App\Form\SignUpType', $user);
+        $form = $this->createForm('App\Form\Type\SignUpType', $user);
 
         $form->handleRequest($request);
 
@@ -56,8 +57,8 @@ class HomeController extends Controller
             $user->setUsername($user->getEmail());
             $user->getTfUser()->addNickname($request->get('sign_up')['tfuser']['nickname']);
 
-            $em->persist($user);
-            $em->flush();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
             return $this->redirectToRoute('login');
         }
