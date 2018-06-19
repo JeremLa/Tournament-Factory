@@ -57,10 +57,12 @@ class HomeController extends Controller
             $user->setUsername($user->getEmail());
             $user->getTfUser()->addNickname($request->get('sign_up')['tfuser']['nickname']);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            if($form->isValid()){
+                $entityManager->persist($user);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('login');
+                return $this->redirectToRoute('login');
+            }
         }
 
         return $this->render('home/signup.html.twig', [
