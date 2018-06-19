@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Type;
 
 use App\Entity\TFUser;
 use Symfony\Component\Form\AbstractType;
@@ -18,7 +18,6 @@ class TFUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-//            ->add('email', EmailType::class)
             ->add('nickname', TextType::class, [
                 'mapped' => false,
                 self::LABEL => 'form.nickname'
