@@ -16,19 +16,19 @@
         {% endif %}
 
         <form action="{{ path('login') }}" method="post" class="form-signin">
-            <label for="username">Username:</label>
+            <label for="username">{{ "form.login" | trans }}</label>
             <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}"/>
 
-            <label for="password">Password:</label>
+            <label for="password">{{ "form.password.name" | trans }}</label>
             <input type="password" class="form-control mb-4" id="password" name="_password"/>
 
             <div class="checkbox mb-3">
                 <label>
-                    <input type="checkbox" value="remember-me" name="_remember_me"> {{ "form.remember_me"|trans }}
+                    <input type="checkbox" value="remember-me" name="_remember_me"> {{ "form.remember_me" | trans }}
                 </label>
             </div>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit">login</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">{{ "security.login" | trans }}</button>
             <a href="{{ path('signup') }}">Créer un compte</a>
         </form>
     </div>

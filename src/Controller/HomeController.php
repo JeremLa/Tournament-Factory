@@ -40,7 +40,8 @@ class HomeController extends Controller
     /**
      * @Route("/signup", name="signup")
      */
-    public function signUp(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder) {
+    public function signUp(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder)
+    {
 
         $user = new User();
 
@@ -48,7 +49,7 @@ class HomeController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $password = $encoder->encodePassword($user, $user->getPassword());
 
             $user->setPassword($password);
@@ -57,12 +58,12 @@ class HomeController extends Controller
             $user->setUsername($user->getEmail());
             $user->getTfUser()->addNickname($request->get('sign_up')['tfuser']['nickname']);
 
-            if($form->isValid()){
-                $entityManager->persist($user);
-                $entityManager->flush();
 
-                return $this->redirectToRoute('login');
-            }
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('login');
+
         }
 
         return $this->render('home/signup.html.twig', [

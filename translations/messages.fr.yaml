@@ -4,7 +4,7 @@ security:
     signup: Inscription
 
 form:
-    save: enregistrer
+    save: Enregistrer
     login: Identifiant
     email: Courriel
     password:
@@ -13,7 +13,7 @@ form:
     firstname: Prénom
     lastname: Nom
     nickname: Surnom
-    country: pays
+    country: Pays
     remember_me: 'Se souvenir de moi'
 
 tournament:

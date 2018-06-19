@@ -5,13 +5,22 @@ sudo: false
 cache:
   directories:
   - "$HOME/.composer/cache/files"
+services:
+  - mysql
+before_script:
+  - php bin/console --env=test cache:warmup
+  - php bin/console doctrine:migrations:migrate --no-interaction
 script:
-  - php bin/phpunit --coverage-clover=coverage.xml
+  - php bin/phpunit --coverage-clover=coverage.xml --verbose
 before_install:
   - chmod +x ./deploy.sh
-  - sudo apt-get install lftp sshpass
+  - sudo apt-get install sshpass
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS tf_test;'
 install:
-  composer install
+  - composer install
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -c -F controllers
+  - bash <(curl -s https://codecov.io/bash) -c -F formType
+  - bash <(curl -s https://codecov.io/bash) -c -F repository
+  - bash <(curl -s https://codecov.io/bash) -c -F service
   - ./deploy.sh
