@@ -48,10 +48,14 @@ class HomeController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $password = $encoder->encodePassword($user, $user->getPassword());
 
             $user->setPassword($password);
+
+            $user->getTfUser()->setEmail($user->getEmail());
+            $user->setUsername($user->getEmail());
+            $user->getTfUser()->addNickname($request->get('sign_up')['tfuser']['nickname']);
 
             $entityManager->persist($user);
             $entityManager->flush();
