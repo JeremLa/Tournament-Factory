@@ -4,23 +4,22 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class HomeControllerTest extends  WebTestCase
+class TournamentControllerTest extends  WebTestCase
 {
     /**
      * @dataProvider urlProvider
      */
-    public function testPageIsSuccessful($url)
+    public function testPageIsRedirect($url)
     {
         $client = self::createClient();
         $client->request('GET', $url);
 
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertTrue($client->getResponse()->isRedirect());
     }
 
     public function urlProvider()
     {
-        yield ['/'];
-        yield ['/login'];
-        yield ['/signup'];
+        yield ['/tournament'];
+        yield ['/tournament/new'];
     }
 }
