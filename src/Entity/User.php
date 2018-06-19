@@ -58,6 +58,7 @@ class User implements UserInterface, EquatableInterface
      * @ORM\Column(type="string", unique=true)
      *
      * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
