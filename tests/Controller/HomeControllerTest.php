@@ -158,7 +158,7 @@ class HomeControllerTest extends  WebTestCase
         $crawler = $client->request('GET', '/login');
 
         $form = $crawler->selectButton('Connexion')->form();
-        $form['_username'] = 'admin';
+        $form['_username'] = 'admin@mail.fr';
         $form['_password'] = 'admin';
 
         $client->submit($form);
