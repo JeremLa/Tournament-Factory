@@ -9,9 +9,12 @@ script:
   - php bin/phpunit --coverage-clover=coverage.xml
 before_install:
   - chmod +x ./deploy.sh
-  - sudo apt-get install lftp sshpass
+  - sudo apt-get install sshpass
 install:
   composer install
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -c -F controllers
+  - bash <(curl -s https://codecov.io/bash) -c -F formType
+  - bash <(curl -s https://codecov.io/bash) -c -F repository
+  - bash <(curl -s https://codecov.io/bash) -c -F service
   - ./deploy.sh
