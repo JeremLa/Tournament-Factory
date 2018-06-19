@@ -16,6 +16,4 @@ class UserController extends Controller
             'controller_name' => 'UserController',
         ]);
     }
-
-
 }
