@@ -18,9 +18,9 @@ coverage:
             service:
                 target: 85%
                 flags: service
-            provider:
+            security:
                 target: 85%
-                flags: provider
+                flags: security
 flags:
     controller:
         paths:
@@ -34,6 +34,6 @@ flags:
     service:
         paths:
             - src/Services
-    provider:
+    security:
         paths:
             - src/Security
