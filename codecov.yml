@@ -11,7 +11,7 @@ coverage:
                 flags: controller
             formType:
                 target: 85%
-                flags: formType
+                flags: formtype
             repository:
                 target: 85%
                 flags: repository
@@ -25,7 +25,7 @@ flags:
     controller:
         paths:
             - src/Controller
-    formType:
+    formtype:
         paths:
             - src/Form/Type
     repository:
