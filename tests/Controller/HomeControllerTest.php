@@ -123,7 +123,8 @@ class HomeControllerTest extends  WebTestCase
             'sign_up[tfuser][country]' => 'FR',
         ));
 
-        $client->submit($form);
+         $client->submit($form);
+
         $this->assertTrue($client->getResponse()->isRedirect());
     }
 

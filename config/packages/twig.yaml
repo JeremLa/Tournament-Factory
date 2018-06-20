@@ -5,4 +5,4 @@ twig:
     form_themes:
         - 'bootstrap_4_layout.html.twig'
     globals:
-        version: 0.1.1
+        version: 0.1.5
