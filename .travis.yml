@@ -14,16 +14,16 @@ script:
   - cat codecov.yml | curl --data-binary @- https://codecov.io/validate
   - php bin/phpunit --coverage-clover=codecov.xml
   - bash <(curl -s https://codecov.io/bash)
-  - php bin/phpunit --filter 'App\\Tests\\Controller' --coverage-clover=codecov.xml
-  - bash <(curl -s https://codecov.io/bash) -F controllers
-  - php bin/phpunit --filter 'App\\Tests\\Form\\Type' --coverage-clover=codecov.xml
-  - bash <(curl -s https://codecov.io/bash) -F formtype
-  - php bin/phpunit --filter 'App\\Tests\\Repository' --coverage-clover=codecov.xml
-  - bash <(curl -s https://codecov.io/bash) -F repository
-  - php bin/phpunit --filter 'App\\Tests\\Services' --coverage-clover=codecov.xml
-  - bash <(curl -s https://codecov.io/bash) -F service
-  - php bin/phpunit --filter 'App\\Tests\\Security' --coverage-clover=codecov.xml
-  - bash <(curl -s https://codecov.io/bash) -F security
+#  - php bin/phpunit --filter 'App\\Tests\\Controller' --coverage-clover=codecov.xml
+#  - bash <(curl -s https://codecov.io/bash) -F controllers
+#  - php bin/phpunit --filter 'App\\Tests\\Form\\Type' --coverage-clover=codecov.xml
+#  - bash <(curl -s https://codecov.io/bash) -F formtype
+#  - php bin/phpunit --filter 'App\\Tests\\Repository' --coverage-clover=codecov.xml
+#  - bash <(curl -s https://codecov.io/bash) -F repository
+#  - php bin/phpunit --filter 'App\\Tests\\Services' --coverage-clover=codecov.xml
+#  - bash <(curl -s https://codecov.io/bash) -F service
+#  - php bin/phpunit --filter 'App\\Tests\\Security' --coverage-clover=codecov.xml
+#  - bash <(curl -s https://codecov.io/bash) -F security
 before_install:
   - chmod +x ./deploy.sh
   - sudo apt-get install sshpass
