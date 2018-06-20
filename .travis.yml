@@ -11,11 +11,16 @@ before_script:
   - php bin/console --env=test cache:warmup
   - php bin/console doctrine:migrations:migrate --no-interaction
 script:
-  - php bin/phpunit --filter 'App\\Tests\\Controller' --coverage-clover=controller.xml
-  - php bin/phpunit --filter 'App\\Tests\\Form\\Type' --coverage-clover=formtype.xml
-  - php bin/phpunit --filter 'App\\Tests\\Repository' --coverage-clover=repository.xml
-  - php bin/phpunit --filter 'App\\Tests\\Services' --coverage-clover=service.xml
-  - php bin/phpunit --filter 'App\\Tests\\Security' --coverage-clover=security.xml
+  - php bin/phpunit --filter 'App\\Tests\\Controller' --coverage-clover=codecov.xml
+  - bash <(curl -s https://codecov.io/bash) -c -F controllers
+  - php bin/phpunit --filter 'App\\Tests\\Form\\Type' --coverage-clover=codecov.xml
+  - bash <(curl -s https://codecov.io/bash) -c -F formtype
+  - php bin/phpunit --filter 'App\\Tests\\Repository' --coverage-clover=codecov.xml
+  - bash <(curl -s https://codecov.io/bash) -c -F repository
+  - php bin/phpunit --filter 'App\\Tests\\Services' --coverage-clover=codecov.xml
+  - bash <(curl -s https://codecov.io/bash) -c -F service
+  - php bin/phpunit --filter 'App\\Tests\\Security' --coverage-clover=codecov.xml
+  - bash <(curl -s https://codecov.io/bash) -c -F security
 before_install:
   - chmod +x ./deploy.sh
   - sudo apt-get install sshpass
@@ -23,9 +28,4 @@ before_install:
 install:
   - composer install
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -c -F controllers
-  - bash <(curl -s https://codecov.io/bash) -c -F formtype
-  - bash <(curl -s https://codecov.io/bash) -c -F repository
-  - bash <(curl -s https://codecov.io/bash) -c -F service
-  - bash <(curl -s https://codecov.io/bash) -c -F security
   - ./deploy.sh
