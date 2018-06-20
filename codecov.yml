@@ -7,13 +7,13 @@ coverage:
         project:
             default: off
             controller:
-                target: 85%
+                target: 70%
                 flags: controller
             formType:
-                target: 85%
+                target: 0%
                 flags: formtype
             repository:
-                target: 85%
+                target: 0%
                 flags: repository
             service:
                 target: 85%
