@@ -71,13 +71,9 @@ class TournamentControllerTest extends  WebTestCase
     {
 
 
-        $this->logIn();
+        $this->logIn($this->user->getUsername(), $this->user->getPassword(), $this->user->getRoles());
 
-        $crawler = $this->client->request('GET', $url);
-
-        while ($crawler->filter('html:contains("Redirecting")')->count() > 0){
-            $crawler = $this->client->followRedirect();
-        }
+        $this->getUrlAndFollowredirect($url);
         $this->assertTrue($this->client->getResponse()->isSuccessful());
     }
 
@@ -88,35 +84,33 @@ class TournamentControllerTest extends  WebTestCase
     {
 
 
-        $this->badLogIn();
+        $this->logIn('toto', 'tata',  ['ROLE_USER']);
 
-        $crawler = $this->client->request('GET', $url);
-        while ($crawler->filter('html:contains("Redirecting")')->count() > 0){
-            $crawler = $this->client->followRedirect();
-        }
+       $crawler = $this->getUrlAndFollowredirect($url);
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Connexion")')->count()
         );
     }
 
-    private function badLogIn()
+   private function getUrlAndFollowredirect($url){
+       $crawler = $this->client->request('GET', $url);
+       while ($crawler->filter('html:contains("Redirecting")')->count() > 0){
+           $crawler = $this->client->followRedirect();
+       }
+       return $crawler;
+   }
+
+    private function logIn($username, $password, $roles)
     {
 
-        $token = new UsernamePasswordToken('toto', 'tata', 'main', ['ROLE_USER']);
+        $token = new UsernamePasswordToken($username, $password, 'main', $roles);
         $session = static::$kernel->getContainer()->get('session');
         $session->set('_security_main', serialize($token));
         $session->save();
     }
 
-    private function logIn()
-    {
 
-        $token = new UsernamePasswordToken($this->user->getUsername(), $this->user->getPassword(), 'main', $this->user->getRoles());
-        $session = static::$kernel->getContainer()->get('session');
-        $session->set('_security_main', serialize($token));
-        $session->save();
-    }
 
     protected function tearDown()
     {
