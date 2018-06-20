@@ -1,6 +1,6 @@
 ignore:
-    - "/src/entity"
-    - "/src/migration"
+    - "/src/Entity"
+    - "/src/Migration"
 
 coverage:
     status:
