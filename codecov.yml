@@ -6,21 +6,23 @@ coverage:
     status:
         project:
             default: off
-            controllers:
+            controller:
                 target: 85%
-                flags: formType
+                flags: controller
             formType:
                 target: 85%
                 flags: formType
             repository:
                 target: 85%
-                flags: formType
+                flags: repository
             service:
-                target: 95%
-                flags: formType
-
+                target: 85%
+                flags: service
+            provider:
+                target: 85%
+                flags: provider
 flags:
-    controllers:
+    controller:
         paths:
             - src/Controller
     formType:
@@ -28,8 +30,10 @@ flags:
             - src/Form/Type
     repository:
         paths:
-            - src/Repository/
+            - src/Repository
     service:
         paths:
             - src/Services
-            - src/Security/User
+    provider:
+        paths:
+            - src/Security
