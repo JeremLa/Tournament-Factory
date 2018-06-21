@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Abstraction\AbstractTFParticipant;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,10 +37,18 @@ class TFUser extends AbstractTFParticipant
      */
     private $country;
 
+
+    /**
+     * @var ArrayCollection $ownedtournaments
+     * @ORM\OneToMany(targetEntity="App\Entity\TFTournament", mappedBy="owner")
+     */
+    private $ownedtournaments;
+
     public function __construct()
     {
         parent::__construct();
         $this->nicknames = [];
+        $this->ownedtournaments = new ArrayCollection;
     }
 
     public function getEmail(): ?string
@@ -133,5 +142,29 @@ class TFUser extends AbstractTFParticipant
     public function setCountry($country): void
     {
         $this->country = $country;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOwnedtournaments(): ArrayCollection
+    {
+        return $this->ownedtournaments;
+    }
+
+    /**
+     * @param TFTournament $TFTournament
+     */
+    public function addOwnedtournaments(TFTournament $TFTournament): void
+    {
+        $this->ownedtournaments->add($TFTournament);
+    }
+
+    /**
+     * @param TFTournament $TFTournament
+     */
+    public function removeOwnedtournaments(TFTournament $TFTournament): void
+    {
+        $this->ownedtournaments->removeElement($TFTournament);
     }
 }

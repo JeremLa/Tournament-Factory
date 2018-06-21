@@ -41,7 +41,11 @@ class TFTournament
      */
     private $participants;
 
-
+    /**
+     * @var TFUser $owner
+     * @ORM\ManyToOne(targetEntity="App\Entity\TFUser", inversedBy="ownedtournaments")
+     */
+    private $owner;
 
     public function __construct()
     {
@@ -130,5 +134,21 @@ class TFTournament
     public function removeParticipanr(AbstractTFParticipant $participant)
     {
         $this->participants->removeElement($participant);
+    }
+
+    /**
+     * @return TFUser
+     */
+    public function getOwner(): TFUser
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param TFUser $owner
+     */
+    public function setOwner(TFUser $owner): void
+    {
+        $this->owner = $owner;
     }
 }
