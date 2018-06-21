@@ -2,19 +2,14 @@
 
 namespace App\Entity;
 
+use App\Entity\Abstraction\AbstractTFParticipant;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TFUserRepository")
  */
-class TFUser
+class TFUser extends AbstractTFParticipant
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true, unique=true)
@@ -44,11 +39,6 @@ class TFUser
     public function __construct()
     {
         $this->nicknames = [];
-    }
-
-    public function getId() : int
-    {
-        return $this->id;
     }
 
     public function getEmail(): ?string
