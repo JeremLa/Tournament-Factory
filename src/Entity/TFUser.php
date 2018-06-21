@@ -38,6 +38,7 @@ class TFUser extends AbstractTFParticipant
 
     public function __construct()
     {
+        parent::__construct();
         $this->nicknames = [];
     }
 

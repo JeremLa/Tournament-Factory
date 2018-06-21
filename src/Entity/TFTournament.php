@@ -1,14 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: AHermes
- * Date: 21/06/2018
- * Time: 13:05
- */
 
 namespace App\Entity;
 
+use App\Entity\Abstraction\AbstractTFParticipant;
 use App\Services\Enum\TournamentTypeEnum;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -40,19 +36,24 @@ class TFTournament
     private $type;
 
     /**
+     * @var AbstractTFParticipant $participants
+     * @ORM\ManyToMany(targetEntity="App\Entity\Abstraction\AbstractTFParticipant", mappedBy="tournaments")
+     */
+    private $participants;
+
+
+
+    public function __construct()
+    {
+        $this->participants = new ArrayCollection();
+    }
+
+    /**
      * @return mixed
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
-    {
-        $this->id = $id;
     }
 
     /**
@@ -107,4 +108,27 @@ class TFTournament
         $this->type = $type;
     }
 
+    /**
+     * @return AbstractTFParticipant
+     */
+    public function getParticipants()
+    {
+        return $this->participants;
+    }
+
+    /**
+     * @param AbstractTFParticipant $participant
+     */
+    public function addParticipant(AbstractTFParticipant $participant)
+    {
+        $this->participants->add($participant);
+    }
+
+    /**
+     * @param AbstractTFParticipant $participant
+     */
+    public function removeParticipanr(AbstractTFParticipant $participant)
+    {
+        $this->participants->removeElement($participant);
+    }
 }
