@@ -1,35 +1,39 @@
 ignore:
-    - "/src/entity"
-    - "/src/migration"
+    - "/src/Entity"
+    - "/src/Migration"
 
 coverage:
     status:
         project:
             default: off
-            controllers:
-                target: 85%
-                flags: formType
+            controller:
+                target: 70%
+                flags: controller
             formType:
-                target: 85%
-                flags: formType
+                target: 0%
+                flags: formtype
             repository:
-                target: 85%
-                flags: formType
+                target: 0%
+                flags: repository
             service:
-                target: 95%
-                flags: formType
-
+                target: 85%
+                flags: service
+            security:
+                target: 85%
+                flags: security
 flags:
-    controllers:
+    controller:
         paths:
             - src/Controller
-    formType:
+    formtype:
         paths:
             - src/Form/Type
     repository:
         paths:
-            - src/Repository/
+            - src/Repository
     service:
         paths:
             - src/Services
-            - src/Security/User
+    security:
+        paths:
+            - src/Security
