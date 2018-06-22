@@ -21,5 +21,9 @@ tournament:
   menu:
       title: 'Tournois'
       list: 'Mes tournois'
+  name: 'Nom'
+  max_participant: 'Nombre de participant maximum'
+  type: 'Type de tournoi'
+  owner: 'Manager du tournoi'
 user:
   profile: 'Profile'

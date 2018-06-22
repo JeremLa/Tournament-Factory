@@ -139,7 +139,7 @@ class TFTournament
     /**
      * @return TFUser
      */
-    public function getOwner(): TFUser
+    public function getOwner(): ?TFUser
     {
         return $this->owner;
     }
