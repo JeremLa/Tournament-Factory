@@ -2,19 +2,15 @@
 
 namespace App\Entity;
 
+use App\Entity\Abstraction\AbstractTFParticipant;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TFUserRepository")
  */
-class TFUser
+class TFUser extends AbstractTFParticipant
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true, unique=true)
@@ -41,14 +37,18 @@ class TFUser
      */
     private $country;
 
+
+    /**
+     * @var ArrayCollection $ownedtournaments
+     * @ORM\OneToMany(targetEntity="App\Entity\TFTournament", mappedBy="owner")
+     */
+    private $ownedtournaments;
+
     public function __construct()
     {
+        parent::__construct();
         $this->nicknames = [];
-    }
-
-    public function getId() : int
-    {
-        return $this->id;
+        $this->ownedtournaments = new ArrayCollection;
     }
 
     public function getEmail(): ?string
@@ -142,5 +142,29 @@ class TFUser
     public function setCountry($country): void
     {
         $this->country = $country;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOwnedtournaments(): ArrayCollection
+    {
+        return $this->ownedtournaments;
+    }
+
+    /**
+     * @param TFTournament $TFTournament
+     */
+    public function addOwnedtournaments(TFTournament $TFTournament): void
+    {
+        $this->ownedtournaments->add($TFTournament);
+    }
+
+    /**
+     * @param TFTournament $TFTournament
+     */
+    public function removeOwnedtournaments(TFTournament $TFTournament): void
+    {
+        $this->ownedtournaments->removeElement($TFTournament);
     }
 }
