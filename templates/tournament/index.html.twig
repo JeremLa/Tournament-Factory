@@ -3,32 +3,54 @@
 {% block title %}Hello {{ controller_name }}!{% endblock %}
 
 {% block body %}
+    <div class="container mt-5">
+        <h1>Tournament list</h1>
 
-<div class="container mt-5">
-    <h1>Tournament list</h1>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>{{ 'tournament.name' | trans }}</th>
-            <th>{{ 'tournament.max_participant' | trans }}</th>
-            <th>{{ 'tournament.type' | trans }}</th>
-            <th>{{ 'tournament.owner' | trans }}</th>
-        </tr>
-        </thead>
-        <tbody>
-            {% for tournament in tournaments %}
-                <tr>
-                    <td>{{ tournament.name }}</td>
-                    <td>{{ tournament.maxParticipantNumber }}</td>
-                    <td>{{ tournament.type | typeEnum }}</td>
-                    {% if tournament.owner.nicknames | length > 0 %}
-                        <td>{{ tournament.owner.nicknames[0] }}</td>
-                    {% else %}
-                        <td>N/C</td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        {% include 'includes/flash-messages.html.twig' %}
+
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>{{ 'tournament.name' | trans }}</th>
+                <th>{{ 'tournament.max_participant' | trans }}</th>
+                <th>{{ 'tournament.type' | trans }}</th>
+                <th>{{ 'tournament.owner' | trans }}</th>
+                <th>{{ 'tournament.owner' | trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for tournament in tournaments %}
+                    <tr>
+                        <td>{{ tournament.name }}</td>
+                        <td>{{ tournament.maxParticipantNumber }}</td>
+                        <td>{{ tournament.type | typeEnum }}</td>
+                        {% if tournament.owner.nicknames | length > 0 %}
+                            <td>{{ tournament.owner.nicknames[0] }}</td>
+                        {% else %}
+                            <td>N/C</td>
+                        {% endif %}
+                        <td>
+                            <button type="button" class="btn btn-danger rounded-circle" data-toggle="modal" data-target="#remove-tournament" data-id="{{ tournament.id }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% include 'includes/modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        const URL = '{{ path('remove_tournament') }}';
+        $(document).ready(() => {
+            $('#remove-tournament').on('shown.bs.modal', function (e) {
+                const tournament_Id = $(e.relatedTarget).attr('data-id');
+                $('#remove-tournament-validate').attr('href', URL + '?tournament-id=' + tournament_Id);
+            })
+        })
+    </script>
 {% endblock %}

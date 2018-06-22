@@ -71,4 +71,22 @@ class TournamentController extends Controller
             'type' => $type
         ]);
     }
+
+    /**
+     * @Route("/tournament/remove", name="remove_tournament")
+     */
+    public function removeTournament (Request $request) {
+        $id = $request->get('tournament-id');
+        $tournament = $this->entityManger->getRepository('App:TFTournament')->find($id);
+
+        if($tournament) {
+            $this->entityManger->remove($tournament);
+            $this->entityManger->flush();
+            $this->addFlash('success', 'tournament.remove.message');
+        }else{
+            $this->addFlash('warning', 'tournament.remove.message');
+        }
+
+        return $this->redirectToRoute('my_tournament');
+    }
 }
