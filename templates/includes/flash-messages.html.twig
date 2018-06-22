@@ -1,0 +1,9 @@
+<div class="row m-0 m-auto">
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }} col-sm-12">
+                {{ (message~ '.' ~label) | trans }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>

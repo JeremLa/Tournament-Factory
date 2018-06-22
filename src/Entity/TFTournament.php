@@ -61,8 +61,9 @@ class TFTournament
      */
     private $owner;
 
-    public function __construct()
+    public function __construct(string $type)
     {
+        $this->type = $type;
         $this->players = new ArrayCollection();
         $this->teams = new ArrayCollection();
     }
@@ -178,7 +179,7 @@ class TFTournament
     /**
      * @return TFUser
      */
-    public function getOwner(): TFUser
+    public function getOwner(): ?TFUser
     {
         return $this->owner;
     }

@@ -23,5 +23,12 @@ tournament:
   menu:
       title: 'Tournois'
       list: 'Mes tournois'
+  name: 'Nom'
+  max_participant: 'Nombre de participant maximum'
+  type: 'Type de tournoi'
+  owner: 'Manager du tournoi'
+  new:
+      message:
+          success: Un nouveau tournois a été créé.
 user:
   profil: 'Profil'

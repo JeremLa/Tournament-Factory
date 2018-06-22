@@ -13,6 +13,8 @@
         </div>
     </div>
 
+    {% include 'includes/flash-messages.html.twig' %}
+
     <div class="row">
         <div class="col-md-4 col-sm-12">
             <div class="card flex-md-row mb-4 box-shadow h-md-250">
@@ -33,7 +35,7 @@
                         <span class="text-success" href="#">Elimination</span>
                     </h4>
                     <p class="card-text mb-2">Choisir le type classement permettra de créer un tournoi basé sur un classement, vous pourrez choisir ...</p>
-                    <a href="{{ path('create-tournament', {type: 'elimination'}) }}">Continuer avec ce type de tournois</a>
+                    <a href="{{ path('create-tournament', {type: 'single-elimination'}) }}">Continuer avec ce type de tournois</a>
                 </div>
             </div>
         </div>
