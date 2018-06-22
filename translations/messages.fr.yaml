@@ -17,9 +17,11 @@ form:
     remember_me: 'Se souvenir de moi'
 
 tournament:
+  form:
+      title: 'Nouveau tournois : %type%'
   create: 'Nouveau tournoi'
   menu:
       title: 'Tournois'
       list: 'Mes tournois'
 user:
-  profile: 'Profile'
+  profil: 'Profil'

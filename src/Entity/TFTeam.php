@@ -28,4 +28,11 @@ class TFTeam extends AbstractTFParticipant
      */
     private $name;
 
+    /**
+     * @var TFTournament $tournaments
+     * @ORM\ManyToMany(targetEntity="App\Entity\TFTournament", inversedBy="teams")
+     */
+    protected $tournaments;
+
 }
+

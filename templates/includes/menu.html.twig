@@ -17,7 +17,7 @@
                     <a class="nav-link dropdown-toggle {{ active }}" href="" id="dropdown-tournois" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ "tournament.menu.title" | trans }}</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown-tournois">
                         <a class="dropdown-item" href="{{ path('my_tournament') }}">{{ 'tournament.menu.list' | trans }}</a>
-                        <a class="dropdown-item" href="{{ path('add_tournament') }}">{{ 'tournament.create' | trans }}</a>
+                        <a class="dropdown-item" href="{{ path('chosen-type') }}">{{ 'tournament.create' | trans }}</a>
                     </div>
                 </li>
             {% endif %}
@@ -32,7 +32,7 @@
                         <img src="{{ URL }}" alt="{{ app.user.username }}" style="height: 30px; width: 30px">
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-options">
-                        <a class="dropdown-item  {{ active }}" href="{{ path('profile') }}">{{ 'user.profile' | trans }}</a>
+                        <a class="dropdown-item  {{ active }}" href="{{ path('profile') }}">{{ 'user.profil' | trans }}</a>
                         {% if is_granted('ROLE_ADMIN') %}
                             {% set active = current_path == 'admin' ? 'active' : '' %}
                             <a class="dropdown-item {{ active }}" href="{{ path('admin') }}">Admin</a>

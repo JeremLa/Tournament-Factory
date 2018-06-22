@@ -37,6 +37,11 @@ class TFUser extends AbstractTFParticipant
      */
     private $country;
 
+    /**
+     * @var TFTournament $tournaments
+     * @ORM\ManyToMany(targetEntity="App\Entity\TFTournament", inversedBy="players")
+     */
+    protected $tournaments;
 
     /**
      * @var ArrayCollection $ownedtournaments

@@ -18,12 +18,6 @@ abstract class AbstractTFParticipant
      */
     protected $id;
 
-    /**
-     * @var TFTournament $tournaments
-     * @ORM\ManyToMany(targetEntity="App\Entity\TFTournament", inversedBy="participants")
-     */
-    protected $tournaments;
-
     public function __construct()
     {
         $this->tournaments = new ArrayCollection();

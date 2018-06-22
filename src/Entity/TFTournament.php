@@ -5,8 +5,9 @@ namespace App\Entity;
 use App\Entity\Abstraction\AbstractTFParticipant;
 use App\Services\Enum\TournamentTypeEnum;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TFTournamentRepository")
  */
@@ -21,11 +22,18 @@ class TFTournament
 
     /**
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     *
+     * @Assert\NotBlank()
+     * @Assert\NotNull()
      */
     private $name;
 
     /**
      * @ORM\Column(name="max_participant", type="integer", nullable=true)
+     *
+     * @Assert\NotBlank()
+     * @Assert\NotNull()
+     * @Assert\Range(min = 0, max=9999, minMessage="{{ 'form.error.tournament.min-participant' | trans }}")
      */
     private $maxParticipantNumber;
 
@@ -36,10 +44,16 @@ class TFTournament
     private $type;
 
     /**
-     * @var AbstractTFParticipant $participants
-     * @ORM\ManyToMany(targetEntity="App\Entity\Abstraction\AbstractTFParticipant", mappedBy="tournaments")
+     * @var TFUser[] | Collection $players
+     * @ORM\ManyToMany(targetEntity="App\Entity\TFUser", mappedBy="tournaments")
      */
-    private $participants;
+    private $players;
+
+    /**
+     * @var TFTeam[] | Collection $teams
+     * @ORM\ManyToMany(targetEntity="App\Entity\TFTeam", mappedBy="tournaments")
+     */
+    private $teams;
 
     /**
      * @var TFUser $owner
@@ -49,7 +63,8 @@ class TFTournament
 
     public function __construct()
     {
-        $this->participants = new ArrayCollection();
+        $this->players = new ArrayCollection();
+        $this->teams = new ArrayCollection();
     }
 
     /**
@@ -113,27 +128,51 @@ class TFTournament
     }
 
     /**
-     * @return AbstractTFParticipant
+     * @return AbstractTFParticipant[] | Collection
      */
-    public function getParticipants()
+    public function getPlayers()
     {
-        return $this->participants;
+        return $this->players;
     }
 
     /**
      * @param AbstractTFParticipant $participant
      */
-    public function addParticipant(AbstractTFParticipant $participant)
+    public function addPlayer(AbstractTFParticipant $participant)
     {
-        $this->participants->add($participant);
+        $this->players->add($participant);
     }
 
     /**
      * @param AbstractTFParticipant $participant
      */
-    public function removeParticipanr(AbstractTFParticipant $participant)
+    public function removePlayer(AbstractTFParticipant $participant)
     {
-        $this->participants->removeElement($participant);
+        $this->players->removeElement($participant);
+    }
+
+    /**
+     * @return AbstractTFParticipant[] | Collection
+     */
+    public function getTeams()
+    {
+        return $this->teams;
+    }
+
+    /**
+     * @param AbstractTFParticipant $participant
+     */
+    public function addTeam(AbstractTFParticipant $participant)
+    {
+        $this->teams->add($participant);
+    }
+
+    /**
+     * @param AbstractTFParticipant $participant
+     */
+    public function removeTeam(AbstractTFParticipant $participant)
+    {
+        $this->teams->removeElement($participant);
     }
 
     /**
