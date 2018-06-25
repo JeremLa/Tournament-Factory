@@ -125,11 +125,15 @@ class TournamentController extends Controller
         if ($form->isSubmitted() && $form->isValid()){
             /* @var array $submited */
             $submited = $request->get('add_participant_to_tournament');
-            $tournamentService->updateTournamentParticipant($submited, $tournament);
+            if($tournamentService->updateTournamentParticipant($submited, $tournament)){
+                $this->addFlash('success', 'tournament.update.participant');
+                return $this->redirectToRoute('my_tournament');
+            }
 
-            $this->addFlash('success', 'tournament.update.participant');
-
-            return $this->redirectToRoute('my_tournament');
+            $this->addFlash('danger', 'tournament.update.participant');
+            return $this->render('tournament/add-participant.html.twig', [
+                'form' => $form->createView()
+            ]);
         }
 
         return $this->render('tournament/add-participant.html.twig', [
