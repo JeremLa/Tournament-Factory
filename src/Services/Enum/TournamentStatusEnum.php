@@ -3,16 +3,21 @@
 namespace App\Services\Enum;
 
 
-abstract class TournamentTypeEnum
+abstract class TournamentStatusEnum
 {
-    const TYPE_SINGLE = "single-elimination";
 
+    const STATUS_SETUP = "setup";
+    const STATUS_STARTED = "started";
+    const STATUS_FINISHED = "finished";
+    const STATUS_CANCELED = "canceled";
 
     /* @var array  $typeName */
     protected static $typeName = [
-        self::TYPE_SINGLE    => 'Elimination directe'
+        self::STATUS_SETUP    => 'En préparation',
+        self::STATUS_STARTED   => 'En cours',
+        self::STATUS_FINISHED    => 'Terminé',
+        self::STATUS_CANCELED    => 'Annulé',
     ];
-
 
     /**
      * @param  string $typeShortName
@@ -34,7 +39,10 @@ abstract class TournamentTypeEnum
     public static function getAvailableTypes()
     {
         return [
-            self::TYPE_SINGLE
+            self::STATUS_SETUP,
+            self::STATUS_STARTED,
+            self::STATUS_FINISHED,
+            self::STATUS_CANCELED
         ];
     }
 }

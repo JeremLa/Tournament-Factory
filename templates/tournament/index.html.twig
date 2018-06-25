@@ -10,6 +10,7 @@
     <table class="table table-hover">
         <thead>
         <tr>
+            <th>{{ 'tournament.status' | trans }}</th>
             <th>{{ 'tournament.name' | trans }}</th>
             <th>{{ 'tournament.type' | trans }}</th>
             <th>{{ 'tournament.owner' | trans }}</th>
@@ -20,8 +21,12 @@
         <tbody>
             {% for tournament in tournaments %}
                 <tr>
+                    {% if tournament.status == 'setup' %}
+                        <td><i class="fa fa-cogs"></i></td>
+                    {% endif %}
                     <td>{{ tournament.name }}</td>
-                    <td>{{ tournament.type | typeEnum }}</td>
+                    {#<td>{{ tournament.status | transEnum('status') }}</td>#}
+                    <td>{{ tournament.type | transEnum('type') }}</td>
                     {% if tournament.owner.nicknames | length > 0 %}
                         <td>{{ tournament.owner.nicknames[0] }}</td>
                     {% else %}
@@ -36,6 +41,7 @@
                            <a class="btn btn-info button-icon" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
                             <i class="fa fa-user-plus"></i>
                            </a>
+                            <button type="button" class="btn btn-success button-icon"><i class="fa fa-sliders-h"></i> </button>
                         {% endif %}
                     </td>
                 </tr>

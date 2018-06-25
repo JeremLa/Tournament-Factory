@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Abstraction\AbstractTFParticipant;
+use App\Services\Enum\TournamentStatusEnum;
 use App\Services\Enum\TournamentTypeEnum;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -44,6 +45,12 @@ class TFTournament
     private $type;
 
     /**
+     * @var string
+     * @ORM\Column(name="status", type="string", length=255, nullable=false)
+     */
+    private $status;
+
+    /**
      * @var TFUser[] | Collection $players
      * @ORM\ManyToMany(targetEntity="App\Entity\TFUser", mappedBy="tournaments")
      */
@@ -61,11 +68,14 @@ class TFTournament
      */
     private $owner;
 
+
+
     public function __construct(string $type)
     {
         $this->type = $type;
         $this->players = new ArrayCollection();
         $this->teams = new ArrayCollection();
+        $this->status = TournamentStatusEnum::STATUS_SETUP;
     }
 
     /**
@@ -126,6 +136,22 @@ class TFTournament
         }
 
         $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
     }
 
     /**
