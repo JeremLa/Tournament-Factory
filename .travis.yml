@@ -10,6 +10,8 @@ services:
 before_script:
   - php bin/console --env=test cache:warmup
   - php bin/console doctrine:migrations:migrate --no-interaction
+script:
+  - php bin/phpunit --coverage-clover=./build/logs/clover.xml
 before_install:
   - chmod +x ./deploy.sh
   - sudo apt-get install sshpass
