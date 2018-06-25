@@ -33,11 +33,11 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
         if [ "$hasComposer" == "true" ]
         then
             echo "ssh request with composer install."
-            sshpass -p $SSH_PASS ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; sudo -n setfacl -R -m u:travis-deploy:rwX ./; composer install --no-dev --optimize-autoloader; php bin/console doctrine:migrations:migrate; sudo -n setfacl -R -m u:travis-deploy:rwX ./; php bin/console cache:clear ;sudo -n setfacl -R -m u:www-data:rwX ./'
+            sshpass -p $SSH_PASS ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; sudo -n setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX var/cache var/log; composer install --no-dev --optimize-autoloader; php bin/console doctrine:migrations:migrate; sudo -n setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX var/cache var/log; php bin/console cache:clear ;sudo -n setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX var/cache var/log'
 
         else
             echo "ssh request without composer install."
-            sshpass -p $SSH_PASS ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; sudo -n setfacl -R -m u:travis-deploy:rwX ./; php bin/console doctrine:migrations:migrate; sudo -n setfacl -R -m u:travis-deploy:rwX ./; php bin/console cache:clear ;sudo -n setfacl -R -m u:www-data:rwX ./'
+            sshpass -p $SSH_PASS ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'cd /var/www/Tournament-Factory; git pull origin master; sudo -n setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX var/cache var/log; php bin/console doctrine:migrations:migrate; php bin/console cache:clear ;sudo -n setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX var/cache var/log'
         fi
     fi
 fi

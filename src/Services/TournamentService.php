@@ -26,6 +26,10 @@ class TournamentService
             $players_id = $submited['players'];
         }
 
+        if (count($players_id) > $tournament->getMaxParticipantNumber()){
+            return false;
+        }
+
         /* @var TFUserRepository $repo */
         $repo = $this->entityManager->getRepository(TFUser::class);
         $players = $repo->findUsersByArrayId($players_id);
@@ -47,5 +51,6 @@ class TournamentService
             }
         }
         $this->entityManager->flush();
+        return true;
     }
 }
