@@ -5,7 +5,7 @@
 {% block body %}
 
 <div class="container mt-5">
-    <h1>{{ 'tournament.menu.list' | trans }}</h1>
+    <h1>Tournament list</h1>
     {% include 'includes/flash-messages.html.twig' %}
     <table class="table table-bordered">
         <thead>
@@ -30,7 +30,12 @@
                     {% endif %}
                     <td>
                         {% if app.user and app.user.tfuser == tournament.owner %}
-                        <a href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">{{ 'actions.addParticipant' | trans }}</a>
+                            <button type="button" class="btn btn-danger button-icon" data-toggle="modal" data-target="#remove-tournament" data-id="{{ tournament.id }}">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                           <a class="btn btn-info button-icon" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
+                            <i class="fa fa-user-plus"></i>
+                           </a>
                         {% endif %}
                     </td>
                 </tr>
@@ -38,4 +43,18 @@
         </tbody>
     </table>
 </div>
+
+    {% include 'includes/modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        const URL = '{{ path('remove_tournament') }}';
+        $(document).ready(() => {
+            $('#remove-tournament').on('shown.bs.modal', function (e) {
+                const tournament_Id = $(e.relatedTarget).attr('data-id');
+                $('#remove-tournament-validate').attr('href', URL + '?tournament-id=' + tournament_Id);
+            })
+        })
+    </script>
 {% endblock %}

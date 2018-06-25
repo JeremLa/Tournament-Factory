@@ -17,23 +17,27 @@ form:
     remember_me: 'Se souvenir de moi'
 
 tournament:
-    form:
-        title: 'Nouveau tournois : %type%'
-    create: 'Nouveau tournoi'
-    menu:
-        title: 'Tournois'
-        list: 'Mes tournois'
-    name: 'Nom'
-    max_participant: 'Participant maximum'
-    type: 'Type de tournoi'
-    owner: 'Manager du tournoi'
-    action: 'Action(s)'
-    new:
-        message:
-            success: Un nouveau tournois a été créé.
-    update:
-        participant:
-            success: 'Les participants ont été mis à jours.'
+  form:
+      title: 'Nouveau tournois : %type%'
+  create: 'Nouveau tournoi'
+  menu:
+      title: 'Tournois'
+      list: 'Mes tournois'
+  name: 'Nom'
+  max_participant: 'Nombre de participant maximum'
+  type: 'Type de tournoi'
+  owner: 'Manager du tournoi'
+  action: 'Actions'
+  new:
+      message:
+          success: Un nouveau tournois a été créé.
+  update:
+          participant:
+              success: 'Les participants ont été mis à jours.'
+  remove:
+      message:
+          success: Le tournois a été supprimé.
+          warning: Le tournois n'existe pas.
 user:
     profil: 'Profil'
 
