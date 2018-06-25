@@ -10,10 +10,6 @@ services:
 before_script:
   - php bin/console --env=test cache:warmup
   - php bin/console doctrine:migrations:migrate --no-interaction
-script:
-  - cat codecov.yml | curl --data-binary @- https://codecov.io/validate
-  - php bin/phpunit --coverage-clover=codecov.xml
-  - bash <(curl -s https://codecov.io/bash)
 before_install:
   - chmod +x ./deploy.sh
   - sudo apt-get install sshpass
@@ -21,4 +17,5 @@ before_install:
 install:
   - composer install
 after_success:
+  - php vendor/bin/php-coveralls -v
   - ./deploy.sh
