@@ -28,29 +28,5 @@ abstract class AbstractTFParticipant
         return $this->id;
     }
 
-    /**
-     * @return TFTournament
-     */
-    public function getTournaments(): TFTournament
-    {
-        return $this->tournaments;
-    }
-
-    /**
-     * @param TFTournament $tournament
-     */
-    public function addTournament(AbstractTFParticipant $tournament)
-    {
-        $this->tournaments->add($tournament);
-    }
-
-    /**
-     * @param TFTournament $tournament
-     */
-    public function removeTournament(AbstractTFParticipant $tournament)
-    {
-        $this->tournaments->removeElement($tournament);
-    }
-
 
 }

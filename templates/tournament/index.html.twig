@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello {{ controller_name }}!{% endblock %}
+{% block title %}{{ 'tournament.menu.list' | trans }}{% endblock %}
 
 {% block body %}
 
 <div class="container mt-5">
-    <h1>Tournament list</h1>
+    <h1>{{ 'tournament.menu.list' | trans }}</h1>
+    {% include 'includes/flash-messages.html.twig' %}
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -13,6 +14,7 @@
             <th>{{ 'tournament.max_participant' | trans }}</th>
             <th>{{ 'tournament.type' | trans }}</th>
             <th>{{ 'tournament.owner' | trans }}</th>
+            <th>{{ 'tournament.action' | trans }}</th>
         </tr>
         </thead>
         <tbody>
@@ -26,6 +28,11 @@
                     {% else %}
                         <td>N/C</td>
                     {% endif %}
+                    <td>
+                        {% if app.user and app.user.tfuser == tournament.owner %}
+                        <a href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">{{ 'actions.addParticipant' | trans }}</a>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
