@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\TFTournament;
+use App\Services\Enum\TournamentTypeEnum;
 use App\Entity\TFUser;
 use App\Repository\TFTournamentRepository;
 use App\Repository\TFUserRepository;
@@ -14,13 +15,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\VarDumper\VarDumper;
 
 class TournamentController extends Controller
 {
-    /**
-     * @var EntityManagerInterface $entityManager
-     */
+    /* @var EntityManagerInterface $entityManager */
     private $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -55,6 +53,10 @@ class TournamentController extends Controller
      * @Route("/tournament/create/{type}", name="create-tournament", requirements={"\s"})
      */
     public function createTournament (Request $request, string $type) {
+        if(!TournamentTypeEnum::getTypeName($type)){
+            throw new NotFoundHttpException('Ce type de tournoi n\'existe pas');
+        }
+
         $tournament = new TFTournament($type);
         $form = $this->createForm('App\Form\Type\TFTournamentType', $tournament);
 
@@ -81,16 +83,17 @@ class TournamentController extends Controller
      * @Route("/tournament/remove", name="remove_tournament")
      */
     public function removeTournament (Request $request) {
-        $id = $request->get('tournament-id');
-        $tournament = $this->entityManager->getRepository('App:TFTournament')->find($id);
+        $index = $request->get('tournament-id');
+        $tournament = $this->entityManager->getRepository('App:TFTournament')->find($index);
 
         if($tournament) {
             $this->entityManager->remove($tournament);
             $this->entityManager->flush();
             $this->addFlash('success', 'tournament.remove.message');
-        }else{
-            $this->addFlash('warning', 'tournament.remove.message');
+            return $this->redirectToRoute('my_tournament');
         }
+
+        $this->addFlash('warning', 'tournament.remove.message');
 
         return $this->redirectToRoute('my_tournament');
     }

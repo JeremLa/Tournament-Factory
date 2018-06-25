@@ -24,7 +24,7 @@ tournament:
       title: 'Tournois'
       list: 'Mes tournois'
   name: 'Nom'
-  max_participant: 'Nombre de participant maximum'
+  nb_participant: 'Participants'
   type: 'Type de tournoi'
   owner: 'Manager du tournoi'
   action: 'Actions'
