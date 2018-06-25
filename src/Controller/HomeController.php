@@ -42,7 +42,6 @@ class HomeController extends Controller
      */
     public function signUp(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder)
     {
-
         $user = new User();
 
         $form = $this->createForm('App\Form\Type\SignUpType', $user);

@@ -1,20 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello {{ controller_name }}!{% endblock %}
+{% block title %}{{ 'tournament.menu.list' | trans }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'src/Controller/TournamentController.php'|file_link(0) }}">src/Controller/TournamentController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'templates/tournament/index.html.twig'|file_link(0) }}">templates/tournament/index.html.twig</a></code></li>
-    </ul>
+<div class="container mt-5">
+    <h1>Tournament list</h1>
+    {% include 'includes/flash-messages.html.twig' %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>{{ 'tournament.name' | trans }}</th>
+            <th>{{ 'tournament.type' | trans }}</th>
+            <th>{{ 'tournament.owner' | trans }}</th>
+            <th>{{ 'tournament.nb_participant' | trans }}</th>
+            <th>{{ 'tournament.action' | trans }}</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for tournament in tournaments %}
+                <tr>
+                    <td>{{ tournament.name }}</td>
+                    <td>{{ tournament.type | typeEnum }}</td>
+                    {% if tournament.owner.nicknames | length > 0 %}
+                        <td>{{ tournament.owner.nicknames[0] }}</td>
+                    {% else %}
+                        <td>N/C</td>
+                    {% endif %}
+                    <td>{{ tournament.players | length ~ '/' ~ tournament.maxParticipantNumber }}</td>
+                    <td>
+                        {% if app.user and app.user.tfuser == tournament.owner %}
+                            <button type="button" class="btn btn-danger button-icon" data-toggle="modal" data-target="#remove-tournament" data-id="{{ tournament.id }}">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                           <a class="btn btn-info button-icon" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
+                            <i class="fa fa-user-plus"></i>
+                           </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
+
+    {% include 'includes/modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        const URL = '{{ path('remove_tournament') }}';
+        $(document).ready(() => {
+            $('#remove-tournament').on('shown.bs.modal', function (e) {
+                const tournament_Id = $(e.relatedTarget).attr('data-id');
+                $('#remove-tournament-validate').attr('href', URL + '?tournament-id=' + tournament_Id);
+            })
+        })
+    </script>
 {% endblock %}

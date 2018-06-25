@@ -19,32 +19,12 @@ class TFUserRepository extends ServiceEntityRepository
         parent::__construct($registry, TFUser::class);
     }
 
-//    /**
-//     * @return TFUser[] Returns an array of TFUser objects
-//     */
-    /*
-    public function findByExampleField($value)
+    public function findUsersByArrayId(array $arrayId)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->createQueryBuilder('TFU')
+                ->where('TFU.id IN (:array)')
+                ->setParameter('array',$arrayId)
+                ->getQuery()
+                ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?TFUser
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

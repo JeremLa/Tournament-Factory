@@ -60,7 +60,9 @@ class TournamentControllerTest extends  WebTestCase
     public function urlProvider()
     {
         yield ['/tournament'];
-        yield ['/tournament/new'];
+        yield ['/tournament/create'];
+        yield ['/tournament/remove'];
+        yield ['/tournament/{tournamentId}/addParticipant'];
     }
 
 

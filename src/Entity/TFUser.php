@@ -2,19 +2,16 @@
 
 namespace App\Entity;
 
+use App\Entity\Abstraction\AbstractTFParticipant;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TFUserRepository")
  */
-class TFUser
+class TFUser extends AbstractTFParticipant
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true, unique=true)
@@ -41,14 +38,24 @@ class TFUser
      */
     private $country;
 
+    /**
+     * @var Collection $tournaments
+     * @ORM\ManyToMany(targetEntity="App\Entity\TFTournament", inversedBy="players")
+     */
+    protected $tournaments;
+
+    /**
+     * @var Collection $ownedtournaments
+     * @ORM\OneToMany(targetEntity="App\Entity\TFTournament", mappedBy="owner")
+     */
+    private $ownedtournaments;
+
     public function __construct()
     {
+        parent::__construct();
         $this->nicknames = [];
-    }
-
-    public function getId() : int
-    {
-        return $this->id;
+        $this->ownedtournaments = new ArrayCollection;
+        $this->tournaments = new ArrayCollection;
     }
 
     public function getEmail(): ?string
@@ -143,4 +150,59 @@ class TFUser
     {
         $this->country = $country;
     }
+
+    /**
+     * @return Collection
+     */
+    public function getOwnedtournaments(): Collection
+    {
+        return $this->ownedtournaments;
+    }
+
+    /**
+     * @param TFTournament $TFTournament
+     */
+    public function addOwnedtournaments(TFTournament $TFTournament): void
+    {
+        $this->ownedtournaments->add($TFTournament);
+    }
+
+    /**
+     * @param TFTournament $TFTournament
+     */
+    public function removeOwnedtournaments(TFTournament $TFTournament): void
+    {
+        $this->ownedtournaments->removeElement($TFTournament);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTournaments(): Collection
+    {
+        return $this->tournaments;
+    }
+
+    /**
+     * @param TFTournament $TFTournament
+     */
+    public function addTournaments(TFTournament $TFTournament): void
+    {
+        $this->tournaments->add($TFTournament);
+    }
+
+    /**
+     * @param TFTournament $TFTournament
+     */
+    public function removeTournament(TFTournament $TFTournament): void
+    {
+        $this->tournaments->removeElement($TFTournament);
+    }
+
+
+    public function __toString()
+    {
+        return $this->getId() . '/' . $this->getEmail();
+    }
+
 }

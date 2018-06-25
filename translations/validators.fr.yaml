@@ -1,3 +1,6 @@
 form:
     password:
         no_match: Les deux mots de passe doivent être identique
+    error:
+        tournament:
+            min-participant: Vous ne pouvez pas avoir moins de 0 joueur.
