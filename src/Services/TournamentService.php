@@ -21,10 +21,9 @@ class TournamentService
 
     public function updateTournamentParticipant(array $submited, TFTournament $tournament)
     {
+        $players_id = [];
         if (array_key_exists('players', $submited)) {
             $players_id = $submited['players'];
-        } else {
-            $players_id = [];
         }
 
         /* @var TFUserRepository $repo */
