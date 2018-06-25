@@ -129,7 +129,7 @@ class TFTournament
     }
 
     /**
-     * @return AbstractTFParticipant[] | Collection
+     * @return TFUser[] | Collection
      */
     public function getPlayers()
     {
@@ -137,23 +137,23 @@ class TFTournament
     }
 
     /**
-     * @param AbstractTFParticipant $participant
+     * @param TFUser $participant
      */
-    public function addPlayer(AbstractTFParticipant $participant)
+    public function addPlayer(TFUser $participant)
     {
         $this->players->add($participant);
     }
 
     /**
-     * @param AbstractTFParticipant $participant
+     * @param TFUser $participant
      */
-    public function removePlayer(AbstractTFParticipant $participant)
+    public function removePlayer(TFUser $participant)
     {
         $this->players->removeElement($participant);
     }
 
     /**
-     * @return AbstractTFParticipant[] | Collection
+     * @return TFTeam[] | Collection
      */
     public function getTeams()
     {
@@ -161,17 +161,17 @@ class TFTournament
     }
 
     /**
-     * @param AbstractTFParticipant $participant
+     * @param TFTeam $participant
      */
-    public function addTeam(AbstractTFParticipant $participant)
+    public function addTeam(TFTeam $participant)
     {
         $this->teams->add($participant);
     }
 
     /**
-     * @param AbstractTFParticipant $participant
+     * @param TFTeam $participant
      */
-    public function removeTeam(AbstractTFParticipant $participant)
+    public function removeTeam(TFTeam $participant)
     {
         $this->teams->removeElement($participant);
     }

@@ -18,12 +18,12 @@ abstract class TournamentTypeEnum
 
     /**
      * @param  string $typeShortName
-     * @return string
+     * @return string|boolean
      */
     public static function getTypeName($typeShortName)
     {
         if (!isset(static::$typeName[$typeShortName])) {
-            return "Unknown type ($typeShortName)";
+            return false;
         }
 
         return static::$typeName[$typeShortName];

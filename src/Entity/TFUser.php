@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Abstraction\AbstractTFParticipant;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,13 +39,13 @@ class TFUser extends AbstractTFParticipant
     private $country;
 
     /**
-     * @var TFTournament $tournaments
+     * @var Collection $tournaments
      * @ORM\ManyToMany(targetEntity="App\Entity\TFTournament", inversedBy="players")
      */
     protected $tournaments;
 
     /**
-     * @var ArrayCollection $ownedtournaments
+     * @var Collection $ownedtournaments
      * @ORM\OneToMany(targetEntity="App\Entity\TFTournament", mappedBy="owner")
      */
     private $ownedtournaments;
@@ -54,6 +55,7 @@ class TFUser extends AbstractTFParticipant
         parent::__construct();
         $this->nicknames = [];
         $this->ownedtournaments = new ArrayCollection;
+        $this->tournaments = new ArrayCollection;
     }
 
     public function getEmail(): ?string
@@ -150,9 +152,9 @@ class TFUser extends AbstractTFParticipant
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getOwnedtournaments(): ArrayCollection
+    public function getOwnedtournaments(): Collection
     {
         return $this->ownedtournaments;
     }
@@ -172,4 +174,35 @@ class TFUser extends AbstractTFParticipant
     {
         $this->ownedtournaments->removeElement($TFTournament);
     }
+
+    /**
+     * @return Collection
+     */
+    public function getTournaments(): Collection
+    {
+        return $this->tournaments;
+    }
+
+    /**
+     * @param TFTournament $TFTournament
+     */
+    public function addTournaments(TFTournament $TFTournament): void
+    {
+        $this->tournaments->add($TFTournament);
+    }
+
+    /**
+     * @param TFTournament $TFTournament
+     */
+    public function removeTournaments(TFTournament $TFTournament): void
+    {
+        $this->tournaments->removeElement($TFTournament);
+    }
+
+
+    public function __toString()
+    {
+        return $this->getId() . '/' . $this->getEmail();
+    }
+
 }

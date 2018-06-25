@@ -27,13 +27,22 @@ tournament:
   max_participant: 'Nombre de participant maximum'
   type: 'Type de tournoi'
   owner: 'Manager du tournoi'
-  option: 'Outils'
+  action: 'Actions'
   new:
       message:
           success: Un nouveau tournois a été créé.
+  update:
+          participant:
+              success: 'Les participants ont été mis à jours.'
   remove:
       message:
           success: Le tournois a été supprimé.
           warning: Le tournois n'existe pas.
 user:
-  profil: 'Profil'
+    profil: 'Profil'
+
+actions:
+    edit: 'Modifier'
+    addParticipant: 'Rajouter des participants'
+    detail: 'Details'
+    delete: 'Supprimer'
