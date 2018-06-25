@@ -61,6 +61,8 @@ class TournamentControllerTest extends  WebTestCase
     {
         yield ['/tournament'];
         yield ['/tournament/create'];
+        yield ['/tournament/remove'];
+        yield ['/tournament/{tournamentId}/addParticipant'];
     }
 
 

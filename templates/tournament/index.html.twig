@@ -7,13 +7,13 @@
 <div class="container mt-5">
     <h1>Tournament list</h1>
     {% include 'includes/flash-messages.html.twig' %}
-    <table class="table table-bordered">
+    <table class="table table-hover">
         <thead>
         <tr>
             <th>{{ 'tournament.name' | trans }}</th>
-            <th>{{ 'tournament.max_participant' | trans }}</th>
             <th>{{ 'tournament.type' | trans }}</th>
             <th>{{ 'tournament.owner' | trans }}</th>
+            <th>{{ 'tournament.nb_participant' | trans }}</th>
             <th>{{ 'tournament.action' | trans }}</th>
         </tr>
         </thead>
@@ -21,13 +21,13 @@
             {% for tournament in tournaments %}
                 <tr>
                     <td>{{ tournament.name }}</td>
-                    <td>{{ tournament.maxParticipantNumber }}</td>
                     <td>{{ tournament.type | typeEnum }}</td>
                     {% if tournament.owner.nicknames | length > 0 %}
                         <td>{{ tournament.owner.nicknames[0] }}</td>
                     {% else %}
                         <td>N/C</td>
                     {% endif %}
+                    <td>{{ tournament.players | length ~ '/' ~ tournament.maxParticipantNumber }}</td>
                     <td>
                         {% if app.user and app.user.tfuser == tournament.owner %}
                             <button type="button" class="btn btn-danger button-icon" data-toggle="modal" data-target="#remove-tournament" data-id="{{ tournament.id }}">

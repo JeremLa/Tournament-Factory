@@ -194,7 +194,7 @@ class TFUser extends AbstractTFParticipant
     /**
      * @param TFTournament $TFTournament
      */
-    public function removeTournaments(TFTournament $TFTournament): void
+    public function removeTournament(TFTournament $TFTournament): void
     {
         $this->tournaments->removeElement($TFTournament);
     }
