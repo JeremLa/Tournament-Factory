@@ -13,8 +13,9 @@ class TournamentRulesServices
 {
     /* @var Session $session */
     private $session;
-    const MESSAGE_TYPE_WARNING = 'warning';
-    const MIN_PARTICIPANT_REQUIRED = 2;
+    private const MESSAGE_TYPE_WARNING = 'warning';
+    private const MIN_PARTICIPANT_REQUIRED = 2;
+    private const MESSAGE_STATUS_DENIED = 'tournament.status.denied';
 
     public function __construct(SessionInterface $session)
     {
@@ -27,12 +28,12 @@ class TournamentRulesServices
      * @param TFTournament $TFTournament
      * @return bool
      */
-    public function canBeDelete (TFTournament $TFTournament) : bool
+    public function canBeDeleted (TFTournament $TFTournament) : bool
     {
         $result = $this->isInSetup($TFTournament);
 
         if (!$result) {
-            $this->addFlashMessage('tournament.status.denied');
+            $this->addFlashMessage(self::MESSAGE_STATUS_DENIED);
         }
 
         return $result;
@@ -50,7 +51,7 @@ class TournamentRulesServices
         $isParticipantMaxed = $this->isParticipantMaxed($TFTournament);
 
         if (!$isInSetup) {
-            $this->addFlashMessage('tournament.status.denied');
+            $this->addFlashMessage(self::MESSAGE_STATUS_DENIED);
         }
 
         if ($isParticipantMaxed) {
@@ -60,14 +61,23 @@ class TournamentRulesServices
         return  $isInSetup && !$isParticipantMaxed;
     }
 
-    public function canBeStarted (TFTournament $TFTournament, TFUser $user)
+    /**
+     * Return if Tournament can be started or not, he need to be in status "in setup", to have more or equals
+     * min participant required and the logged user need to be owner. Flash message are added to bag for each
+     * false test.
+     *
+     * @param TFTournament $TFTournament
+     * @param TFUser $user
+     * @return bool
+     */
+    public function canBeStarted (TFTournament $TFTournament, TFUser $user) : bool
     {
         $isInSetup = $this->isInSetup($TFTournament);
         $hasMinParticipant = $this->hasMinParticipantRequired($TFTournament);
         $isOwner = $this->isOwner($TFTournament, $user);
 
         if (!$isInSetup) {
-            $this->addFlashMessage( 'tournament.status.denied');
+            $this->addFlashMessage( self::MESSAGE_STATUS_DENIED);
         }
 
         if (!$hasMinParticipant) {
@@ -82,6 +92,31 @@ class TournamentRulesServices
     }
 
     /**
+     * Check if a tournament is cancellable. It is possible if logged user is owner and
+     * tournament status is "started". For each false test, a flash message is push in
+     * the bag
+     *
+     * @param TFTournament $TFTournament
+     * @param TFUser $user
+     * @return bool
+     */
+    public function canBeCancelled (TFTournament $TFTournament, TFUser $user) : bool
+    {
+        $isStarted = $this->isStarted($TFTournament);
+        $isOwner = $this->isOwner($TFTournament, $user);
+
+        if (!$isStarted) {
+            $this->addFlashMessage( self::MESSAGE_STATUS_DENIED);
+        }
+
+        if (!$isOwner) {
+            $this->addFlashMessage( 'tournament.owner.denied');
+        }
+
+        return $isStarted && $isOwner;
+    }
+
+    /**
      * Next methods are here to expose individual test
      */
 
@@ -91,7 +126,7 @@ class TournamentRulesServices
      */
     public function isParticipantMaxed (TFTournament $TFTournament) : bool
     {
-        return count($TFTournament->getPlayers()) >= $TFTournament->getMaxParticipantNumber();
+        return \count($TFTournament->getPlayers()) >= $TFTournament->getMaxParticipantNumber();
     }
 
     /**
@@ -100,7 +135,12 @@ class TournamentRulesServices
      */
     public function isInSetup (TFTournament $TFTournament) : bool
     {
-        return $TFTournament->getStatus() == TournamentStatusEnum::STATUS_SETUP;
+        return $TFTournament->getStatus() === TournamentStatusEnum::STATUS_SETUP;
+    }
+
+    public function isStarted (TFTournament $TFTournament) : bool
+    {
+        return $TFTournament->getStatus() === TournamentStatusEnum::STATUS_STARTED;
     }
 
     /**
@@ -120,7 +160,7 @@ class TournamentRulesServices
      */
     public function isUpdatableNBMax (TFTournament $TFTournament, int $newMaxParticipant) : bool
     {
-        return count($TFTournament->getPlayers()) <= $newMaxParticipant;
+        return \count($TFTournament->getPlayers()) <= $newMaxParticipant;
     }
 
     /**
@@ -129,7 +169,9 @@ class TournamentRulesServices
      */
     public function hasMinParticipantRequired (TFTournament $TFTournament) : bool
     {
-        return count($TFTournament->getPlayers()) >= self::MIN_PARTICIPANT_REQUIRED;
+        $min = self::MIN_PARTICIPANT_REQUIRED > $TFTournament->getMaxParticipantNumber() ? self::MIN_PARTICIPANT_REQUIRED : $TFTournament->getMaxParticipantNumber();
+
+        return \count($TFTournament->getPlayers()) >= $min;
     }
 
     /**
@@ -140,7 +182,7 @@ class TournamentRulesServices
      * @param string $state
      * @param string $message
      */
-    private function addFlashMessage (string $message, string $state = self::MESSAGE_TYPE_WARNING)
+    private function addFlashMessage (string $message, string $state = self::MESSAGE_TYPE_WARNING) : void
     {
         $this->session->getFlashBag()->add($state, $message);
     }

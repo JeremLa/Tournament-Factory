@@ -93,7 +93,7 @@ class TournamentController extends Controller
 
 
         if($tournament){
-            if(!$rulesServices->canBeDelete($tournament)) {
+            if(!$rulesServices->canBeDeleted($tournament)) {
                 return $this->redirectToRoute($redirectRoute);
             }
 
