@@ -14,3 +14,7 @@ a.navbar-brand > small {
     border-radius: 100%;
     text-align: center;
 }
+
+.text-align-center {
+    text-align: center;
+}

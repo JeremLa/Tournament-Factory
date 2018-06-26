@@ -14,6 +14,7 @@ class TournamentEnumExtension extends AbstractExtension
     {
         return [
             new TwigFilter('transEnum', [$this, 'transEnumFilter'], ['is_safe' => ['html']]),
+            new TwigFilter('transClass', [$this, 'transClassFilter'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -38,6 +39,15 @@ class TournamentEnumExtension extends AbstractExtension
                 break;
         }
         return $return;
+    }
+
+    public function transClassFilter($value){
+        $class = [  TournamentStatusEnum::STATUS_SETUP => 'fa fa-cogs',
+                    TournamentStatusEnum::STATUS_STARTED => 'fa fa-play-circle',
+                    TournamentStatusEnum::STATUS_FINISHED => 'fa fa-flag-checkered',
+                    TournamentStatusEnum::STATUS_CANCELED => 'fa fa-ban'
+            ];
+        return $class[$value];
     }
 
 }
