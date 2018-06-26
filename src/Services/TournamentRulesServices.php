@@ -27,7 +27,7 @@ class TournamentRulesServices
      * @param TFTournament $TFTournament
      * @return bool
      */
-    public function canBeDelete (TFTournament $TFTournament) : bool
+    public function canBeDeleted (TFTournament $TFTournament) : bool
     {
         $result = $this->isInSetup($TFTournament);
 
@@ -60,7 +60,16 @@ class TournamentRulesServices
         return  $isInSetup && !$isParticipantMaxed;
     }
 
-    public function canBeStarted (TFTournament $TFTournament, TFUser $user)
+    /**
+     * Return if Tournament can be started or not, he need to be in status "in setup", to have more or equals
+     * min participant required and the logged user need to be owner. Flash message are added to bag for each
+     * false test.
+     *
+     * @param TFTournament $TFTournament
+     * @param TFUser $user
+     * @return bool
+     */
+    public function canBeStarted (TFTournament $TFTournament, TFUser $user) : bool
     {
         $isInSetup = $this->isInSetup($TFTournament);
         $hasMinParticipant = $this->hasMinParticipantRequired($TFTournament);
@@ -79,6 +88,31 @@ class TournamentRulesServices
         }
 
         return $isInSetup && $hasMinParticipant && $isOwner;
+    }
+
+    /**
+     * Check if a tournament is cancellable. It is possible if logged user is owner and
+     * tournament status is "started". For each false test, a flash message is push in
+     * the bag
+     *
+     * @param TFTournament $TFTournament
+     * @param TFUser $user
+     * @return bool
+     */
+    public function canBeCancelled (TFTournament $TFTournament, TFUser $user) : bool
+    {
+        $isStarted = $this->isStarted($TFTournament);
+        $isOwner = $this->isOwner($TFTournament, $user);
+
+        if (!$isStarted) {
+            $this->addFlashMessage( 'tournament.status.denied');
+        }
+
+        if (!$isOwner) {
+            $this->addFlashMessage( 'tournament.owner.denied');
+        }
+
+        return $isStarted && $isOwner;
     }
 
     /**
@@ -101,6 +135,11 @@ class TournamentRulesServices
     public function isInSetup (TFTournament $TFTournament) : bool
     {
         return $TFTournament->getType() == TournamentStatusEnum::STATUS_SETUP;
+    }
+
+    public function isStarted (TFTournament $TFTournament) : bool
+    {
+        return $TFTournament->getType() == TournamentStatusEnum::STATUS_STARTED;
     }
 
     /**
