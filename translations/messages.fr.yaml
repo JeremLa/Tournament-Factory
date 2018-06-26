@@ -17,29 +17,42 @@ form:
     remember_me: 'Se souvenir de moi'
 
 tournament:
-  form:
-      title: 'Nouveau tournois : %type%'
-  create: 'Nouveau tournoi'
-  menu:
-      title: 'Tournois'
-      list: 'Mes tournois'
-  name: 'Nom'
-  nb_participant: 'Participants'
-  type: 'Type'
-  status: 'Statut'
-  owner: 'Manager'
-  action: 'Actions'
-  new:
-      message:
-          success: Un nouveau tournois a été créé.
-  update:
-          participant:
-              success: 'Les participants ont été mis à jours.'
-              danger: 'Vous ne pouvez pas choisir plus de participant que le maximum possible pour ce tournoi'
-  remove:
-      message:
-          success: Le tournois a été supprimé.
-          warning: Le tournois n'existe pas.
+    form:
+        title: 'Nouveau tournois : %type%'
+    create: 'Nouveau tournoi'
+    menu:
+        title: 'Tournois'
+        list: 'Mes tournois'
+    name: 'Nom'
+    nb_participant: 'Participants'
+    type: 'Type'
+    status:
+        title: 'Statut'
+        denied:
+            warning: L'état du tournois ne permet pas sa suppression
+    owner:
+        title: 'Manager'
+        denied:
+            warning: Vous devez être propriétaire du tournois pour réaliser cette action
+    action: 'Actions'
+    new:
+        message:
+            success: Un nouveau tournois a été créé.
+    participant:
+        update:
+            success: 'Les participants ont été mis à jours.'
+            danger: 'Vous ne pouvez pas choisir plus de participant que le maximum possible pour ce tournoi'
+        add:
+            maxed:
+                warning: Le nombre maximum de participant a déjà été atteind pour ce tournois
+            denied:
+                warning: L'état du tournois ne permet pas sa suppression
+        min:
+            warning: Vous n'avez pas le nombre minimum de participant dans ce tournois.
+    remove:
+        message:
+            success: Le tournois a été supprimé
+            warning: Le tournois n'existe pas
 user:
     profil: 'Profil'
 

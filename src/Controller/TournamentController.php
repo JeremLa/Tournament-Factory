@@ -7,6 +7,7 @@ use App\Services\Enum\TournamentTypeEnum;
 use App\Entity\TFUser;
 use App\Repository\TFTournamentRepository;
 use App\Repository\TFUserRepository;
+use App\Services\TournamentRulesServices;
 use App\Services\TournamentService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 
 class TournamentController extends Controller
 {
@@ -29,7 +31,7 @@ class TournamentController extends Controller
     /**
      * @Route("/tournament", name="my_tournament")
      */
-    public function index()
+    public function index(TournamentRulesServices $rulesServices)
     {
         /**
          * @var TFTournament[] $tournaments
@@ -82,20 +84,26 @@ class TournamentController extends Controller
     /**
      * @Route("/tournament/remove", name="remove_tournament")
      */
-    public function removeTournament (Request $request) {
+    public function removeTournament (Request $request, TournamentRulesServices $rulesServices) {
         $index = $request->get('tournament-id');
+        $redirectRoute = 'my_tournament';
         $tournament = $this->entityManager->getRepository('App:TFTournament')->find($index);
 
-        if($tournament) {
+
+        if($tournament){
+            if(!$rulesServices->canBeDelete($tournament)) {
+                return $this->redirectToRoute($redirectRoute);
+            }
+
             $this->entityManager->remove($tournament);
             $this->entityManager->flush();
             $this->addFlash('success', 'tournament.remove.message');
-            return $this->redirectToRoute('my_tournament');
+            return $this->redirectToRoute($redirectRoute);
         }
 
         $this->addFlash('warning', 'tournament.remove.message');
 
-        return $this->redirectToRoute('my_tournament');
+        return $this->redirectToRoute($redirectRoute);
     }
 
     /**
@@ -126,11 +134,11 @@ class TournamentController extends Controller
             /* @var array $submited */
             $submited = $request->get('add_participant_to_tournament');
             if($tournamentService->updateTournamentParticipant($submited, $tournament)){
-                $this->addFlash('success', 'tournament.update.participant');
+                $this->addFlash('success', 'tournament.participant.update');
                 return $this->redirectToRoute('my_tournament');
             }
 
-            $this->addFlash('danger', 'tournament.update.participant');
+            $this->addFlash('danger', 'tournament.participant.update');
             return $this->render('tournament/add-participant.html.twig', [
                 'form' => $form->createView()
             ]);
