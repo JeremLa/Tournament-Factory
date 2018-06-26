@@ -38,7 +38,7 @@
                            <a class="btn btn-info button-icon" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
                             <i class="fa fa-user-plus"></i>
                            </a>
-                            <button type="button" class="btn btn-success button-icon"><i class="fa fa-sliders-h"></i> </button>
+                            <a class="btn btn-success button-icon" href="{{ path('start-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-sliders-h"></i> </a>
                         {% endif %}
                     </td>
                 </tr>

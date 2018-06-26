@@ -71,7 +71,7 @@ class TournamentRulesServices
         }
 
         if (!$hasMinParticipant) {
-            $this->addFlashMessage( 'tournament.status.min');
+            $this->addFlashMessage( 'tournament.participant.min');
         }
 
         if (!$isOwner) {
@@ -100,7 +100,7 @@ class TournamentRulesServices
      */
     public function isInSetup (TFTournament $TFTournament) : bool
     {
-        return $TFTournament->getType() == TournamentStatusEnum::STATUS_SETUP;
+        return $TFTournament->getStatus() == TournamentStatusEnum::STATUS_SETUP;
     }
 
     /**

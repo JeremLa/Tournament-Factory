@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\TFTournament;
+use App\Services\Enum\TournamentStatusEnum;
 use App\Services\Enum\TournamentTypeEnum;
 use App\Entity\TFUser;
 use App\Repository\TFTournamentRepository;
@@ -12,6 +13,7 @@ use App\Services\TournamentService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -111,13 +113,7 @@ class TournamentController extends Controller
      */
     public function addParticipant (Request $request, string $tournamentId, TournamentService $tournamentService)
     {
-        /* @var TFTournamentRepository $repo */
-        $repo = $this->entityManager->getRepository(TFTournament::class);
-        $tournament = $repo->find($tournamentId);
-
-        if($tournament == null){
-            throw new NotFoundHttpException("Ce tournoi n'existe pas");
-        }
+        $tournament = self::checkTournamentExist($tournamentId);
 
         /* @var TFUser[] $players_in_tournament */
         $tournamentPlayers = $tournament->getPlayers()->toArray();
@@ -147,5 +143,37 @@ class TournamentController extends Controller
         return $this->render('tournament/add-participant.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/tournament/{tournamentId}/start", name="start-tournament", requirements={"\s"})
+     */
+    public function startTournament (Request $request, string $tournamentId, TournamentRulesServices $rulesServices)
+    {
+
+        $tournament = self::checkTournamentExist($tournamentId);
+
+        if(!$rulesServices->canBeStarted($tournament,$this->getUser()->getTFUser())){
+            return $this->redirect($request->headers->get('referer'));
+        }
+
+        $tournament->setStatus(TournamentStatusEnum::STATUS_STARTED);
+        $this->entityManager->persist($tournament);
+        $this->entityManager->flush();
+
+        $this->addFlash('sucess', 'tournament.started');
+        return $this->redirectToRoute('my_tournament');
+    }
+
+
+    private function checkTournamentExist($tournamentId){
+        /* @var TFTournamentRepository $repo */
+        $repo = $this->entityManager->getRepository(TFTournament::class);
+        $tournament = $repo->find($tournamentId);
+
+        if($tournament == null){
+            throw new NotFoundHttpException("Ce tournoi n'existe pas");
+        }
+        return $tournament;
     }
 }
