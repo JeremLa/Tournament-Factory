@@ -8,7 +8,6 @@ use App\Entity\TFUser;
 use App\Services\Enum\TournamentStatusEnum;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\VarDumper\VarDumper;
 
 class TournamentRulesServices
 {
@@ -175,7 +174,7 @@ class TournamentRulesServices
     public function hasMinParticipantRequired (TFTournament $TFTournament) : bool
     {
         $min = self::MIN_PARTICIPANT_REQUIRED < $TFTournament->getMaxParticipantNumber() ? self::MIN_PARTICIPANT_REQUIRED : $TFTournament->getMaxParticipantNumber();
-        
+
         return \count($TFTournament->getPlayers()) >= $min;
     }
 
