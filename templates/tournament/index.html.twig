@@ -32,13 +32,23 @@
                     <td>{{ tournament.players | length ~ '/' ~ tournament.maxParticipantNumber }}</td>
                     <td>
                         {% if app.user and app.user.tfuser == tournament.owner %}
-                            <button type="button" class="btn btn-danger button-icon" data-toggle="modal" data-target="#remove-tournament" data-id="{{ tournament.id }}">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                           <a class="btn btn-info button-icon" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
-                            <i class="fa fa-user-plus"></i>
-                           </a>
-                            <button type="button" class="btn btn-success button-icon"><i class="fa fa-sliders-h"></i> </button>
+                            {% if tournament.status == 'setup' %}
+                                <a class="btn btn-info button-icon" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
+                                    <i class="fa fa-user-plus"></i>
+                                </a>
+                            {% endif %}
+
+                            {%  if (tournamentRule.canBeCancelled(tournament, app.getUser.getTFUser, false))  %}
+                                <a class="btn btn-success button-icon" href="{{ path('cancel-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-ban"></i> </a>
+                            {% endif %}
+                            {%  if (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false))  %}
+                                <a class="btn btn-success button-icon" href="{{ path('start-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-play-circle"></i> </a>
+                            {% endif %}
+                            {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
+                                <button type="button" class="btn btn-danger button-icon" data-toggle="modal" data-target="#remove-tournament" data-id="{{ tournament.id }}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>

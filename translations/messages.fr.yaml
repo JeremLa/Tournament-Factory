@@ -29,7 +29,7 @@ tournament:
     status:
         title: 'Statut'
         denied:
-            warning: L'état du tournois ne permet pas sa suppression
+            warning: L'état du tournois ne permet pas cette action
     owner:
         title: 'Manager'
         denied:
@@ -53,6 +53,10 @@ tournament:
         message:
             success: Le tournois a été supprimé
             warning: Le tournois n'existe pas
+    started:
+        success: 'Le tournoi est démarré'
+    canceled:
+        success: 'Le tournoi est annulé'
 user:
     profil: 'Profil'
 
