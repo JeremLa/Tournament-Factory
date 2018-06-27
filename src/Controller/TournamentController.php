@@ -33,7 +33,7 @@ class TournamentController extends Controller
     /**
      * @Route("/tournament", name="my_tournament")
      */
-    public function index(TournamentRulesServices $rulesServices)
+    public function index()
     {
         /**
          * @var TFTournament[] $tournaments
