@@ -55,6 +55,8 @@ tournament:
             warning: Le tournois n'existe pas
     started:
         success: 'Le tournoi est démarré'
+    canceled:
+        success: 'Le tournoi est annulé'
 user:
     profil: 'Profil'
 

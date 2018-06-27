@@ -8,6 +8,7 @@ use App\Entity\TFUser;
 use App\Services\Enum\TournamentStatusEnum;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\VarDumper\VarDumper;
 
 class TournamentRulesServices
 {
@@ -26,14 +27,15 @@ class TournamentRulesServices
      * Return if Tournament can be delete and push flash message if it is false
      *
      * @param TFTournament $TFTournament
+     * @param bool $withMessage
      * @return bool
      */
-    public function canBeDeleted (TFTournament $TFTournament) : bool
+    public function canBeDeleted (TFTournament $TFTournament, bool $withMessage = true) : bool
     {
         $result = $this->isInSetup($TFTournament);
 
         if (!$result) {
-            $this->addFlashMessage(self::MESSAGE_STATUS_DENIED);
+            $this->addFlashMessage(self::MESSAGE_STATUS_DENIED, $withMessage);
         }
 
         return $result;
@@ -43,19 +45,20 @@ class TournamentRulesServices
      * Return if it is possible to add participant and push flash message if it is false
      *
      * @param TFTournament $TFTournament
+     * @param bool $withMessage
      * @return bool
      */
-    public function canAddParticipant (TFTournament $TFTournament) : bool
+    public function canAddParticipant (TFTournament $TFTournament, bool $withMessage = true) : bool
     {
         $isInSetup = $this->isInSetup($TFTournament);
         $isParticipantMaxed = $this->isParticipantMaxed($TFTournament);
 
         if (!$isInSetup) {
-            $this->addFlashMessage(self::MESSAGE_STATUS_DENIED);
+            $this->addFlashMessage(self::MESSAGE_STATUS_DENIED, $withMessage);
         }
 
         if ($isParticipantMaxed) {
-            $this->addFlashMessage( 'tournament.participant.add.maxed');
+            $this->addFlashMessage( 'tournament.participant.add.maxed', $withMessage);
         }
 
         return  $isInSetup && !$isParticipantMaxed;
@@ -68,24 +71,25 @@ class TournamentRulesServices
      *
      * @param TFTournament $TFTournament
      * @param TFUser $user
+     * @param bool $withMessage
      * @return bool
      */
-    public function canBeStarted (TFTournament $TFTournament, TFUser $user) : bool
+    public function canBeStarted (TFTournament $TFTournament, TFUser $user, bool $withMessage = true) : bool
     {
         $isInSetup = $this->isInSetup($TFTournament);
         $hasMinParticipant = $this->hasMinParticipantRequired($TFTournament);
         $isOwner = $this->isOwner($TFTournament, $user);
 
         if (!$isInSetup) {
-            $this->addFlashMessage( self::MESSAGE_STATUS_DENIED);
+            $this->addFlashMessage( self::MESSAGE_STATUS_DENIED, $withMessage);
         }
 
         if (!$hasMinParticipant) {
-            $this->addFlashMessage( 'tournament.participant.min');
+            $this->addFlashMessage( 'tournament.participant.min', $withMessage);
         }
 
         if (!$isOwner) {
-            $this->addFlashMessage( 'tournament.owner.denied');
+            $this->addFlashMessage( 'tournament.owner.denied', $withMessage);
         }
 
         return $isInSetup && $hasMinParticipant && $isOwner;
@@ -98,19 +102,20 @@ class TournamentRulesServices
      *
      * @param TFTournament $TFTournament
      * @param TFUser $user
+     * @param bool $withMessage
      * @return bool
      */
-    public function canBeCancelled (TFTournament $TFTournament, TFUser $user) : bool
+    public function canBeCancelled (TFTournament $TFTournament, TFUser $user, bool $withMessage = true) : bool
     {
         $isStarted = $this->isStarted($TFTournament);
         $isOwner = $this->isOwner($TFTournament, $user);
 
         if (!$isStarted) {
-            $this->addFlashMessage( self::MESSAGE_STATUS_DENIED);
+            $this->addFlashMessage( self::MESSAGE_STATUS_DENIED, $withMessage);
         }
 
         if (!$isOwner) {
-            $this->addFlashMessage( 'tournament.owner.denied');
+            $this->addFlashMessage( 'tournament.owner.denied', $withMessage);
         }
 
         return $isStarted && $isOwner;
@@ -169,8 +174,8 @@ class TournamentRulesServices
      */
     public function hasMinParticipantRequired (TFTournament $TFTournament) : bool
     {
-        $min = self::MIN_PARTICIPANT_REQUIRED > $TFTournament->getMaxParticipantNumber() ? self::MIN_PARTICIPANT_REQUIRED : $TFTournament->getMaxParticipantNumber();
-
+        $min = self::MIN_PARTICIPANT_REQUIRED < $TFTournament->getMaxParticipantNumber() ? self::MIN_PARTICIPANT_REQUIRED : $TFTournament->getMaxParticipantNumber();
+        
         return \count($TFTournament->getPlayers()) >= $min;
     }
 
@@ -181,9 +186,12 @@ class TournamentRulesServices
     /**
      * @param string $state
      * @param string $message
+     * @param bool $withMessage
      */
-    private function addFlashMessage (string $message, string $state = self::MESSAGE_TYPE_WARNING) : void
+    private function addFlashMessage (string $message,bool $withMessage = true, string $state = self::MESSAGE_TYPE_WARNING) : void
     {
-        $this->session->getFlashBag()->add($state, $message);
+        if($withMessage) {
+            $this->session->getFlashBag()->add($state, $message);
+        }
     }
 }

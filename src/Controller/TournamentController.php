@@ -111,10 +111,15 @@ class TournamentController extends Controller
     /**
      * @Route("/tournament/{tournamentId}/addParticipant", name="add-participant", requirements={"\s"})
      */
-    public function addParticipant (Request $request, string $tournamentId, TournamentService $tournamentService)
+    public function addParticipant (Request $request, string $tournamentId, TournamentRulesServices $rulesServices, TournamentService $tournamentService)
     {
         $tournament = self::checkTournamentExist($tournamentId);
-
+        if(!$rulesServices->canAddParticipant($tournament)){
+            if($request->headers->get('referer')) {
+                return $this->redirect($request->headers->get('referer'));
+            }
+            return $this->redirectToRoute('my_tournament');
+        }
         /* @var TFUser[] $players_in_tournament */
         $tournamentPlayers = $tournament->getPlayers()->toArray();
 
@@ -154,14 +159,40 @@ class TournamentController extends Controller
         $tournament = self::checkTournamentExist($tournamentId);
 
         if(!$rulesServices->canBeStarted($tournament,$this->getUser()->getTFUser())){
-            return $this->redirect($request->headers->get('referer'));
+            if($request->headers->get('referer')) {
+                return $this->redirect($request->headers->get('referer'));
+            }
+            return $this->redirectToRoute('my_tournament');
         }
 
         $tournament->setStatus(TournamentStatusEnum::STATUS_STARTED);
         $this->entityManager->persist($tournament);
         $this->entityManager->flush();
 
-        $this->addFlash('sucess', 'tournament.started');
+        $this->addFlash('success', 'tournament.started');
+        return $this->redirectToRoute('my_tournament');
+    }
+
+    /**
+     * @Route("/tournament/{tournamentId}/cancel", name="cancel-tournament", requirements={"\s"})
+     */
+    public function cancelTournament (Request $request, string $tournamentId, TournamentRulesServices $rulesServices)
+    {
+
+        $tournament = self::checkTournamentExist($tournamentId);
+
+        if(!$rulesServices->canBeCancelled($tournament,$this->getUser()->getTFUser())){
+            if($request->headers->get('referer')) {
+                return $this->redirect($request->headers->get('referer'));
+            }
+            return $this->redirectToRoute('my_tournament');
+        }
+
+        $tournament->setStatus(TournamentStatusEnum::STATUS_CANCELED);
+        $this->entityManager->persist($tournament);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'tournament.canceled');
         return $this->redirectToRoute('my_tournament');
     }
 
