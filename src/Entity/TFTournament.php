@@ -68,7 +68,10 @@ class TFTournament
      */
     private $owner;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TFMatch", mappedBy="tournament", cascade={"persist"})
+     */
+    private $matches;
 
     public function __construct(string $type)
     {
@@ -76,6 +79,7 @@ class TFTournament
         $this->players = new ArrayCollection();
         $this->teams = new ArrayCollection();
         $this->status = TournamentStatusEnum::STATUS_SETUP;
+        $this->matches = new ArrayCollection();
     }
 
     /**
@@ -216,5 +220,36 @@ class TFTournament
     public function setOwner(TFUser $owner): void
     {
         $this->owner = $owner;
+    }
+
+    /**
+     * @return Collection|TFMatch[]
+     */
+    public function getMatches(): Collection
+    {
+        return $this->matches;
+    }
+
+    public function addMatch(TFMatch $match): self
+    {
+        if (!$this->matches->contains($match)) {
+            $this->matches[] = $match;
+            $match->setTournament($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMatch(TFMatch $match): self
+    {
+        if ($this->matches->contains($match)) {
+            $this->matches->removeElement($match);
+            // set the owning side to null (unless already changed)
+            if ($match->getTournament() === $this) {
+                $match->setTournament(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -11,6 +11,7 @@ namespace App\Entity;
 
 use App\Entity\Abstraction\AbstractTFParticipant;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,9 +36,15 @@ class TFTeam extends AbstractTFParticipant
      */
     protected $tournaments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\TFMatch", mappedBy="teams")
+     */
+    private $matches;
+
     public function __construct()
     {
         $this->tournaments = new ArrayCollection;
+        $this->matches = new ArrayCollection();
     }
 
     /**
@@ -62,6 +69,34 @@ class TFTeam extends AbstractTFParticipant
     public function removeTournaments(TFTournament $TFTournament): void
     {
         $this->tournaments->removeElement($TFTournament);
+    }
+
+    /**
+     * @return Collection|TFMatch[]
+     */
+    public function getMatches(): Collection
+    {
+        return $this->matches;
+    }
+
+    public function addMatch(TFMatch $match): self
+    {
+        if (!$this->matches->contains($match)) {
+            $this->matches[] = $match;
+            $match->addTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMatch(TFMatch $match): self
+    {
+        if ($this->matches->contains($match)) {
+            $this->matches->removeElement($match);
+            $match->removeTeam($this);
+        }
+
+        return $this;
     }
 
 }

@@ -8,6 +8,7 @@ use App\Services\Enum\TournamentTypeEnum;
 use App\Entity\TFUser;
 use App\Repository\TFTournamentRepository;
 use App\Repository\TFUserRepository;
+use App\Services\MatchService;
 use App\Services\TournamentRulesServices;
 use App\Services\TournamentService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -153,7 +154,7 @@ class TournamentController extends Controller
     /**
      * @Route("/tournament/{tournamentId}/start", name="start-tournament", requirements={"\s"})
      */
-    public function startTournament (Request $request, string $tournamentId, TournamentRulesServices $rulesServices)
+    public function startTournament (Request $request, string $tournamentId, TournamentRulesServices $rulesServices, MatchService $matchService)
     {
 
         $tournament = self::checkTournamentExist($tournamentId);
@@ -167,6 +168,7 @@ class TournamentController extends Controller
 
         $tournament->setStatus(TournamentStatusEnum::STATUS_STARTED);
         $this->entityManager->persist($tournament);
+        $matchService->generateMatches($tournament);
         $this->entityManager->flush();
 
         $this->addFlash('success', 'tournament.started');
