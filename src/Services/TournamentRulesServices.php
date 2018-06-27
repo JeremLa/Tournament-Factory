@@ -8,6 +8,7 @@ use App\Entity\TFUser;
 use App\Services\Enum\TournamentStatusEnum;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\VarDumper\VarDumper;
 
 class TournamentRulesServices
 {
@@ -135,12 +136,12 @@ class TournamentRulesServices
      */
     public function isInSetup (TFTournament $TFTournament) : bool
     {
-        return $TFTournament->getType() === TournamentStatusEnum::STATUS_SETUP;
+        return $TFTournament->getStatus() === TournamentStatusEnum::STATUS_SETUP;
     }
 
     public function isStarted (TFTournament $TFTournament) : bool
     {
-        return $TFTournament->getType() === TournamentStatusEnum::STATUS_STARTED;
+        return $TFTournament->getStatus() === TournamentStatusEnum::STATUS_STARTED;
     }
 
     /**
@@ -169,7 +170,7 @@ class TournamentRulesServices
      */
     public function hasMinParticipantRequired (TFTournament $TFTournament) : bool
     {
-        $min = self::MIN_PARTICIPANT_REQUIRED > $TFTournament->getMaxParticipantNumber() ? self::MIN_PARTICIPANT_REQUIRED : $TFTournament->getMaxParticipantNumber();
+        $min = self::MIN_PARTICIPANT_REQUIRED < $TFTournament->getMaxParticipantNumber() ? self::MIN_PARTICIPANT_REQUIRED : $TFTournament->getMaxParticipantNumber();
 
         return \count($TFTournament->getPlayers()) >= $min;
     }
@@ -184,6 +185,7 @@ class TournamentRulesServices
      */
     private function addFlashMessage (string $message, string $state = self::MESSAGE_TYPE_WARNING) : void
     {
+
         $this->session->getFlashBag()->add($state, $message);
     }
 }
