@@ -15,11 +15,12 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class AddParticipantToTournamentType extends AbstractType
 {
+    const PLAYERS = 'players';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder
-            ->add('players', ChoiceType::class, array(
+            ->add(self::PLAYERS, ChoiceType::class, array(
                 'choices' => $options['users'],
                 'choice_label' => function(TFUser $choice) {
                     return $choice->getFirstname() . ' ' . $choice->getLastname();
@@ -30,7 +31,7 @@ class AddParticipantToTournamentType extends AbstractType
                 'multiple' => true,
                 'mapped' => false,
                 'expanded' => true,
-                'data' => $options['players'],
+                'data' => $options[self::PLAYERS],
             ))
         ;
     }
@@ -40,7 +41,7 @@ class AddParticipantToTournamentType extends AbstractType
         $resolver->setDefaults([
             'data_class' => TFTournament::class,
             'users' => null,
-            'players' => [],
+            self::PLAYERS => [],
         ]);
     }
 }

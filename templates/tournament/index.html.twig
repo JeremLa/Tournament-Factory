@@ -8,20 +8,22 @@
     <h1>Tournament list</h1>
     {% include 'includes/flash-messages.html.twig' %}
     <table class="table table-hover">
-        <thead>
+        <thead class="text-align-center">
         <tr>
+            <th>{{ 'tournament.status.title' | trans }}</th>
             <th>{{ 'tournament.name' | trans }}</th>
             <th>{{ 'tournament.type' | trans }}</th>
-            <th>{{ 'tournament.owner' | trans }}</th>
+            <th>{{ 'tournament.owner.title' | trans }}</th>
             <th>{{ 'tournament.nb_participant' | trans }}</th>
             <th>{{ 'tournament.action' | trans }}</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="text-align-center">
             {% for tournament in tournaments %}
                 <tr>
+                    <td><i class="{{ tournament.status | transClass }}"></i></td>
                     <td>{{ tournament.name }}</td>
-                    <td>{{ tournament.type | typeEnum }}</td>
+                    <td>{{ tournament.type | transEnum('type') }}</td>
                     {% if tournament.owner.nicknames | length > 0 %}
                         <td>{{ tournament.owner.nicknames[0] }}</td>
                     {% else %}
@@ -30,12 +32,23 @@
                     <td>{{ tournament.players | length ~ '/' ~ tournament.maxParticipantNumber }}</td>
                     <td>
                         {% if app.user and app.user.tfuser == tournament.owner %}
-                            <button type="button" class="btn btn-danger button-icon" data-toggle="modal" data-target="#remove-tournament" data-id="{{ tournament.id }}">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                           <a class="btn btn-info button-icon" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
-                            <i class="fa fa-user-plus"></i>
-                           </a>
+                            {% if tournament.status == 'setup' %}
+                                <a class="btn btn-info button-icon" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
+                                    <i class="fa fa-user-plus"></i>
+                                </a>
+                            {% endif %}
+
+                            {%  if (tournamentRule.canBeCancelled(tournament, app.getUser.getTFUser, false))  %}
+                                <a class="btn btn-success button-icon" href="{{ path('cancel-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-ban"></i> </a>
+                            {% endif %}
+                            {%  if (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false))  %}
+                                <a class="btn btn-success button-icon" href="{{ path('start-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-play-circle"></i> </a>
+                            {% endif %}
+                            {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
+                                <button type="button" class="btn btn-danger button-icon" data-toggle="modal" data-target="#remove-tournament" data-id="{{ tournament.id }}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>

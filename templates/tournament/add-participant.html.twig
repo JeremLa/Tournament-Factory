@@ -6,11 +6,10 @@
 
 {% block body %}
     <div class="container">
-
+        {% include 'includes/flash-messages.html.twig' %}
         {{ form_start(form) }}
         {{ form_widget(form) }}
         <button type="submit" class="btn btn-primary btn-block">{{ 'form.save' | trans }}</button>
         {{ form_end(form) }}
-
     </div>
 {% endblock %}

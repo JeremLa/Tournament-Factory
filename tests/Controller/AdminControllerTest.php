@@ -36,7 +36,7 @@ class AdminControllerTest extends  WebTestCase
         $this->client = static::createClient();
 
         $kernel = self::bootKernel();
-       $this->entityManager = $kernel->getContainer()
+        $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
 
@@ -67,9 +67,7 @@ class AdminControllerTest extends  WebTestCase
      */
     public function testSecurePageIsLoaded($url)
     {
-
-
-       $this->logIn($this->user->getUsername(), $this->user->getPassword(), $this->user->getRoles());
+        $this->logIn($this->user->getUsername(), $this->user->getPassword(), $this->user->getRoles());
 
         $this->getUrlAndFollowredirect($url);
         $this->assertTrue($this->client->getResponse()->isSuccessful());
@@ -80,8 +78,6 @@ class AdminControllerTest extends  WebTestCase
      */
     public function testSecurePageBadUserLogged($url)
     {
-
-
         $this->logIn('toto', 'tata',  ['ROLE_USER']);
 
         $crawler = $this->getUrlAndFollowredirect($url);
@@ -106,7 +102,6 @@ class AdminControllerTest extends  WebTestCase
 
     private function logIn($username, $password, $roles)
     {
-
         $token = new UsernamePasswordToken($username, $password, 'main', $roles);
         $session = static::$kernel->getContainer()->get('session');
         $session->set('_security_main', serialize($token));

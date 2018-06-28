@@ -50,12 +50,18 @@ class TFUser extends AbstractTFParticipant
      */
     private $ownedtournaments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\TFMatch", mappedBy="players")
+     */
+    private $matches;
+
     public function __construct()
     {
         parent::__construct();
         $this->nicknames = [];
         $this->ownedtournaments = new ArrayCollection;
         $this->tournaments = new ArrayCollection;
+        $this->matches = new ArrayCollection();
     }
 
     public function getEmail(): ?string
@@ -203,6 +209,34 @@ class TFUser extends AbstractTFParticipant
     public function __toString()
     {
         return $this->getId() . '/' . $this->getEmail();
+    }
+
+    /**
+     * @return Collection|TFMatch[]
+     */
+    public function getMatches(): Collection
+    {
+        return $this->matches;
+    }
+
+    public function addMatch(TFMatch $match): self
+    {
+        if (!$this->matches->contains($match)) {
+            $this->matches[] = $match;
+            $match->addPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMatch(TFMatch $match): self
+    {
+        if ($this->matches->contains($match)) {
+            $this->matches->removeElement($match);
+            $match->removePlayer($this);
+        }
+
+        return $this;
     }
 
 }

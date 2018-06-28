@@ -5,6 +5,7 @@ namespace App\Tests\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
@@ -13,18 +14,11 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class TournamentControllerTest extends  WebTestCase
 {
 
-    /**
-     * @var EntityManager $entityManager
-     */
+    /* @var EntityManagerInterface $entityManager */
     private $entityManager;
-    /**
-     * @var Client
-     */
+    /* @var Client */
     private $client = null;
-
-    /**
-     * @var User
-     */
+    /* @var User */
     private $user;
 
 
@@ -51,9 +45,7 @@ class TournamentControllerTest extends  WebTestCase
      */
     public function testPageIsRedirect($url)
     {
-
         $this->client->request('GET', $url);
-
         $this->assertTrue($this->client->getResponse()->isRedirect());
     }
 
@@ -71,8 +63,6 @@ class TournamentControllerTest extends  WebTestCase
      */
     public function testSecurePageIsLoaded($url)
     {
-
-
         $this->logIn($this->user->getUsername(), $this->user->getPassword(), $this->user->getRoles());
 
         $this->getUrlAndFollowredirect($url);
@@ -84,11 +74,9 @@ class TournamentControllerTest extends  WebTestCase
      */
     public function testSecurePageBadUserLogged($url)
     {
-
-
         $this->logIn('toto', 'tata',  ['ROLE_USER']);
 
-       $crawler = $this->getUrlAndFollowredirect($url);
+        $crawler = $this->getUrlAndFollowredirect($url);
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Connexion")')->count()
@@ -105,7 +93,6 @@ class TournamentControllerTest extends  WebTestCase
 
     private function logIn($username, $password, $roles)
     {
-
         $token = new UsernamePasswordToken($username, $password, 'main', $roles);
         $session = static::$kernel->getContainer()->get('session');
         $session->set('_security_main', serialize($token));
@@ -116,7 +103,6 @@ class TournamentControllerTest extends  WebTestCase
 
     protected function tearDown()
     {
-
         $userEntity = $this->entityManager->merge($this->user);
         $tfUser = $userEntity->getTfUser();
         $this->entityManager->remove($userEntity);

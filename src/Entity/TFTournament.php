@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Abstraction\AbstractTFParticipant;
+use App\Services\Enum\TournamentStatusEnum;
 use App\Services\Enum\TournamentTypeEnum;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -44,6 +45,12 @@ class TFTournament
     private $type;
 
     /**
+     * @var string
+     * @ORM\Column(name="status", type="string", length=255, nullable=false)
+     */
+    private $status;
+
+    /**
      * @var TFUser[] | Collection $players
      * @ORM\ManyToMany(targetEntity="App\Entity\TFUser", mappedBy="tournaments")
      */
@@ -61,11 +68,18 @@ class TFTournament
      */
     private $owner;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TFMatch", mappedBy="tournament", cascade={"persist"})
+     */
+    private $matches;
+
     public function __construct(string $type)
     {
         $this->type = $type;
         $this->players = new ArrayCollection();
         $this->teams = new ArrayCollection();
+        $this->status = TournamentStatusEnum::STATUS_SETUP;
+        $this->matches = new ArrayCollection();
     }
 
     /**
@@ -126,6 +140,22 @@ class TFTournament
         }
 
         $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
     }
 
     /**
@@ -190,5 +220,36 @@ class TFTournament
     public function setOwner(TFUser $owner): void
     {
         $this->owner = $owner;
+    }
+
+    /**
+     * @return Collection|TFMatch[]
+     */
+    public function getMatches(): Collection
+    {
+        return $this->matches;
+    }
+
+    public function addMatch(TFMatch $match): self
+    {
+        if (!$this->matches->contains($match)) {
+            $this->matches[] = $match;
+            $match->setTournament($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMatch(TFMatch $match): self
+    {
+        if ($this->matches->contains($match)) {
+            $this->matches->removeElement($match);
+            // set the owning side to null (unless already changed)
+            if ($match->getTournament() === $this) {
+                $match->setTournament(null);
+            }
+        }
+
+        return $this;
     }
 }
