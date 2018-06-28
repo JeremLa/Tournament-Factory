@@ -7,18 +7,19 @@
 <div class="container mt-5">
     <h1>Tournament list</h1>
     {% include 'includes/flash-messages.html.twig' %}
-    <table class="table table-hover">
-        <thead class="text-align-center">
-        <tr>
-            <th>{{ 'tournament.status.title' | trans }}</th>
-            <th>{{ 'tournament.name' | trans }}</th>
-            <th>{{ 'tournament.type' | trans }}</th>
-            <th>{{ 'tournament.owner.title' | trans }}</th>
-            <th>{{ 'tournament.nb_participant' | trans }}</th>
-            <th>{{ 'tournament.action' | trans }}</th>
-        </tr>
-        </thead>
-        <tbody class="text-align-center">
+    {% if tournaments | length > 0 %}
+        <table class="table table-hover">
+            <thead class="text-align-center">
+            <tr>
+                <th>{{ 'tournament.status.title' | trans }}</th>
+                <th>{{ 'tournament.name' | trans }}</th>
+                <th>{{ 'tournament.type' | trans }}</th>
+                <th>{{ 'tournament.owner.title' | trans }}</th>
+                <th>{{ 'tournament.nb_participant' | trans }}</th>
+                <th>{{ 'tournament.action' | trans }}</th>
+            </tr>
+            </thead>
+            <tbody class="text-align-center">
             {% for tournament in tournaments %}
                 <tr>
                     <td><i class="{{ tournament.status | transClass }}"></i></td>
@@ -53,8 +54,11 @@
                     </td>
                 </tr>
             {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    {% else %}
+        <b>{{ 'tournament.list.empty' | trans}}</b>
+    {% endif %}
 </div>
 
     {% include 'includes/modal.html.twig' %}

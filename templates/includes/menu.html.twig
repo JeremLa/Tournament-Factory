@@ -32,6 +32,8 @@
                         <img src="{{ URL }}" alt="{{ app.user.username }}" style="height: 30px; width: 30px">
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-options">
+                        <a href="#" class="dropdown-item">{{ app.user.tfuser.firstname ~ ' ' ~ app.user.tfuser.lastname }}</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item  {{ active }}" href="{{ path('profile') }}">{{ 'user.profil' | trans }}</a>
                         {% if is_granted('ROLE_ADMIN') %}
                             {% set active = current_path == 'admin' ? 'active' : '' %}

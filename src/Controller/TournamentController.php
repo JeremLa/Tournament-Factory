@@ -39,7 +39,7 @@ class TournamentController extends Controller
         /**
          * @var TFTournament[] $tournaments
          */
-        $tournaments = $this->entityManager->getRepository('App\Entity\TFTournament')->findAll();
+        $tournaments = $this->entityManager->getRepository('App\Entity\TFTournament')->getMyTournaments($this->getUser()->getTFUser());
 
         return $this->render('tournament/index.html.twig', [
             'controller_name' => 'TournamentController',

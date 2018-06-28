@@ -57,6 +57,8 @@ tournament:
         success: 'Le tournoi est démarré'
     canceled:
         success: 'Le tournoi est annulé'
+    list:
+        empty: Vous ne possédez et ne participez à aucun tournois
 user:
     profil: 'Profil'
 
