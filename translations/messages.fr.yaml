@@ -28,6 +28,9 @@ tournament:
     name: 'Nom'
     nb_participant: 'Participants'
     type: 'Type'
+    turn:
+        tab: '{1} Finale |{2} Demi-finale |{4} Quart de finale |]4,Inf[ %count%èmes de finale'
+        notGenerated: Les matchs n'ont pas été générés
     status:
         title: 'Statut'
         denied:

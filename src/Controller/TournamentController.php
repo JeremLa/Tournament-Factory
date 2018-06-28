@@ -198,8 +198,21 @@ class TournamentController extends Controller
         return $this->redirectToRoute('my_tournament');
     }
 
+    /**
+     * @Route("/tournament/{tournamentId}/detail", name="detail-tournament", requirements={"\s"})
+     */
+    public function detailTournament(Request $request, string $tournamentId, MatchService $matchService)
+    {
+        $tournament = $this->checkTournamentExist($tournamentId);
+        $matchesPerTurn = $matchService->getMatchPerRound($tournament);
+        return $this->render('tournament/details.html.twig', [
+            'tournament' => $tournament,
+            'matchesPerTurn' => $matchesPerTurn,
+        ]);
+    }
 
-    private function checkTournamentExist($tournamentId){
+
+    private function checkTournamentExist($tournamentId) : TFTournament{
         /* @var TFTournamentRepository $repo */
         $repo = $this->entityManager->getRepository(TFTournament::class);
         $tournament = $repo->find($tournamentId);
