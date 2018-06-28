@@ -19,6 +19,8 @@ form:
 tournament:
     form:
         title: 'Nouveau tournois : %type%'
+        name: Nom
+        maxParticipant: Nombre de joueurs maximum
     create: 'Nouveau tournoi'
     menu:
         title: 'Tournois'
@@ -58,7 +60,9 @@ tournament:
     canceled:
         success: 'Le tournoi est annulé'
     list:
-        empty: Vous ne possédez et ne participez à aucun tournois
+        myTournaments:
+            title: Mes tournois
+            empty: Vous ne possédez et ne participez à aucun tournois
 user:
     profil: 'Profil'
 
