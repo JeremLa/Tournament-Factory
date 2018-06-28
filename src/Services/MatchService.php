@@ -9,9 +9,11 @@
 namespace App\Services;
 
 
+use App\Entity\Abstraction\AbstractTFParticipant;
 use App\Entity\TFMatch;
+use App\Entity\TFTeam;
 use App\Entity\TFTournament;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\TFUser;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\VarDumper\VarDumper;
@@ -26,23 +28,25 @@ class MatchService
         $this->entityManager = $entityManager;
     }
 
-    public function generateMatches(TFTournament $tournament)
+    public function generateMatches(TFTournament $tournament, bool $withParticipantAssignement = false) : void
     {
-
         $nbRound = $this->getMaxTurnInTournament($tournament);
 
         $match = new TFMatch();
         $match->setTurn(0);
         $match->setTournament($tournament);
         $tournament->addMatch($match);
-     //   $this->entityManager->persist($match);
         $this->generate($tournament, $match, 1, $nbRound);
+
+        if($withParticipantAssignement) {
+            $this->assignParticipants($tournament);
+        }
 
         $this->entityManager->persist($tournament);
         $this->entityManager->flush();
     }
 
-    private function generate(TFTournament $tournament, TFMatch $nextMatch, int $round, int $nbRoundMax)
+    private function generate(TFTournament $tournament, TFMatch $nextMatch, int $round, int $nbRoundMax) : void
     {
         if($round < $nbRoundMax) {
             for($i=0; $i < 2 ; $i++) {
@@ -51,18 +55,16 @@ class MatchService
                 $match->setTournament($tournament);
                 $match->setNextMatch($nextMatch);
                 $tournament->addMatch($match);
-          //      $this->entityManager->persist($match);
                 $this->generate($tournament, $match, $round + 1, $nbRoundMax);
             }
         }
-        return;
     }
 
     /**
      * @param Collection $matches
      * @return array
      */
-    private function getRoundList(Collection $matches)
+    private function getRoundList(Collection $matches) : array
     {
         $rounds = [];
         /** @var  TFMatch $match */
@@ -73,13 +75,13 @@ class MatchService
         return array_unique($rounds);
     }
 
-    public function getMaxTurnInTournament(TFTournament $tournament)
+    public function getMaxTurnInTournament(TFTournament $tournament) : int
     {
         $participantNumber = $tournament->getMaxParticipantNumber();
-        return log($participantNumber ,2);
+        return (int) log($participantNumber ,2);
     }
 
-    public function getMatchPerRound(TFTournament $tournament)
+    public function getMatchPerRound(TFTournament $tournament) : array
     {
         $array = [];
         $repo = $this->entityManager->getRepository(TFMatch::class);
@@ -91,5 +93,66 @@ class MatchService
             ]);
         }
         return $array;
+    }
+
+    public function assignParticipants (TFTournament $tournament) : void
+    {
+        $used = [];
+
+        $maxTurn = $this->getMaxTurnInTournament($tournament) - 1;
+
+        /* @var TFMatch $match */
+        foreach ($tournament->getMatches() as $match) {
+            if($match->getTurn() === $maxTurn){
+                $participant1 = $this->randomUser($tournament->getPlayers()->toArray(), $used);
+                $used[] = $participant1;
+                $participant2 = $this->randomUser($tournament->getPlayers()->toArray(), $used);
+                $used[] = $participant2;
+
+                $match->addPlayer($participant1)->addPlayer($participant2);
+            }
+        }
+    }
+
+    /**
+     * @param TFMatch $match
+     * @param TFUser $participant1
+     * @param TFUser $participant2
+     */
+    public function assignPlayers (TFMatch $match, TFUser $participant1, TFUser $participant2) : void
+    {
+            $match->addPlayer($participant1)
+                  ->addPlayer($participant2);
+    }
+
+    /**
+     * @param TFMatch $match
+     * @param TFTeam $participant1
+     * @param TFTeam $participant2
+     */
+    public function addTeams (TFMatch $match, TFTeam $participant1, TFTeam $participant2) : void
+    {
+        $match->addTeam($participant1)
+              ->addTeam($participant2);
+    }
+
+    private function randomUser (array $users, array $excluded = []) : TFUser
+    {
+        $min = 0;
+        $max = count($users) - 1;
+        $find = false;
+        $rand = 0;
+
+        while (!$find) {
+            $rand = random_int($min, $max);
+
+            echo 'random : '.$rand;
+
+            if(!in_array($users[$rand], $excluded)){
+                $find = true;
+            }
+        }
+
+        return $users[$rand];
     }
 }

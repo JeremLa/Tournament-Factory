@@ -26,6 +26,7 @@ class TFTournamentRepository extends ServiceEntityRepository
                 ->where('tournament.owner = :user')
                 ->orWhere('p = :user')
                 ->setParameter('user', $user)
+                ->orderBy('tournament.id', 'DESC')
                 ->getQuery()
                 ->getResult();
     }

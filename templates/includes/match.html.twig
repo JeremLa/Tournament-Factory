@@ -1,9 +1,10 @@
 {%  set participant1 = match.players.toArray()[0] is defined ? match.players[0].lastname : '-' %}
-{%  set score1 = match.score.toArray()[0] is defined ? match.score[0] : '-' %}
-{%  set participant2 = match.players.toArray()[1] is defined ? match.score[1].lastname : '-' %}
-{%  set score2 = match.score.toArray()[1] is defined ? match.players[1] : '-' %}
+{%  set participant2 = match.players.toArray()[1] is defined ? match.players[1].lastname : '-' %}
 
-<div class="row border b-2 rounded p-4 mt-3">
+{%  set score1 = match.score[0] is defined ? match.score[0] : '-' %}
+{%  set score2 = match.score[1] is defined ? match.score[1] : '-' %}
+
+<div class="row border b-2 rounded p-4 mt-3 show-match">
     <div class="col-sm-1 text-align-center"></div>
     <div class="col-sm text-left">{{ participant1 }}</div>
     <div class="col-sm text-align-center">{{ score1 }} / {{ score2 }}</div>

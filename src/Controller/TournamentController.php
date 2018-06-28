@@ -156,7 +156,6 @@ class TournamentController extends Controller
      */
     public function startTournament (Request $request, string $tournamentId, TournamentRulesServices $rulesServices, MatchService $matchService)
     {
-
         $tournament = self::checkTournamentExist($tournamentId);
 
         if(!$rulesServices->canBeStarted($tournament,$this->getUser()->getTFUser())){
@@ -166,9 +165,11 @@ class TournamentController extends Controller
             return $this->redirectToRoute('my_tournament');
         }
 
+        $matchService->generateMatches($tournament, true);
+
         $tournament->setStatus(TournamentStatusEnum::STATUS_STARTED);
         $this->entityManager->persist($tournament);
-        $matchService->generateMatches($tournament);
+
         $this->entityManager->flush();
 
         $this->addFlash('success', 'tournament.started');

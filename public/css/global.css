@@ -22,3 +22,7 @@ a.navbar-brand > small {
 .b-2 {
     border-width: 2px !important;
 }
+
+.show-match:hover {
+    background: #dee2e6 ;
+}
