@@ -3,8 +3,6 @@
 {% block title %}{{ 'tournament.menu.list' | trans }}{% endblock %}
 
 {% block body %}
-
-<div class="container mt-5">
     <h1>Tournament list</h1>
     {% include 'includes/flash-messages.html.twig' %}
     <table class="table table-hover">
@@ -50,12 +48,12 @@
                                 </button>
                             {% endif %}
                         {% endif %}
+                        <a class="btn btn-info button-icon" href="{{ path('detail-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-eye"></i> </a>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-</div>
 
     {% include 'includes/modal.html.twig' %}
 {% endblock %}

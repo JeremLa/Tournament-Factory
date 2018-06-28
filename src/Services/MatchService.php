@@ -11,6 +11,8 @@ namespace App\Services;
 
 use App\Entity\TFMatch;
 use App\Entity\TFTournament;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -26,8 +28,8 @@ class MatchService
 
     public function generateMatches(TFTournament $tournament)
     {
-        $participantNumber = $tournament->getMaxParticipantNumber();
-        $nbRound = log($participantNumber ,2);
+
+        $nbRound = $this->getMaxTurnInTournament($tournament);
 
         $match = new TFMatch();
         $match->setTurn(0);
@@ -56,4 +58,38 @@ class MatchService
         return;
     }
 
+    /**
+     * @param Collection $matches
+     * @return array
+     */
+    private function getRoundList(Collection $matches)
+    {
+        $rounds = [];
+        /** @var  TFMatch $match */
+        foreach ($matches as $match){
+            $rounds[] = $match->getTurn();
+        }
+
+        return array_unique($rounds);
+    }
+
+    public function getMaxTurnInTournament(TFTournament $tournament)
+    {
+        $participantNumber = $tournament->getMaxParticipantNumber();
+        return log($participantNumber ,2);
+    }
+
+    public function getMatchPerRound(TFTournament $tournament)
+    {
+        $array = [];
+        $repo = $this->entityManager->getRepository(TFMatch::class);
+        $rounds = $this->getRoundList($tournament->getMatches());
+        foreach($rounds as $round){
+            $array [$round] = $repo->findBy([
+                'tournament' => $tournament,
+                'turn' => $round
+            ]);
+        }
+        return $array;
+    }
 }
