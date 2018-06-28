@@ -80,7 +80,7 @@ class TournamentController extends Controller
 
         return $this->render('tournament/new-tournament.html.twig', [
             'form' => $form->createView(),
-            'type' => $type
+            'type' => $type,
         ]);
     }
 
@@ -208,6 +208,33 @@ class TournamentController extends Controller
         return $this->render('tournament/details.html.twig', [
             'tournament' => $tournament,
             'matchesPerTurn' => $matchesPerTurn,
+        ]);
+    }
+
+    /**
+     * @Route("/tournament/{tournamentId}/edit", name="edit-tournament", requirements={"\s"})
+     */
+    public function editTournament(Request $request, string $tournamentId, MatchService $matchService)
+    {
+        $tournament = $this->checkTournamentExist($tournamentId);
+
+        $form = $this->createForm('App\Form\Type\TFTournamentType', $tournament);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            $this->entityManager->persist($tournament);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'tournament.edit.message');
+
+            return $this->redirectToRoute('my_tournament');
+        }
+
+        return $this->render('tournament/edit-tournament.html.twig', [
+            'form' => $form->createView(),
+            'name' => $tournament->getName(),
         ]);
     }
 

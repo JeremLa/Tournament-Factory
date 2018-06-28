@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+{% form_theme form 'form/custom-label.html.twig' %}
+
+{% block title %}
+    {{ 'tournament.edit.title' | trans }}
+{% endblock %}
+
+{% block body %}
+    <h2>{{ "tournament.form.title.edit" | trans({ '%name%' : name | lower } ) }}</h2>
+    {% include 'includes/tournamentForm.html.twig' %}
+{% endblock %}
