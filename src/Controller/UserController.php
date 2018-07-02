@@ -8,11 +8,9 @@ use App\Repository\TFTournamentRepository;
 use App\Repository\TFUserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\VarDumper\VarDumper;
 
 class UserController extends Controller
 {
@@ -58,7 +56,7 @@ class UserController extends Controller
     /**
      * @Route("/usersInTournament/{tournamentId}", name="searchInUsers", requirements={"\s"}))
      */
-    public function searchUsersInTournament(Request $request, string $tournamentId)
+    public function searchUsersInTournament(string $tournamentId)
     {
         /** @var TFTournamentRepository $repo */
         $repo = $this->entityManager->getRepository(TFTournament::class);

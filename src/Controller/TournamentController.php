@@ -162,7 +162,7 @@ class TournamentController extends Controller
     /**
      * @Route("/tournament/{tournamentId}/detail", name="detail-tournament", requirements={"\s"})
      */
-    public function detailTournament(Request $request, string $tournamentId)
+    public function detailTournament(string $tournamentId)
     {
         $tournament = $this->tournamentService->checkTournamentExist($tournamentId);
         $matchesPerTurn = $this->matchService->getMatchPerRound($tournament);
