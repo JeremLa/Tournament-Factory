@@ -1,27 +1,30 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: AHermes
+ * Date: 29/06/2018
+ * Time: 14:36
+ */
 
 namespace App\Form\Type;
 
+
 use App\Entity\TFTournament;
-use App\Services\Enum\TournamentTypeEnum;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TFTournamentType extends AbstractType
+class ManageParticipantType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, [
-                'label' => 'tournament.form.name'
-            ])
-            ->add('maxParticipantNumber', NumberType::class, [
-                'label' => 'tournament.form.maxParticipant',
-                'scale' => 0,
+            ->add('tags', TextType::class, [
+                'mapped' => false,
+                'attr' => ['class' => 'typeahead tm-input form-control tm-input-info'],
+                'label' => 'form.players',
+                'required' => false
             ])
         ;
     }
@@ -29,7 +32,6 @@ class TFTournamentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => TFTournament::class,
         ]);
     }
 }

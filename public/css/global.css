@@ -18,3 +18,7 @@ a.navbar-brand > small {
 .text-align-center {
     text-align: center;
 }
+
+.b-2 {
+    border-width: 2px !important;
+}

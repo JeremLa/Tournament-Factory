@@ -6,18 +6,6 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h2>{{ "tournament.form.title" | trans({ '%type%' : type | transEnum('type') | lower } ) }}</h2>
-        {{ form_start(form) }}
-        <div class="form-group">
-            {{ form_row(form.name) }}
-        </div>
-
-        <div class="form-group">
-            {{ form_row(form.maxParticipantNumber) }}
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-block">{{ 'form.save' | trans }}</button>
-        {{ form_end(form) }}
-    </div>
+        <h2>{{ "tournament.form.title.new" | trans({ '%type%' : type | transEnum('type') | lower } ) }}</h2>
+        {% include 'includes/tournamentForm.html.twig' %}
 {% endblock %}

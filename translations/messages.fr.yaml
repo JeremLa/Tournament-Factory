@@ -15,10 +15,15 @@ form:
     nickname: Surnom
     country: Pays
     remember_me: 'Se souvenir de moi'
+    players: 'Participant'
 
 tournament:
     form:
-        title: 'Nouveau tournois : %type%'
+        title:
+            new: 'Nouveau tournois : %type%'
+            edit: 'Modification du tournoi : %name%'
+        name: Nom
+        maxParticipant: Nombre de joueurs maximum
     create: 'Nouveau tournoi'
     menu:
         title: 'Tournois'
@@ -26,27 +31,34 @@ tournament:
     name: 'Nom'
     nb_participant: 'Participants'
     type: 'Type'
+    turn:
+        tab: '{1} Finale |{2} Demi-finale |{4} Quart de finale |]4,Inf[ %count%èmes de finale'
+        notGenerated: Les matchs n'ont pas été générés.
     status:
         title: 'Statut'
         denied:
-            warning: L'état du tournois ne permet pas cette action
+            warning: L'état du tournois ne permet pas cette action.
     owner:
         title: 'Manager'
         denied:
-            warning: Vous devez être propriétaire du tournois pour réaliser cette action
+            warning: Vous devez être propriétaire du tournois pour réaliser cette action.
     action: 'Actions'
     new:
         message:
             success: Un nouveau tournois a été créé.
+    edit:
+        title: 'Modifier un tournoi'
+        message:
+            success: Les informations ont été enregistrées.
     participant:
         update:
             success: 'Les participants ont été mis à jours.'
-            danger: 'Vous ne pouvez pas choisir plus de participant que le maximum possible pour ce tournoi'
+            warning: 'Vous ne pouvez pas choisir plus de participant que le maximum possible pour ce tournoi'
         add:
             maxed:
-                warning: Le nombre maximum de participant a déjà été atteind pour ce tournois
+                warning: Le nombre maximum de participant a déjà été atteind pour ce tournois.
             denied:
-                warning: L'état du tournois ne permet pas sa suppression
+                warning: L'état du tournois ne permet pas sa suppression.
         min:
             warning: Vous n'avez pas le nombre minimum de participant dans ce tournois.
     remove:
@@ -57,8 +69,13 @@ tournament:
         success: 'Le tournoi est démarré'
     canceled:
         success: 'Le tournoi est annulé'
+    list:
+        myTournaments:
+            title: Mes tournois
+            empty: Vous ne possédez et ne participez à aucun tournois
 user:
     profil: 'Profil'
+    notFound: "Cet utilisateur n'existe pas"
 
 actions:
     edit: 'Modifier'
