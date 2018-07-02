@@ -5,9 +5,11 @@ namespace App\Services;
 
 use App\Entity\TFTournament;
 use App\Entity\TFUser;
+use App\Repository\TFTournamentRepository;
 use App\Repository\TFUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\VarDumper\VarDumper;
 
 class TournamentService
@@ -34,7 +36,9 @@ class TournamentService
         /* @var TFUser $player */
         foreach ($players_to_delete as $player) {
             $player->removeTournament($tournament);
+            $tournament->removePlayer($player);
             $this->entityManager->persist($player);
+            $this->entityManager->persist($tournament);
         }
 
         foreach ($players as $player) {
@@ -42,6 +46,8 @@ class TournamentService
 
             if (!$tournaments->contains($tournament)) {
                 $player->addTournaments($tournament);
+                $tournament->addPlayer($player);
+                $this->entityManager->persist($tournament);
                 $this->entityManager->persist($player);
             }
         }
@@ -60,7 +66,9 @@ class TournamentService
 
         if (!$tournaments->contains($tournament)) {
             $player->addTournaments($tournament);
+            $tournament->addPlayer($player);
             $this->entityManager->persist($player);
+            $this->entityManager->persist($tournament);
         }
         $this->entityManager->flush();
         return true;
@@ -70,10 +78,22 @@ class TournamentService
     public function removeTournamentParticipant(TFUser $player, TFTournament $tournament)
     {
         $player->removeTournament($tournament);
+        $tournament->removePlayer($player);
         $this->entityManager->persist($player);
+        $this->entityManager->persist($tournament);
         $this->entityManager->flush();
         return true;
     }
 
+    public function checkTournamentExist($tournamentId) : TFTournament{
+        /* @var TFTournamentRepository $repo */
+        $repo = $this->entityManager->getRepository(TFTournament::class);
+        $tournament = $repo->find($tournamentId);
+
+        if($tournament == null){
+            throw new NotFoundHttpException("Ce tournoi n'existe pas");
+        }
+        return $tournament;
+    }
 
 }

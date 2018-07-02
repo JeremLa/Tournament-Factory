@@ -53,7 +53,7 @@ tournament:
     participant:
         update:
             success: 'Les participants ont été mis à jours.'
-            danger: 'Vous ne pouvez pas choisir plus de participant que le maximum possible pour ce tournoi'
+            warning: 'Vous ne pouvez pas choisir plus de participant que le maximum possible pour ce tournoi'
         add:
             maxed:
                 warning: Le nombre maximum de participant a déjà été atteind pour ce tournois.
