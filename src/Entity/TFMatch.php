@@ -77,7 +77,14 @@ class TFMatch
         return $this->score;
     }
 
-    public function setScore(?array $score): self
+    public function setScore($index, $score): self
+    {
+        $this->score[$index] = $score;
+
+        return $this;
+    }
+
+    public function setScores(?array $score): self
     {
         $this->score = $score;
 

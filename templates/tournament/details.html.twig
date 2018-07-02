@@ -25,7 +25,7 @@
             {% else %}
                 {% set active = '' %}
             {% endif %}
-            <div class="tab-pane fade show {{ active }}" id="p{{ key }}">
+            <div class="tab-pane fade show {{ active }}" id="p{{ key }}" style="line-height: 40px;">
             {% for match in tfmatches %}
                 {% include 'includes/match.html.twig' %}
             {% endfor %}

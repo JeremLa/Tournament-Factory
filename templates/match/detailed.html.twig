@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% form_theme scoreForm 'form/custom-label.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/match/match-details.css') }}">
+{% endblock %}
+
+{% block title %}Détail du match{% endblock %}
+
+{% block body %}
+
+    <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
+        <div class="col-sm-12 px-0">
+            <h1 class="display-5 font-italic">{{ 'tournament.turn.tab' | transchoice(2 ** match.turn) }}</h1>
+            <div class="row">
+                <div class="col-5 display-4 match-align-middle">{{ match.players[0].nicknames[0] }}</div>
+                <div class="col-2 text-center display-2">VS</div>
+                <div class="col-5 text-right display-4 match-align-middle">{{ match.players[1].nicknames[0] }}</div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <small>{{ match.score[match.players[0].id] }} - {{ match.score[match.players[1].id] }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(scoreForm) }}
+        {{ form_row(scoreForm) }}
+        <button type="submit" class="btn btn-primary btn-block">{{ 'form.save' | trans }}</button>
+    {{ form_end(scoreForm) }}
+{% endblock %}

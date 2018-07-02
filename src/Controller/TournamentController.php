@@ -202,16 +202,17 @@ class TournamentController extends Controller
     /**
      * @Route("/tournament/{tournamentId}/detail", name="detail-tournament", requirements={"\s"})
      */
-    public function detailTournament(Request $request, string $tournamentId, MatchService $matchService)
+    public function detailTournament(string $tournamentId, MatchService $matchService)
     {
+        $form = $this->createForm('App\Form\Type\ScoreType');
         $tournament = $this->checkTournamentExist($tournamentId);
         $matchesPerTurn = $matchService->getMatchPerRound($tournament);
         return $this->render('tournament/details.html.twig', [
             'tournament' => $tournament,
             'matchesPerTurn' => $matchesPerTurn,
+            'scorForm' => $form->createView()
         ]);
     }
-
 
     private function checkTournamentExist($tournamentId) : TFTournament{
         /* @var TFTournamentRepository $repo */

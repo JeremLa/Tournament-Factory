@@ -9,19 +9,20 @@
 namespace App\Services;
 
 
-use App\Entity\Abstraction\AbstractTFParticipant;
 use App\Entity\TFMatch;
 use App\Entity\TFTeam;
 use App\Entity\TFTournament;
 use App\Entity\TFUser;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\VarDumper\VarDumper;
 
 class MatchService
 {
 
     private $entityManager;
+    private const SCORE = 'score';
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -109,7 +110,7 @@ class MatchService
                 $participant2 = $this->randomUser($tournament->getPlayers()->toArray(), $used);
                 $used[] = $participant2;
 
-                $match->addPlayer($participant1)->addPlayer($participant2);
+                $this->assignPlayers($match, $participant1, $participant2);
             }
         }
     }
@@ -121,6 +122,10 @@ class MatchService
      */
     public function assignPlayers (TFMatch $match, TFUser $participant1, TFUser $participant2) : void
     {
+            $match->setScore([
+               $participant1->getId() => 0,
+               $participant2->getId() => 0
+            ]);
             $match->addPlayer($participant1)
                   ->addPlayer($participant2);
     }
@@ -134,6 +139,38 @@ class MatchService
     {
         $match->addTeam($participant1)
               ->addTeam($participant2);
+    }
+
+    public function getScoreForForm (TFMatch $match) : array
+    {
+        $result = [];
+        $index = 1;
+
+        foreach ($match->getPlayers() as $player) {
+            $result[self::SCORE.$index] = 0;
+            if(isset($match->getScore()[$player->getId()])) {
+                $result[self::SCORE.$index] = $match->getScore()[$player->getId()];
+            }
+            $index++;
+        }
+        return $result;
+    }
+
+    public function updateScore(TFMatch $match, FormInterface $scoreForm)
+    {
+        $index = 1;
+
+        foreach ($match->getPlayers() as $player) {
+            $score = $scoreForm->get(self::SCORE.$index)->getData() ?: 0;
+            $match->setScore($player->getId(), $score);
+
+            $index++;
+        }
+
+        $this->entityManager->persist($match);
+        $this->entityManager->flush();
+
+        return $match;
     }
 
     private function randomUser (array $users, array $excluded = []) : TFUser

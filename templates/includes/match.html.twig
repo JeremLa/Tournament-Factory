@@ -1,12 +1,21 @@
-{%  set participant1 = match.players.toArray()[0] is defined ? match.players[0].lastname : '-' %}
-{%  set participant2 = match.players.toArray()[1] is defined ? match.players[1].lastname : '-' %}
+{%  set participant1 = match.players.toArray[0] is defined ? match.players[0].nicknames[0] : '-' %}
+{%  set id1 = match.players.toArray[0] is defined ? match.players[0].id : '-' %}
 
-{%  set score1 = match.score[0] is defined ? match.score[0] : '-' %}
-{%  set score2 = match.score[1] is defined ? match.score[1] : '-' %}
+{%  set participant2 = match.players.toArray[1] is defined ? match.players[1].nicknames[0] : '-' %}
+{%  set id2 = match.players.toArray[1] is defined ? match.players[1].id : '-' %}
 
-<div class="row border b-2 rounded p-4 mt-3 show-match">
-    <div class="col-sm-1 text-align-center"></div>
+{%  set score1 = match.score[id1] is defined ? match.score[id1] : '0' %}
+{%  set score2 = match.score[id2] is defined ? match.score[id2] : '0' %}
+
+<div class="row border b-2 rounded p-3 mt-3 show-match">
+    {% if app.user.tfuser == tournament.owner %}
+        <div class="col-sm-1 text-align-center">
+            <a href="{{ path('match-detailed', {'id':match.id}) }}" class="btn btn-warning text-white rounded-action">
+                <i class="fas fa-stopwatch"></i>
+            </a>
+        </div>
+    {% endif %}
     <div class="col-sm text-left">{{ participant1 }}</div>
-    <div class="col-sm text-align-center">{{ score1 }} / {{ score2 }}</div>
+    <div class="col-sm text-align-center">{{ score1 }} - {{ score2 }}</div>
     <div class="col-sm text-right"> {{ participant2 }}</div>
 </div>
