@@ -37,6 +37,9 @@
                                 <a class="btn btn-info rounded-action" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
                                     <i class="fa fa-user-plus"></i>
                                 </a>
+                                <a class="btn btn-success button-icon" href="{{ path('edit-tournament', {tournamentId: tournament.id} ) }}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
                             {% endif %}
 
                             {%  if (tournamentRule.canBeCancelled(tournament, app.getUser.getTFUser, false))  %}

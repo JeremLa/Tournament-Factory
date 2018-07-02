@@ -5,9 +5,11 @@ namespace App\Services;
 
 use App\Entity\TFTournament;
 use App\Entity\TFUser;
+use App\Repository\TFTournamentRepository;
 use App\Repository\TFUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\VarDumper\VarDumper;
 
 class TournamentService
@@ -21,25 +23,22 @@ class TournamentService
 
     public function updateTournamentParticipant(array $submited, TFTournament $tournament)
     {
-        $players_id = [];
-        if (array_key_exists('players', $submited)) {
-            $players_id = $submited['players'];
-        }
-
-        if (count($players_id) > $tournament->getMaxParticipantNumber()){
+        if (count($submited) > $tournament->getMaxParticipantNumber()){
             return false;
         }
 
         /* @var TFUserRepository $repo */
         $repo = $this->entityManager->getRepository(TFUser::class);
-        $players = $repo->findUsersByArrayId($players_id);
+        $players = $repo->findUsersByArrayEmail($submited);
 
         $players_to_delete = array_diff($tournament->getPlayers()->toArray(), $players);
 
         /* @var TFUser $player */
         foreach ($players_to_delete as $player) {
             $player->removeTournament($tournament);
+            $tournament->removePlayer($player);
             $this->entityManager->persist($player);
+            $this->entityManager->persist($tournament);
         }
 
         foreach ($players as $player) {
@@ -47,10 +46,54 @@ class TournamentService
 
             if (!$tournaments->contains($tournament)) {
                 $player->addTournaments($tournament);
+                $tournament->addPlayer($player);
+                $this->entityManager->persist($tournament);
                 $this->entityManager->persist($player);
             }
         }
         $this->entityManager->flush();
         return true;
     }
+
+    public function addTournamentParticipant(TFUser $player, TFTournament $tournament)
+    {
+        $users = $tournament->getPlayers();
+        if (count($users) + 1 > $tournament->getMaxParticipantNumber()){
+            return false;
+        }
+
+        $tournaments = $player->getTournaments();
+
+        if (!$tournaments->contains($tournament)) {
+            $player->addTournaments($tournament);
+            $tournament->addPlayer($player);
+            $this->entityManager->persist($player);
+            $this->entityManager->persist($tournament);
+        }
+        $this->entityManager->flush();
+        return true;
+
+    }
+
+    public function removeTournamentParticipant(TFUser $player, TFTournament $tournament)
+    {
+        $player->removeTournament($tournament);
+        $tournament->removePlayer($player);
+        $this->entityManager->persist($player);
+        $this->entityManager->persist($tournament);
+        $this->entityManager->flush();
+        return true;
+    }
+
+    public function checkTournamentExist($tournamentId) : TFTournament{
+        /* @var TFTournamentRepository $repo */
+        $repo = $this->entityManager->getRepository(TFTournament::class);
+        $tournament = $repo->find($tournamentId);
+
+        if($tournament == null){
+            throw new NotFoundHttpException("Ce tournoi n'existe pas");
+        }
+        return $tournament;
+    }
+
 }
