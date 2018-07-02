@@ -16,9 +16,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\Translator;
 use Symfony\Component\VarDumper\VarDumper;
 
 class TournamentController extends Controller
@@ -110,48 +113,6 @@ class TournamentController extends Controller
     }
 
     /**
-     * @Route("/tournament/{tournamentId}/addParticipant", name="add-participant", requirements={"\s"})
-     */
-    public function addParticipant (Request $request, string $tournamentId, TournamentRulesServices $rulesServices, TournamentService $tournamentService)
-    {
-        $tournament = self::checkTournamentExist($tournamentId);
-        if(!$rulesServices->canAddParticipant($tournament)){
-            if($request->headers->get('referer')) {
-                return $this->redirect($request->headers->get('referer'));
-            }
-            return $this->redirectToRoute('my_tournament');
-        }
-        /* @var TFUser[] $players_in_tournament */
-        $tournamentPlayers = $tournament->getPlayers()->toArray();
-
-        /* @var  TFUserRepository $repo */
-        $repo = $this->entityManager->getRepository(TFUser::class);
-        /* @var Collection $users */
-        $users = $repo->findAll();
-
-        $form = $this->createForm('App\Form\Type\AddParticipantToTournamentType', $tournament, ['users' => $users, 'players' => $tournamentPlayers]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()){
-            /* @var array $submited */
-            $submited = $request->get('add_participant_to_tournament');
-            if($tournamentService->updateTournamentParticipant($submited, $tournament)){
-                $this->addFlash('success', 'tournament.participant.update');
-                return $this->redirectToRoute('my_tournament');
-            }
-
-            $this->addFlash('danger', 'tournament.participant.update');
-            return $this->render('tournament/add-participant.html.twig', [
-                'form' => $form->createView()
-            ]);
-        }
-
-        return $this->render('tournament/add-participant.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
      * @Route("/tournament/{tournamentId}/start", name="start-tournament", requirements={"\s"})
      */
     public function startTournament (Request $request, string $tournamentId, TournamentRulesServices $rulesServices, MatchService $matchService)
@@ -239,6 +200,40 @@ class TournamentController extends Controller
     }
 
 
+    /**
+     * @Route("/tournament/{tournamentId}/manageParticipant", name="manage-participant", requirements={"\s"})
+     */
+    public function manageTournament(Request $request, string $tournamentId, TournamentService $tournamentService)
+    {
+        $tournament = $this->checkTournamentExist($tournamentId);
+        $players = $tournament->getPlayers();
+
+        $form = $this->createForm('App\Form\Type\ManageParticipantType');
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $values = explode(',',$request->get('hidden-manage_participant')['tags']);
+            if($tournamentService->updateTournamentParticipant($values, $tournament)){
+                $this->addFlash('success', 'tournament.participant.update');
+                return $this->redirectToRoute('my_tournament');
+            }
+
+            $this->addFlash('danger', 'tournament.participant.update');
+            return $this->render('tournament/add-participant.html.twig', [
+                'form' => $form->createView(),
+                'tournament' => $tournament,
+                'playerNumber' => count($players),
+            ]);
+
+        }
+        return $this->render('tournament/manage-participant.html.twig', [
+            'form' => $form->createView(),
+            'tournament' => $tournament,
+            'playerNumber' => count($players),
+        ]);
+    }
+
     private function checkTournamentExist($tournamentId) : TFTournament{
         /* @var TFTournamentRepository $repo */
         $repo = $this->entityManager->getRepository(TFTournament::class);
@@ -248,5 +243,18 @@ class TournamentController extends Controller
             throw new NotFoundHttpException("Ce tournoi n'existe pas");
         }
         return $tournament;
+    }
+
+    private function checkUserExist($email) : TFUser{
+        /* @var TFUserRepository $repo */
+        $repo = $this->entityManager->getRepository(TFUser::class);
+        $user = $repo->findOneBy([
+            'email' => $email,
+        ]);
+
+        if($user == null){
+            throw new NotFoundHttpException("Cet utilisateur n'existe pas");
+        }
+        return $user;
     }
 }

@@ -15,6 +15,7 @@ form:
     nickname: Surnom
     country: Pays
     remember_me: 'Se souvenir de moi'
+    players: 'Participant'
 
 tournament:
     form:
@@ -74,6 +75,7 @@ tournament:
             empty: Vous ne possédez et ne participez à aucun tournois
 user:
     profil: 'Profil'
+    notFound: "Cet utilisateur n'existe pas"
 
 actions:
     edit: 'Modifier'

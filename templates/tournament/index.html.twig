@@ -34,7 +34,7 @@
                     <td>
                         {% if app.user and app.user.tfuser == tournament.owner %}
                             {% if tournament.status == 'setup' %}
-                                <a class="btn btn-info button-icon" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
+                                <a class="btn btn-info button-icon" href="{{ path('manage-participant', {tournamentId: tournament.id} ) }}">
                                     <i class="fa fa-user-plus"></i>
                                 </a>
                                 <a class="btn btn-success button-icon" href="{{ path('edit-tournament', {tournamentId: tournament.id} ) }}">

@@ -21,18 +21,13 @@ class TournamentService
 
     public function updateTournamentParticipant(array $submited, TFTournament $tournament)
     {
-        $players_id = [];
-        if (array_key_exists('players', $submited)) {
-            $players_id = $submited['players'];
-        }
-
-        if (count($players_id) > $tournament->getMaxParticipantNumber()){
+        if (count($submited) > $tournament->getMaxParticipantNumber()){
             return false;
         }
 
         /* @var TFUserRepository $repo */
         $repo = $this->entityManager->getRepository(TFUser::class);
-        $players = $repo->findUsersByArrayId($players_id);
+        $players = $repo->findUsersByArrayEmail($submited);
 
         $players_to_delete = array_diff($tournament->getPlayers()->toArray(), $players);
 
@@ -53,4 +48,32 @@ class TournamentService
         $this->entityManager->flush();
         return true;
     }
+
+    public function addTournamentParticipant(TFUser $player, TFTournament $tournament)
+    {
+        $users = $tournament->getPlayers();
+        if (count($users) + 1 > $tournament->getMaxParticipantNumber()){
+            return false;
+        }
+
+        $tournaments = $player->getTournaments();
+
+        if (!$tournaments->contains($tournament)) {
+            $player->addTournaments($tournament);
+            $this->entityManager->persist($player);
+        }
+        $this->entityManager->flush();
+        return true;
+
+    }
+
+    public function removeTournamentParticipant(TFUser $player, TFTournament $tournament)
+    {
+        $player->removeTournament($tournament);
+        $this->entityManager->persist($player);
+        $this->entityManager->flush();
+        return true;
+    }
+
+
 }
