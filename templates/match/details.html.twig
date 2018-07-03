@@ -18,33 +18,61 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-5 display-4 match-align-middle">{{ match.players[0].nicknames[0] }}</div>
+                <div class="col-5 display-4 match-align-middle">{{ match.players[0] is defined ? match.players[0].nicknames[0] : '??' }}</div>
                 <div class="col-2 text-center display-2">VS</div>
-                <div class="col-5 text-right display-4 match-align-middle">{{ match.players[1].nicknames[0] }}</div>
+                <div class="col-5 text-right display-4 match-align-middle">{{ match.players[1] is defined ? match.players[1].nicknames[0] : '??' }}</div>
             </div>
             <div class="row">
                 <div class="col text-center">
-                    <small>{{ match.score[match.players[0].id] }} - {{ match.score[match.players[1].id] }}</small>
+                    <small>{{ match.players[0] is defined ? match.score[match.players[0].id] : '' }} - {{  match.players[1] is defined ? match.score[match.players[1].id] : '' }}</small>
                 </div>
+            </div>
+            <div class="row">
+
+                {% if match.previousMatch | length > 0 %}
+                    <div class="col text-left">
+                        {% for pmatch in match.previousMatch %}
+                            <a href="{{ path('match-details', {'id' : pmatch.id}) }}" class="d-block">
+                                {% set player1 = pmatch.players[0] is defined ? pmatch.players[0].nicknames[0] : '??' %}
+                                {% set player2 = pmatch.players[1] is defined ? pmatch.players[1].nicknames[0] : '??' %}
+                                Match précédent : {{ player1 ~ ' VS ' ~ player2 }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if match.nextMatch is not null %}
+                    <div class="col text-right">
+                        <a href="{{ path('match-details', {'id' : match.nextMatch.id}) }}">
+                            Match suivant
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
 
     {% if match.tournament.owner == app.user.tfuser %}
         {% include 'includes/flash-messages.html.twig' %}
-        
-        {{ form_start(scoreForm) }}
-            <div class="row p-1 mb-2">
-               <div class="col match-align-middle"><strong>{{ match.players[0].nicknames[0] }}</strong></div>
-               <div class="col-1 text-center">{{ form_widget(scoreForm.score1) }}</div>
-               <div class="match-align-middle"><strong>-</strong></div>
-               <div class="col-1 text-center">{{ form_widget(scoreForm.score2) }}</div>
-               <div class="col text-right match-align-middle"><strong>{{ match.players[1].nicknames[0] }}</strong></div>
+
+        {% if not match.over and match.players | length == 2 %}
+            {{ form_start(scoreForm) }}
+                <div class="row p-1 mb-2">
+                   <div class="col match-align-middle"><strong>{{ match.players[0].nicknames[0] }}</strong></div>
+                   <div class="col-1 text-center">{{ form_widget(scoreForm.score1) }}</div>
+                   <div class="match-align-middle"><strong>-</strong></div>
+                   <div class="col-1 text-center">{{ form_widget(scoreForm.score2) }}</div>
+                   <div class="col text-right match-align-middle"><strong>{{ match.players[1].nicknames[0] }}</strong></div>
+                </div>
+                <div class="row">
+                    {{ form_widget(scoreForm.save, { 'attr': {'class': 'btn btn-primary col m-1'}}) }}
+                    {{ form_widget(scoreForm.over, { 'attr': {'class': 'btn btn-success col m-1'}}) }}
+                </div>
+            {{ form_end(scoreForm) }}
+        {% else %}
+            <div class="alert alert-warning col-sm-12">
+                {{ 'match.owner.update.warning' | trans }}
             </div>
-            <div class="row">
-                {{ form_widget(scoreForm.save, { 'attr': {'class': 'btn btn-primary col m-1'}}) }}
-                {{ form_widget(scoreForm.over, { 'attr': {'class': 'btn btn-success col m-1'}}) }}
-            </div>
-        {{ form_end(scoreForm) }}
+        {% endif %}
     {% endif %}
 {% endblock %}

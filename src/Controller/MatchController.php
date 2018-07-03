@@ -6,9 +6,7 @@ use App\Services\MatchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -26,7 +24,7 @@ class MatchController extends AbstractController
     }
 
     /**
-     * @Route(path="/match/{id}/match-detailed", name="match-detailed")
+     * @Route(path="/match/{id}/match-detailed", name="match-details")
      */
     public function updateScore (int $id, Request $request)
     {

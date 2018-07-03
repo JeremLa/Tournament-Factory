@@ -216,7 +216,7 @@ class TFMatch
     /**
      * @return TFMatch
      */
-    public function getNextMatch() : TFMatch
+    public function getNextMatch() : ?TFMatch
     {
         return $this->nextMatch;
     }
@@ -244,6 +244,4 @@ class TFMatch
     {
         $this->over = $over;
     }
-
-
 }

@@ -76,6 +76,11 @@ tournament:
 
 match:
     over: Terminer le match
+    owner:
+        update:
+            warning: La mise à jour des scores sera disponnible lorsque deux joueurs seront disponible pour le match
+        over:
+            warning: Ce match est terminé et ne peut plus être modifié.
     singleElimination:
         over:
             notEqual:
