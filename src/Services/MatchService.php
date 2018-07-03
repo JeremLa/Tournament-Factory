@@ -121,12 +121,14 @@ class MatchService
 
         $maxTurn = $this->getMaxTurnInTournament($tournament) - 1;
 
+        $players = $tournament->getPlayers()->toArray();
+
         /* @var TFMatch $match */
         foreach ($tournament->getMatches() as $match) {
             if($match->getTurn() === $maxTurn){
-                $participant1 = $this->randomUser($tournament->getPlayers()->toArray(), $used);
+                $participant1 = $this->randomUser($players, $used);
                 $used[] = $participant1;
-                $participant2 = $this->randomUser($tournament->getPlayers()->toArray(), $used);
+                $participant2 = $this->randomUser($players, $used);
                 $used[] = $participant2;
 
                 $this->assignPlayers($match, $participant1, $participant2);
@@ -215,8 +217,6 @@ class MatchService
 
         while (!$find) {
             $rand = random_int($min, $max);
-
-            echo 'random : '.$rand;
 
             if(!in_array($users[$rand], $excluded)){
                 $find = true;
