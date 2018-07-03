@@ -65,7 +65,7 @@
     {% endif %}
 </div>
 
-    {% include 'includes/modal.html.twig' %}
+    {% include 'includes/modal.html.twig'  with {'modalId' : 'remove-tournament'} %}
 {% endblock %}
 
 {% block javascripts %}

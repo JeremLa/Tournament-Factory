@@ -87,6 +87,10 @@ match:
                 warning: Lors d'un tournois à élimination directe, il n'est pas possible de mettre fin à un match sur une égalité.
             lowerThanZero:
                 warning: Le match ne pourra pas être cloturé tant que le score contiendra une valeur négative.
+            update:
+                danger: Un tournois ne peut être mis à jour alors qu'il est terminé.
+            validation:
+                success: Ce match est terminé.
 user:
     profil: 'Profil'
     notFound: "Cet utilisateur n'existe pas"

@@ -3,6 +3,7 @@
 namespace App\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,12 +30,16 @@ class ScoreType extends AbstractType
                     'min' => 0
                 ]
             ])
+            ->add('isOver', CheckboxType::class, [
+                self::KEY_LABEL => 'Terminer le match',
+                'required' => false
+            ])
             ->add('save', SubmitType::class, [
                 self::KEY_LABEL => 'form.save'
             ])
-            ->add('over', SubmitType::class, [
-                self::KEY_LABEL => 'match.over'
-            ])
+//            ->add('over', SubmitType::class, [
+//                self::KEY_LABEL => 'match.over'
+//            ])
         ;
     }
 
@@ -42,7 +47,8 @@ class ScoreType extends AbstractType
     {
         $resolver->setDefaults([
             'score1' => 0,
-            'score2' => 0
+            'score2' => 0,
+            'isOver' => false
         ]);
     }
 }

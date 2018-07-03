@@ -141,12 +141,9 @@ class MatchService
      */
     public function assignPlayers (TFMatch $match, TFUser $participant1, TFUser $participant2) : void
     {
-            $match->setScores([
-               $participant1->getId() => 0,
-               $participant2->getId() => 0
-            ]);
             $match->addPlayer($participant1)
                   ->addPlayer($participant2);
+            $this->initScores($match);
     }
 
     /**
@@ -160,6 +157,10 @@ class MatchService
               ->addTeam($participant2);
     }
 
+    /**
+     * @param TFMatch $match
+     * @return array
+     */
     public function getScoreForForm (TFMatch $match) : array
     {
         $result = [];
@@ -175,37 +176,59 @@ class MatchService
         return $result;
     }
 
+    /**
+     * @param TFMatch $match
+     * @param Form $scoreForm
+     * @return TFMatch
+     */
     public function updateScore(TFMatch $match, Form $scoreForm)
     {
-        $hasNoEquality = $this->hasNoEquality($scoreForm);
-        if(!$hasNoEquality)
-        {
-            $canHaveEquality = $this->canHaveEquality($match);
-            if (!$canHaveEquality) {
-                $this->addFlashMessage('match.singleElimination.over.notEqual');
+        if(!$match->isOver()){
+            $hasNoEquality = $this->hasNoEquality($scoreForm);
+            if(!$hasNoEquality)
+            {
+                $canHaveEquality = $this->canHaveEquality($match);
+                if (!$canHaveEquality) {
+                    $this->addFlashMessage('match.singleElimination.over.notEqual');
+                }
             }
+
+            $hasNoNegativeScore = $this->hasNoNegativeScore($scoreForm);
+            if(!$hasNoNegativeScore) {
+                $this->addFlashMessage('match.singleElimination.over.lowerThanZero');
+            }
+
+            $index = 1;
+
+            foreach ($match->getPlayers() as $player) {
+                $score = $scoreForm->get(self::SCORE.$index)->getData() ?: 0;
+                $match->setScore($player->getId(), $score);
+
+                $index++;
+            }
+
+            if($scoreForm->get('isOver') && $hasNoEquality && $hasNoNegativeScore){
+                $this->updateNextMatch($match);
+                $match->setOver(true);
+            }
+
+            $this->entityManager->persist($match);
+            $this->entityManager->flush();
+        }else{
+            $this->addFlashMessage('match.singleElimination.over.update', true, 'danger');
         }
 
-        $hasNoNegativeScore = $this->hasNoNegativeScore($scoreForm);
-        if(!$hasNoNegativeScore) {
-            $this->addFlashMessage('match.singleElimination.over.lowerThanZero');
-        }
 
-        $index = 1;
-
-        foreach ($match->getPlayers() as $player) {
-            $score = $scoreForm->get(self::SCORE.$index)->getData() ?: 0;
-            $match->setScore($player->getId(), $score);
-
-            $index++;
-        }
-
-        $this->entityManager->persist($match);
-        $this->entityManager->flush();
 
         return $match;
     }
 
+    /**
+     * @param array $users
+     * @param array $excluded
+     * @return TFUser
+     * @throws \Exception
+     */
     private function randomUser (array $users, array $excluded = []) : TFUser
     {
         $min = 0;
@@ -277,6 +300,38 @@ class MatchService
                 return false;
             default:
                 return false;
+        }
+    }
+
+    public function updateNextMatch (TFMatch $match)
+    {
+        $userId = array_search(max($match->getScore()), $match->getScore());
+
+        $user = null;
+
+        foreach ($match->getPlayers() as $player) {
+            if ($player->getId() == $userId) {
+                $user = $player;
+                break;
+            }
+        }
+
+        if($user) {
+            $nextMatch = $match->getNextMatch();
+            $nextMatch->addPlayer($user);
+            $this->initScores($nextMatch);
+            $this->entityManager->persist($nextMatch);
+            $this->entityManager->flush();
+        }
+    }
+
+    /**
+     * @param TFMatch $match
+     */
+    public function initScores (TFMatch $match) {
+        $match->setScores([]);
+        foreach ($match->getPlayers() as $player) {
+            $match->setScore($player->getId(), 0);
         }
     }
 
