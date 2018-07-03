@@ -59,12 +59,18 @@ class TFMatch
      */
     private $turn;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $over;
+
     public function __construct()
     {
         $this->players = new ArrayCollection();
         $this->teams = new ArrayCollection();
         $this->score = [];
         $this->previousMatch = new ArrayCollection();
+        $this->over = false;
     }
 
     public function getId()
@@ -77,7 +83,14 @@ class TFMatch
         return $this->score;
     }
 
-    public function setScore(?array $score): self
+    public function setScore($index, $score): self
+    {
+        $this->score[$index] = $score;
+
+        return $this;
+    }
+
+    public function setScores(?array $score): self
     {
         $this->score = $score;
 
@@ -214,6 +227,22 @@ class TFMatch
     public function setNextMatch(TFMatch $nextMatch): void
     {
         $this->nextMatch = $nextMatch;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOver() : bool
+    {
+        return $this->over;
+    }
+
+    /**
+     * @param bool $over
+     */
+    public function setOver(bool $over): void
+    {
+        $this->over = $over;
     }
 
 

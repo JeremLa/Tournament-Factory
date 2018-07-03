@@ -8,7 +8,7 @@ a.navbar-brand > small {
     font-size: 50%;
 }
 
-.button-icon {
+.rounded-action{
     height: 40px;
     width: 40px;
     border-radius: 100%;
@@ -21,4 +21,8 @@ a.navbar-brand > small {
 
 .b-2 {
     border-width: 2px !important;
+}
+
+.show-match:hover {
+    background: #dee2e6 ;
 }

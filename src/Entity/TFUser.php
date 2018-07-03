@@ -205,12 +205,6 @@ class TFUser extends AbstractTFParticipant
         $this->tournaments->removeElement($TFTournament);
     }
 
-
-    public function __toString()
-    {
-        return $this->getId() . '/' . $this->getEmail();
-    }
-
     /**
      * @return Collection|TFMatch[]
      */

@@ -73,6 +73,15 @@ tournament:
         myTournaments:
             title: Mes tournois
             empty: Vous ne possédez et ne participez à aucun tournois
+
+match:
+    over: Terminer le match
+    singleElimination:
+        over:
+            notEqual:
+                warning: Lors d'un tournois à élimination directe, il n'est pas possible de mettre fin à un match sur une égalité.
+            lowerThanZero:
+                warning: Le match ne pourra pas être cloturé tant que le score contiendra une valeur négative.
 user:
     profil: 'Profil'
     match: 'Mes matchs'
