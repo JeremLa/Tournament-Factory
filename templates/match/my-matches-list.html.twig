@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Matchs{% endblock %}
+
+{% block body %}
+    <h1 class="row">{{ 'match.list.title' | trans | capitalize }}</h1>
+
+    <nav class="row nav nav-tabs">
+        <a class="nav-item nav-link active" href="#notOver" data-toggle="tab">
+                 {{ 'match.list.notOver' | trans }}
+        </a>
+        <a class="nav-item nav-link" href="#over" data-toggle="tab">
+            {{ 'match.list.over' | trans }}
+        </a>
+    </nav>
+
+    <div class="tab-content">
+            <div class="tab-pane fade show active" id="notOver" style="line-height: 40px;">
+                {% if tfmatchesNotOver | length > 0 %}
+                {% for match in tfmatchesNotOver %}
+                    {% include 'includes/match.html.twig' %}
+                {% endfor %}
+                {% else %}
+                    <b>
+                        {{ 'match.list.none' | trans }}
+                    </b>
+                {% endif %}
+            </div>
+            <div class="tab-pane fade show" id="over" style="line-height: 40px;">
+                {% if tfmatchesOver | length > 0 %}
+                {% for match in tfmatchesOver %}
+                    {% include 'includes/match.html.twig' %}
+                {% endfor %}
+                {% else %}
+                    <b>
+                        {{ 'match.list.none' | trans }}
+                    </b>
+                {% endif %}
+            </div>
+
+    </div>
+
+
+{% endblock %}

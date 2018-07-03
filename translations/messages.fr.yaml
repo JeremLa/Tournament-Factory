@@ -75,6 +75,11 @@ tournament:
             empty: Vous ne possédez et ne participez à aucun tournois
 
 match:
+    list:
+        title: Mes matchs
+        over: Terminés
+        notOver: En cours
+        none: Aucun match
     over: Terminer le match
     owner:
         update:

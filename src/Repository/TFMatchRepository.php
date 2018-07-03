@@ -19,32 +19,34 @@ class TFMatchRepository extends ServiceEntityRepository
         parent::__construct($registry, TFMatch::class);
     }
 
-//    /**
-//     * @return TFMatch[] Returns an array of TFMatch objects
-//     */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return TFMatch[] Returns an array of TFMatch objects
+     */
+    public function findByUserParticipantNotOver($user)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('m')
+            ->leftJoin('m.players', 'p')
+            ->where('p = :user')
+            ->andWhere('m.over = false')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?TFMatch
+    /**
+     * @return TFMatch[] Returns an array of TFMatch objects
+     */
+    public function findByUserParticipantOver($user)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('m')
+            ->leftJoin('m.players', 'p')
+            ->where('p = :user')
+            ->andWhere('m.over = true')
+            ->setParameter('user', $user)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult()
+            ;
     }
-    */
+
 }

@@ -2,12 +2,15 @@
 namespace App\Controller;
 
 
+use App\Entity\TFMatch;
+use App\Repository\TFMatchRepository;
 use App\Services\MatchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 
 class MatchController extends AbstractController
 {
@@ -26,7 +29,7 @@ class MatchController extends AbstractController
      * @param int $identifier
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route(path="/match/{id}/match-detailed", name="match-details")
+     * @Route(path="/match/{identifier}/match-detailed", name="match-details")
      */
     public function updateScore (int $identifier, Request $request)
     {
@@ -43,6 +46,22 @@ class MatchController extends AbstractController
         return $this->render('match/details.html.twig', [
             'scoreForm' => $scoreForm->createView(),
             'match' => $match
+        ]);
+    }
+
+    /**
+     * @Route(path="/match/mine", name="my-matches")
+     */
+    public function myMatches ()
+    {
+        /** @var TFMatchRepository $repo */
+        $repo = $this->entityManager->getRepository(TFMatch::class);
+
+        $matchesNotOver = $repo->findByUserParticipantNotOver($this->getUser()->getTFUser());
+        $matchesOver = $repo->findByUserParticipantOver($this->getUser()->getTFUser());
+        return $this->render('match/my-matches-list.html.twig', [
+            'tfmatchesNotOver' => $matchesNotOver,
+            'tfmatchesOver' => $matchesOver,
         ]);
     }
 }

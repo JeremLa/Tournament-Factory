@@ -32,7 +32,7 @@
                 {% if match.previousMatch | length > 0 %}
                     <div class="col text-left">
                         {% for pmatch in match.previousMatch %}
-                            <a href="{{ path('match-details', {'id' : pmatch.id}) }}" class="d-block">
+                            <a href="{{ path('match-details', {'identifier' : pmatch.id}) }}" class="d-block">
                                 {% set player1 = pmatch.players[0] is defined ? pmatch.players[0].nicknames[0] : '??' %}
                                 {% set player2 = pmatch.players[1] is defined ? pmatch.players[1].nicknames[0] : '??' %}
                                 Match précédent : {{ player1 ~ ' VS ' ~ player2 }}
@@ -43,7 +43,7 @@
 
                 {% if match.nextMatch is not null %}
                     <div class="col text-right">
-                        <a href="{{ path('match-details', {'id' : match.nextMatch.id}) }}">
+                        <a href="{{ path('match-details', {'identifier' : match.nextMatch.id}) }}">
                             Match suivant
                         </a>
                     </div>
