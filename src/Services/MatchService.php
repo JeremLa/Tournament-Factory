@@ -13,20 +13,39 @@ use App\Entity\TFMatch;
 use App\Entity\TFTeam;
 use App\Entity\TFTournament;
 use App\Entity\TFUser;
+use App\Services\Enum\TournamentTypeEnum;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\VarDumper\VarDumper;
 
 class MatchService
 {
 
+    /* @var Session $session */
+    private $session;
     private $entityManager;
     private const SCORE = 'score';
+    private const MESSAGE_TYPE_WARNING = 'warning';
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session)
     {
         $this->entityManager = $entityManager;
+        $this->session = $session;
+    }
+
+    public function findOr404 ($id) : TFMatch
+    {
+        $match = $this->entityManager->getRepository('App:TFMatch')->find($id);
+
+        if(!$match) {
+            throw new NotFoundHttpException('Ce match n\'existe pas.');
+        }
+
+        return $match;
     }
 
     public function generateMatches(TFTournament $tournament, bool $withParticipantAssignement = false) : void
@@ -122,7 +141,7 @@ class MatchService
      */
     public function assignPlayers (TFMatch $match, TFUser $participant1, TFUser $participant2) : void
     {
-            $match->setScore([
+            $match->setScores([
                $participant1->getId() => 0,
                $participant2->getId() => 0
             ]);
@@ -156,8 +175,22 @@ class MatchService
         return $result;
     }
 
-    public function updateScore(TFMatch $match, FormInterface $scoreForm)
+    public function updateScore(TFMatch $match, Form $scoreForm)
     {
+        $hasNoEquality = $this->hasNoEquality($scoreForm);
+        if(!$hasNoEquality)
+        {
+            $canHaveEquality = $this->canHaveEquality($match);
+            if (!$canHaveEquality) {
+                $this->addFlashMessage('match.singleElimination.over.notEqual');
+            }
+        }
+
+        $hasNoNegativeScore = $this->hasNoNegativeScore($scoreForm);
+        if(!$hasNoNegativeScore) {
+            $this->addFlashMessage('match.singleElimination.over.lowerThanZero');
+        }
+
         $index = 1;
 
         foreach ($match->getPlayers() as $player) {
@@ -191,5 +224,71 @@ class MatchService
         }
 
         return $users[$rand];
+    }
+
+    /**
+     * @param Form $form
+     * @return bool
+     */
+    public function hasNoNegativeScore (Form $form) : bool
+    {
+        $return = false;
+
+        if($form->get('score1') !== null && $form->get('score2') !== null)
+        {
+            if($form->get('score1')->getData() >= 0 && $form->get('score2')->getData() >= 0) {
+                $return = true;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Form $form
+     * @return bool
+     */
+    public function hasNoEquality (Form $form) : bool
+    {
+        $return = false;
+
+        if($form->get('score1') !== null && $form->get('score2') !== null)
+        {
+            if($form->get('score1')->getData() !== $form->get('score2')->getData()) {
+                $return = true;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param TFMatch $match
+     * @return bool
+     */
+    public function canHaveEquality (TFMatch $match) : bool
+    {
+        /* @var TFTournament $tournament */
+        $tournament = $match->getTournament();
+
+        switch ($tournament->getType())
+        {
+            case TournamentTypeEnum::TYPE_SINGLE :
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * @param string $state
+     * @param string $message
+     * @param bool $withMessage
+     */
+    private function addFlashMessage (string $message,bool $withMessage = true, string $state = self::MESSAGE_TYPE_WARNING) : void
+    {
+        if($withMessage) {
+            $this->session->getFlashBag()->add($state, $message);
+        }
     }
 }

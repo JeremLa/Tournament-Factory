@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Services\MatchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,12 +30,9 @@ class MatchController extends AbstractController
      */
     public function updateScore (int $id, Request $request)
     {
-        $match = $this->entityManager->getRepository('App:TFMatch')->find($id);
+        $match = $this->matchService->findOr404($id);
 
-        if(!$match) {
-            throw new NotFoundHttpException('Ce match n\'existe pas.');
-        }
-
+        /* @var Form $scoreForm */
         $scoreForm = $this->createForm('App\Form\Type\ScoreType', $this->matchService->getScoreForForm($match));
         $scoreForm->handleRequest($request);
 

@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-{% form_theme scoreForm 'form/custom-label.html.twig' %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/match/match-details.css') }}">
@@ -8,7 +7,6 @@
 {% block title %}Détail du match{% endblock %}
 
 {% block body %}
-
     <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
         <div class="col-sm-12 px-0">
             <h1 class="display-5 font-italic">{{ 'tournament.turn.tab' | transchoice(2 ** match.turn) }}</h1>
@@ -26,9 +24,20 @@
     </div>
 
     {% if match.tournament.owner == app.user.tfuser %}
+        {% include 'includes/flash-messages.html.twig' %}
+
         {{ form_start(scoreForm) }}
-            {{ form_row(scoreForm) }}
-            <button type="submit" class="btn btn-primary btn-block">{{ 'form.save' | trans }}</button>
+            <div class="row p-1 mb-2">
+               <div class="col match-align-middle"><strong>{{ match.players[0].nicknames[0] }}</strong></div>
+               <div class="col-1 text-center">{{ form_widget(scoreForm.score1) }}</div>
+               <div class="match-align-middle"><strong>-</strong></div>
+               <div class="col-1 text-center">{{ form_widget(scoreForm.score2) }}</div>
+               <div class="col text-right match-align-middle"><strong>{{ match.players[1].nicknames[0] }}</strong></div>
+            </div>
+            <div class="row">
+                {{ form_widget(scoreForm.save, { 'attr': {'class': 'btn btn-primary col m-1'}}) }}
+                {{ form_widget(scoreForm.over, { 'attr': {'class': 'btn btn-success col m-1'}}) }}
+            </div>
         {{ form_end(scoreForm) }}
     {% endif %}
 {% endblock %}
