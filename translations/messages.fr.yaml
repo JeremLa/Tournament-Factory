@@ -80,6 +80,8 @@ user:
 
 actions:
     edit: 'Modifier'
-    addParticipant: 'Rajouter des participants'
+    manageParticipant: 'Editer les participants'
     detail: 'Details'
     delete: 'Supprimer'
+    cancel: 'Annuler'
+    start: 'Démarrer'
