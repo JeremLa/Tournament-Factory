@@ -173,8 +173,8 @@ class TournamentRulesServices
      */
     public function hasMinParticipantRequired (TFTournament $TFTournament) : bool
     {
-        $min = self::MIN_PARTICIPANT_REQUIRED < $TFTournament->getMaxParticipantNumber() ? self::MIN_PARTICIPANT_REQUIRED : $TFTournament->getMaxParticipantNumber();
-
+//        $min = self::MIN_PARTICIPANT_REQUIRED < $TFTournament->getMaxParticipantNumber() ? self::MIN_PARTICIPANT_REQUIRED : $TFTournament->getMaxParticipantNumber();
+        $min = $TFTournament->getMaxParticipantNumber();
         return \count($TFTournament->getPlayers()) >= $min;
     }
 

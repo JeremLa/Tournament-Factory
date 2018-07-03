@@ -85,7 +85,7 @@ class TournamentController extends Controller
 
             $this->addFlash('success', 'tournament.new.message');
 
-            return $this->redirectToRoute('chosen-type');
+            return $this->redirectToRoute('detail-tournament', ['tournamentId' => $tournament->getId()]);
         }
 
         return $this->render('tournament/new-tournament.html.twig', [

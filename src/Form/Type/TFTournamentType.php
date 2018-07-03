@@ -19,9 +19,9 @@ class TFTournamentType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'tournament.form.name'
             ])
-            ->add('maxParticipantNumber', NumberType::class, [
+            ->add('maxParticipantNumber', ChoiceType::class, [
                 'label' => 'tournament.form.maxParticipant',
-                'scale' => 0,
+                'choices' => [2=>2,4=>4,8=>8,16=>16,32=>32,64=>64]
             ])
         ;
     }

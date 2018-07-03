@@ -81,7 +81,7 @@ class TournamentRulesServicesTest extends KernelTestCase
         $this->tournament->addPlayer(new TFUser());
         $this->tournament->addPlayer(new TFUser());
 
-        $this->assertTrue($this->service->hasMinParticipantRequired($this->tournament));
+        $this->assertFalse($this->service->hasMinParticipantRequired($this->tournament));
 
         $this->tournament->setMaxParticipantNumber(1);
 
@@ -112,6 +112,8 @@ class TournamentRulesServicesTest extends KernelTestCase
         $owner = new TFUser();
         $this->tournament->setStatus(TournamentStatusEnum::STATUS_SETUP);
         $this->tournament->setMaxParticipantNumber(4);
+        $this->tournament->addPlayer(new TFUser());
+        $this->tournament->addPlayer(new TFUser());
         $this->tournament->addPlayer(new TFUser());
         $this->tournament->addPlayer($owner);
         $this->tournament->setOwner($owner);

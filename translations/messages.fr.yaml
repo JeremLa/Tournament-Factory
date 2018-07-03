@@ -75,6 +75,11 @@ tournament:
             empty: Vous ne possédez et ne participez à aucun tournois
 
 match:
+    list:
+        title: Mes matchs
+        over: Terminés
+        notOver: En cours
+        none: Aucun match
     over: Terminer le match
     owner:
         update:
@@ -93,10 +98,13 @@ match:
                 success: Ce match est terminé.
 user:
     profil: 'Profil'
+    match: 'Mes matchs'
     notFound: "Cet utilisateur n'existe pas"
 
 actions:
     edit: 'Modifier'
-    addParticipant: 'Rajouter des participants'
+    manageParticipant: 'Editer les participants'
     detail: 'Details'
     delete: 'Supprimer'
+    cancel: 'Annuler'
+    start: 'Démarrer'

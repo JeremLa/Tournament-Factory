@@ -6,4 +6,5 @@ twig:
         - 'bootstrap_4_layout.html.twig'
     globals:
         version: 0.2.3
+        appTitle: 'Tournament Factory'
         tournamentRule: "@rules.tournament"
