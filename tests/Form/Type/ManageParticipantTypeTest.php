@@ -1,16 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: AHermes
- * Date: 02/07/2018
- * Time: 18:16
- */
 
 namespace App\Tests\Form\Type;
 
 use App\Form\Type\ManageParticipantType;
 use Symfony\Component\Form\Test\TypeTestCase;
-use Symfony\Component\VarDumper\VarDumper;
 
 class ManageParticipantTypeTest extends TypeTestCase
 {
