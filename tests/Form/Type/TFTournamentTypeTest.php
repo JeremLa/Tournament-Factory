@@ -11,13 +11,14 @@ class TFTournamentTypeTest extends TypeTestCase
     public function testSubmitValidData () {
         $formData = array(
             'name' => 'tournament',
-            'maxParticipantNumber' => 12,
+            'maxParticipantNumber' => 16,
         );
 
         $objectToCompare = new TFTournament('single-elimination');
         $form = $this->factory->create(TFTournamentType::class, $objectToCompare);
 
         $object = new TFTournament('single-elimination');
+        $object->setMaxParticipantNumber(16);
         $object->setName($formData['name']);
         $object->setMaxParticipantNumber($formData['maxParticipantNumber']);
 

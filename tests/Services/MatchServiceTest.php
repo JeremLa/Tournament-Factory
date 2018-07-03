@@ -14,6 +14,7 @@ use App\Services\Enum\TournamentTypeEnum;
 use App\Services\MatchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class MatchServiceTest extends KernelTestCase
 {
@@ -22,6 +23,8 @@ class MatchServiceTest extends KernelTestCase
     private $matchSevice;
     /* @var EntityManagerInterface $entityManager */
     private $entityManager;
+    /* @var SessionInterface $session */
+    private $session;
     /* @var  TFTournament $tournament */
     private $tournament;
     /* @var  TFUser $user */
@@ -32,8 +35,9 @@ class MatchServiceTest extends KernelTestCase
     protected function setUp() {
         $kernel = self::bootKernel();
         $this->entityManager = $kernel->getContainer()->get('doctrine')->getManager();
+        $this->session = $kernel->getContainer()->get('session');
 
-        $this->matchSevice = new MatchService($this->entityManager);
+        $this->matchSevice = new MatchService($this->entityManager, $this->session);
         $this->user = new TFUser();
         $this->user->setEmail('test@test.fr');
         $this->user->setCountry('FR');
