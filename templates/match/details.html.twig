@@ -77,19 +77,11 @@
                             {{ form_label(scoreForm.isOver) }}
                         </div>
                     </div>
-                    {#<input id="option1" name="option1" type="checkbox"/>#}
-                    {#<label for="option1">Option One</label>#}
                 </div>
                 <div class="row justify-content-md-center">
                     <div class="col-6">
                         {{ form_widget(scoreForm.save, { 'attr': {'class': 'btn btn-primary btn-lg col m-1'}}) }}
                     </div>
-                    {#{{ form_widget(scoreForm.over, {#}
-                        {#'attr': {#}
-                            {#'class': 'btn btn-success col m-1',#}
-                            {#'onClick': "return confirm('Une fois terminé, le match ne pourra plus être modifié.')"#}
-                        {#}#}
-                    {#}) }}#}
                 </div>
             {{ form_end(scoreForm) }}
 

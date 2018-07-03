@@ -209,7 +209,7 @@ class MatchService
                 $index++;
             }
 
-            if($scoreForm->get('isOver') && $hasNoEquality && $hasNoNegativeScore){
+            if($scoreForm->get('isOver')->getData() && $hasNoEquality && $hasNoNegativeScore){
                 $this->updateNextMatch($match);
                 $match->setOver(true);
             }
