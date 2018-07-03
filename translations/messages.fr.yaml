@@ -75,6 +75,7 @@ tournament:
             empty: Vous ne possédez et ne participez à aucun tournois
 user:
     profil: 'Profil'
+    match: 'Mes matchs'
     notFound: "Cet utilisateur n'existe pas"
 
 actions:

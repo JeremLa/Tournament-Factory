@@ -30,6 +30,7 @@ class UserController extends Controller
     {
         return $this->render('user/profile.html.twig', [
             'controller_name' => 'UserController',
+            'user' => $this->getUser()->getTFUser(),
         ]);
     }
 
