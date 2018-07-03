@@ -40,7 +40,7 @@ class MatchController extends AbstractController
             $this->matchService->updateScore($match, $scoreForm);
         }
 
-        return $this->render('match/detailed.html.twig', [
+        return $this->render('match/details.html.twig', [
             'scoreForm' => $scoreForm->createView(),
             'match' => $match
         ]);
