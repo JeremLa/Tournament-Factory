@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\VarDumper\VarDumper;
 
 class MatchController extends AbstractController
 {
@@ -24,11 +23,14 @@ class MatchController extends AbstractController
     }
 
     /**
+     * @param int $identifier
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route(path="/match/{id}/match-detailed", name="match-details")
      */
-    public function updateScore (int $id, Request $request)
+    public function updateScore (int $identifier, Request $request)
     {
-        $match = $this->matchService->findOr404($id);
+        $match = $this->matchService->findOr404($identifier);
 
         /* @var Form $scoreForm */
         $scoreForm = $this->createForm('App\Form\Type\ScoreType', $this->matchService->getScoreForForm($match));
