@@ -15,7 +15,7 @@ form:
     nickname: Surnom
     country: Pays
     remember_me: 'Se souvenir de moi'
-    players: 'Participant'
+    players: 'Participants'
 
 tournament:
     finished: Ce tournois est terminé

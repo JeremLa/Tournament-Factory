@@ -45,17 +45,11 @@
                                     <i class="fa fa-edit"></i>
                                 </a>
                             {% endif %}
-
-                            {%  if (tournamentRule.canBeCancelled(tournament, app.getUser.getTFUser, false))  %}
-                                <a class="btn btn-success rounded-action" title="{{ 'actions.cancel' | trans }}" href="{{ path('cancel-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-ban"></i> </a>
-                            {% endif %}
-                            {%  if (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false))  %}
-                                <a class="btn btn-success rounded-action" title="{{ 'actions.start' | trans }}" href="{{ path('start-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-play-circle"></i> </a>
-                            {% endif %}
                             {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
-                                <button type="button" class="btn btn-danger rounded-action" data-toggle="modal" data-target="#remove-tournament" title="{{ 'actions.delete' | trans }}" data-id="{{ tournament.id }}">
+                                <button type="button" class="btn btn-danger rounded-action" data-toggle="modal" data-target="#remove" title="{{ 'actions.delete' | trans }}" data-id="{{ tournament.id }}" data-action="remove">
                                     <i class="fa fa-trash"></i>
                                 </button>
+                                {% include 'includes/modal.html.twig'  with {'modalId' : 'remove', 'text' : 'Êtes-vous sur de vouloir surpprimer ce tournoi ?', 'title' : 'Supprimer', 'validButtonTitle' : 'Supprimer', 'validButtonClass' : 'danger'} %}
                             {% endif %}
                         {% endif %}
                         <a class="btn btn-info rounded-action" title="{{ 'actions.detail' | trans }}" href="{{ path('detail-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-eye"></i> </a>
@@ -69,17 +63,8 @@
     {% endif %}
 </div>
 
-    {% include 'includes/modal.html.twig'  with {'modalId' : 'remove-tournament'} %}
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        const URL = '{{ path('remove_tournament') }}';
-        $(document).ready(() => {
-            $('#remove-tournament').on('shown.bs.modal', function (e) {
-                const tournament_Id = $(e.relatedTarget).attr('data-id');
-                $('#remove-tournament-validate').attr('href', URL + '?tournament-id=' + tournament_Id);
-            })
-        })
-    </script>
+    {% include 'includes/modal-js.html.twig' %}
 {% endblock %}

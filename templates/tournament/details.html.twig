@@ -94,36 +94,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        $(document).ready(() => {
-            let id = null;
-            let action = null;
-            $('.modal').on('shown.bs.modal', function (e) {
-                id = $(e.relatedTarget).attr('data-id');
-                action = $(e.relatedTarget).attr('data-action');
-                switch (action){
-                    case 'cancel':
-                        initModal('{{ path('cancel-tournament') }}', id, action);
-                        break;
-                    case 'start':
-                        initModal('{{ path('start-tournament') }}', id, action);
-                        break;
-                    case 'remove':
-                        initModal('{{ path('remove_tournament') }}', id, action);
-                        break;
-                    default :
-                        closeModal(action,action);
-                        break;
-                }
-            });
-            function initModal(URL, id, action){
-                $('#tournament-validate-'+action).attr('href', URL + '?tournament-id=' + id);
-            }
-            function closeModal(modalId, action) {
-                $('#tournament-validate-'+action).on('click', () => {
-                    $('#'+modalId).modal('hide');
-                });
-            }
-        })
-    </script>
+   {% include 'includes/modal-js.html.twig' %}
 {% endblock %}
