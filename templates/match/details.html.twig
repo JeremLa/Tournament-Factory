@@ -15,8 +15,19 @@
     {% set nickname2 = player2 is not null ? player2.nicknames[0] : '??' %}
     {% set score2 = player2 is not null ? match.score[player2.id] : '' %}
 
-    {% set winner1 = score1 > score2 ? 'match.victor' | trans : '' %}
-    {% set winner2 = score2 > score1 ? 'match.victor' | trans : '' %}
+
+    {% set winner1 = ' ' %}
+    {% set winner2 = ' ' %}
+
+    {% if match.over %}
+        {% if score1 > score2 %}
+            {% set winner1 = 'match.victor' %}
+        {% endif %}
+
+        {% if score2 > score1 %}
+            {% set winner2 = 'match.victor' %}
+        {% endif %}
+    {% endif %}
 
     <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
         <div class="col-sm-12 px-0">
@@ -38,11 +49,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col text-right">{{ winner1 }}</div>
+                <div class="col text-right">{{ winner1 | trans }}</div>
                 <div class="text-center">
                     <small>{{score1}} - {{score2}}</small>
                 </div>
-                <div class="col text-left">{{ winner2 }}</div>
+                <div class="col text-left">{{ winner2 | trans }}</div>
             </div>
             <div class="row">
                 {% if match.previousMatch | length > 0 %}
@@ -117,8 +128,14 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            Attention, si vous décidez de terminer ce match, vous ne pourrez plus modifier le score.
-                            Ce choix est irréversible.
+                            {% if match.turn != 0 %}
+                                Attention, si vous décidez de terminer ce match, vous ne pourrez plus modifier le score.<br>
+                                Ce choix est irréversible.
+                            {% else %}
+                                Attention, si vous décidez de terminer ce match, vous ne pourrez plus modifier le score.<br>
+                                Une fois le match terminé, le tournoi le sera aussi et ne sera plus modifiable.<br>
+                                Ce choix est irréversible.
+                            {% endif %}
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>

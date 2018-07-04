@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\TFMatch;
 use App\Entity\TFTournament;
-use App\Form\Type\ManageParticipantType;
 use App\Form\Type\ScoreType;
 use App\Form\Type\TFTournamentType;
 use App\Services\Enum\TournamentStatusEnum;
@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\VarDumper\VarDumper;
 
 
 class TournamentController extends Controller
@@ -207,11 +206,18 @@ class TournamentController extends Controller
             }
             $playerText .= $tournament->getPlayers()->get($i)->getNicknames()[0];
         }
+        /** @var TFMatch $lastMatch */
+        $lastMatch = $matchesPerTurn[0][0];
+        $victor = null;
+        if($lastMatch->isOver()) {
+            $victor = $lastMatch->getScore()[$lastMatch->getPlayers()->toArray()[0]->getId()] > $lastMatch->getScore()[$lastMatch->getPlayers()->toArray()[1]->getId()] ? $lastMatch->getPlayers()->toArray()[0] : $lastMatch->getPlayers()->toArray()[1];
+        }
         return $this->render('tournament/details.html.twig', [
             'tournament' => $tournament,
             'matchesPerTurn' => $matchesPerTurn,
             'scorForm' => $form->createView(),
-            'playerText' => $playerText
+            'playerText' => $playerText,
+            'victor' => $victor,
         ]);
     }
 
