@@ -59,7 +59,6 @@ class TournamentControllerTest extends  WebTestCase
         yield ['/tournament/{tournamentId}/cancel'];
         yield ['/tournament/{tournamentId}/detail'];
         yield ['/tournament/{tournamentId}/edit'];
-        yield ['/tournament/{tournamentId}/manageParticipant'];
     }
 
 
