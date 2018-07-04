@@ -305,6 +305,12 @@ class MatchService
 
     public function updateNextMatch (TFMatch $match)
     {
+        $nextMatch = $match->getNextMatch();
+
+        if(!$nextMatch){
+            return;
+        }
+
         $userId = array_search(max($match->getScore()), $match->getScore());
 
         $user = null;
@@ -317,7 +323,6 @@ class MatchService
         }
 
         if($user) {
-            $nextMatch = $match->getNextMatch();
             $nextMatch->addPlayer($user);
             $this->initScores($nextMatch);
             $this->entityManager->persist($nextMatch);

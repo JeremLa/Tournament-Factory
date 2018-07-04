@@ -5,7 +5,14 @@
 {% block body %}
 
 <div class="container mt-5">
-    <h1>{{ 'tournament.list.myTournaments.title' | trans }}</h1>
+    <div class="row align-items-center">
+        <div class="col">
+            <h1>{{ 'tournament.list.myTournaments.title' | trans }} </h1>
+        </div>
+        <div class="col text-right">
+            <a class="btn btn-primary" href="{{ path('chosen-type') }}"><i class="fa fa-plus"></i> {{ 'tournament.create' | trans }}</a>
+        </div>
+    </div>
     {% include 'includes/flash-messages.html.twig' %}
     {% if tournaments | length > 0 %}
         <table class="table table-hover">
