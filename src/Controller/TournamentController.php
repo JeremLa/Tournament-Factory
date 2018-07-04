@@ -206,11 +206,13 @@ class TournamentController extends Controller
             }
             $playerText .= $tournament->getPlayers()->get($i)->getNicknames()[0];
         }
-        /** @var TFMatch $lastMatch */
-        $lastMatch = $matchesPerTurn[0][0];
         $victor = null;
-        if($lastMatch->isOver()) {
-            $victor = $lastMatch->getScore()[$lastMatch->getPlayers()->toArray()[0]->getId()] > $lastMatch->getScore()[$lastMatch->getPlayers()->toArray()[1]->getId()] ? $lastMatch->getPlayers()->toArray()[0] : $lastMatch->getPlayers()->toArray()[1];
+        if($matchesPerTurn) {
+            /** @var TFMatch $lastMatch */
+            $lastMatch = $matchesPerTurn[0][0];
+            if ($lastMatch->isOver()) {
+                $victor = $lastMatch->getScore()[$lastMatch->getPlayers()->toArray()[0]->getId()] > $lastMatch->getScore()[$lastMatch->getPlayers()->toArray()[1]->getId()] ? $lastMatch->getPlayers()->toArray()[0] : $lastMatch->getPlayers()->toArray()[1];
+            }
         }
         return $this->render('tournament/details.html.twig', [
             'tournament' => $tournament,
@@ -244,7 +246,9 @@ class TournamentController extends Controller
 
                 $this->addFlash('success', 'tournament.edit.message');
 
-                return $this->redirectToRoute('my_tournament');
+                return $this->redirectToRoute('detail-tournament', [
+                    'tournamentId' => $tournamentId
+                ]);
             }
             $this->addFlash('warning', 'tournament.participant.update');
         }
