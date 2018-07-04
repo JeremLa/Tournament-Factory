@@ -23,6 +23,11 @@ class TFTournamentType extends AbstractType
                 'label' => 'tournament.form.maxParticipant',
                 'choices' => [2=>2,4=>4,8=>8,16=>16,32=>32,64=>64]
             ])
+            ->add('participant', ManageParticipantType::class, [
+                'mapped' => false,
+                'label' => 'form.players',
+                'required' => false
+            ])
         ;
     }
 

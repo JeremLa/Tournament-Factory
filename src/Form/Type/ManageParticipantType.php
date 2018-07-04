@@ -9,7 +9,6 @@
 namespace App\Form\Type;
 
 
-use App\Entity\TFTournament;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,8 +22,7 @@ class ManageParticipantType extends AbstractType
             ->add('tags', TextType::class, [
                 'mapped' => false,
                 'attr' => ['class' => 'typeahead tm-input form-control tm-input-info'],
-                'label' => 'form.players',
-                'required' => false
+                'label' => false
             ])
         ;
     }

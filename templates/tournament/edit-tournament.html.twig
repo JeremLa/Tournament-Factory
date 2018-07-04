@@ -1,4 +1,9 @@
 {% extends "base.html.twig" %}
+
+{% block stylesheets %}
+    {% include 'includes/participant-css.html.twig' %}
+{% endblock %}
+
 {% form_theme form 'form/custom-label.html.twig' %}
 
 {% block title %}
@@ -7,5 +12,10 @@
 
 {% block body %}
     <h2>{{ "tournament.form.title.edit" | trans({ '%name%' : name | lower } ) }}</h2>
+    {% include 'includes/flash-messages.html.twig' %}
     {% include 'includes/tournamentForm.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {% include 'includes/participant-js.html.twig' %}
 {% endblock %}

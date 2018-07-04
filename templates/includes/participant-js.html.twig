@@ -1,0 +1,59 @@
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tagmanager/3.0.2/tagmanager.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        let tournamentId = {{ tournament.id ? : 'null'}};
+        if(tournamentId != null){
+            $.ajax({
+                url: '{{ path('searchInUsers', {tournamentId: tournament.id ? : 'null'}) }}',
+                method: 'GET',
+                success: (data) => {
+                    initAutoComplete(data);
+                }
+            });
+        }else{
+            initAutoComplete([]);
+        }
+
+        function initAutoComplete(data) {
+            const tagApi = $(".tm-input").tagsManager({
+                prefilled : data,
+                backspace: [],
+            });
+
+            const path = '{{ path('searchNotInUsers') }}?search=';
+            let finish = true;
+            $(".typeahead").typeahead({
+                name: 'tags',
+                displayKey: 'name',
+                source: function (query, process) {
+                    if(finish) {
+                        $.ajax({
+                            method: 'GET',
+                            url: path + $('#tf_tournament_participant_tags')[0].value,
+                            data: {
+                                userList: tagApi.tagsManager('tags'),
+                            },
+                            beforeSend: () => {
+                                finish = false;
+                                return true;
+                            },
+                            success: function (data) {
+                                return process(data);
+                            },
+                            complete: () => {
+                                finish = true;
+                            }
+
+                        });
+                    }
+                },
+                afterSelect :function (item){
+                    tagApi.tagsManager("pushTag", item);
+                }
+            });
+
+        }
+
+    });
+</script>

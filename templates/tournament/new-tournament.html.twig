@@ -1,11 +1,20 @@
 {% extends "base.html.twig" %}
 {% form_theme form 'form/custom-label.html.twig' %}
 
+{% block stylesheets %}
+    {% include 'includes/participant-css.html.twig' %}
+{% endblock %}
+
 {% block title %}
     {{ 'tournament.create' | trans }}
 {% endblock %}
 
 {% block body %}
         <h2>{{ "tournament.form.title.new" | trans({ '%type%' : type | transEnum('type') | lower } ) }}</h2>
+    {% include 'includes/flash-messages.html.twig' %}
         {% include 'includes/tournamentForm.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {% include 'includes/participant-js.html.twig' %}
 {% endblock %}
