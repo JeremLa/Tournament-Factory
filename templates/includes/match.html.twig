@@ -7,6 +7,18 @@
 {%  set score1 = match.score[id1] is defined ? match.score[id1] : '0' %}
 {%  set score2 = match.score[id2] is defined ? match.score[id2] : '0' %}
 
+{% set winner1 = ' ' %}
+{% set winner2 = ' ' %}
+
+{% if match.over %}
+    {% if score1 > score2 %}
+        {% set winner1 = '🏆' %}
+    {% endif %}
+
+    {% if score2 > score1 %}
+        {% set winner2 = '🏆' %}
+    {% endif %}
+{% endif %}
 <div class="row border b-2 rounded p-3 mt-3 show-match">
     <div class="col-sm-1 text-align-center">
         <a href="{{ path('match-details', {'identifier':match.id}) }}" class="btn btn-info text-white rounded-action">
@@ -14,6 +26,8 @@
         </a>
     </div>
     <div class="col-sm text-left">{{ participant1 }}</div>
-    <div class="col-sm text-align-center">{{ score1 }} - {{ score2 }}</div>
+    <div class="col text-right">{{ winner1 }}</div>
+    <div class="text-align-center">{{ score1 }} - {{ score2 }} </div>
+    <div class="col text-left">{{ winner2 }}</div>
     <div class="col-sm text-right"> {{ participant2 }}</div>
 </div>

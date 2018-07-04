@@ -7,6 +7,17 @@
 {% block title %}Détail du match{% endblock %}
 
 {% block body %}
+    {% set player1 = match.players[0] is defined ? match.players[0] : null %}
+    {% set nickname1 = player1 is not null ? player1.nicknames[0] : '??' %}
+    {% set score1 = player1 is not null ? match.score[player1.id] : '' %}
+
+    {% set player2 = match.players[1] is defined ? match.players[1] : null %}
+    {% set nickname2 = player2 is not null ? player2.nicknames[0] : '??' %}
+    {% set score2 = player2 is not null ? match.score[player2.id] : '' %}
+
+    {% set winner1 = score1 > score2 ? 'match.victor' | trans : '' %}
+    {% set winner2 = score2 > score1 ? 'match.victor' | trans : '' %}
+
     <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
         <div class="col-sm-12 px-0">
             <div class="row">
@@ -18,17 +29,22 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-5 display-4 match-align-middle">{{ match.players[0] is defined ? match.players[0].nicknames[0] : '??' }}</div>
+                <div class="col-5 display-4 match-align-middle">
+                    {{ nickname1 }}
+                </div>
                 <div class="col-2 text-center display-2">VS</div>
-                <div class="col-5 text-right display-4 match-align-middle">{{ match.players[1] is defined ? match.players[1].nicknames[0] : '??' }}</div>
-            </div>
-            <div class="row">
-                <div class="col text-center">
-                    <small>{{ match.players[0] is defined ? match.score[match.players[0].id] : '' }} - {{  match.players[1] is defined ? match.score[match.players[1].id] : '' }}</small>
+                <div class="col-5 text-right display-4 match-align-middle">
+                    {{ nickname2 }}
                 </div>
             </div>
             <div class="row">
-
+                <div class="col text-right">{{ winner1 }}</div>
+                <div class="text-center">
+                    <small>{{score1}} - {{score2}}</small>
+                </div>
+                <div class="col text-left">{{ winner2 }}</div>
+            </div>
+            <div class="row">
                 {% if match.previousMatch | length > 0 %}
                     <div class="col text-left">
                         {% for pmatch in match.previousMatch %}

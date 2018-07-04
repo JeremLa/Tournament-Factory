@@ -75,6 +75,7 @@ tournament:
             empty: Vous ne possédez et ne participez à aucun tournois
 
 match:
+    victor: 🏆
     list:
         title: Mes matchs
         over: Terminés
