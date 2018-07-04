@@ -13,6 +13,7 @@ use App\Entity\TFMatch;
 use App\Entity\TFTeam;
 use App\Entity\TFTournament;
 use App\Entity\TFUser;
+use App\Services\Enum\TournamentStatusEnum;
 use App\Services\Enum\TournamentTypeEnum;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -308,6 +309,7 @@ class MatchService
         $nextMatch = $match->getNextMatch();
 
         if(!$nextMatch){
+            $match->getTournament()->setStatus(TournamentStatusEnum::STATUS_FINISHED);
             return;
         }
 

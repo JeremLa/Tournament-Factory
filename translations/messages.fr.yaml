@@ -18,6 +18,7 @@ form:
     players: 'Participant'
 
 tournament:
+    finished: Ce tournois est terminé
     form:
         title:
             new: 'Nouveau tournois : %type%'
