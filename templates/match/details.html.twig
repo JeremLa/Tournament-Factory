@@ -74,6 +74,12 @@
         </div>
     {% endif %}
 
+    {% if match.tournament.status == 'finished' %}
+        <div class="alert alert-success col-sm-12">
+            {{ 'tournament.finished' | trans }}
+        </div>
+    {% endif %}
+
     {% if match.tournament.owner == app.user.tfuser %}
         {% include 'includes/flash-messages.html.twig' %}
 
