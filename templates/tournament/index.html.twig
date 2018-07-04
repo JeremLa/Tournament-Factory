@@ -41,9 +41,6 @@
                     <td>
                         {% if app.user and app.user.tfuser == tournament.owner %}
                             {% if tournament.status == 'setup' %}
-                                <a class="btn btn-info rounded-action" title="{{ 'actions.manageParticipant' | trans }}" href="{{ path('manage-participant', {tournamentId: tournament.id} ) }}">
-                                    <i class="fa fa-user-plus"></i>
-                                </a>
                                 <a class="btn btn-success rounded-action" title="{{ 'actions.edit' | trans }}" href="{{ path('edit-tournament', {tournamentId: tournament.id} ) }}">
                                     <i class="fa fa-edit"></i>
                                 </a>

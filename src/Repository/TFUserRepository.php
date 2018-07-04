@@ -38,19 +38,19 @@ class TFUserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getUsersNotInTournament(TFTournament $tournament, string $search)
+    public function getUsersNotInTournament(array $userList, string $search)
     {
-        if($tournament->getPlayers()->isEmpty()){
-            return $this->createQueryBuilder('users')
-                ->where('users.email LIKE :email')
-                ->setParameter('email', '%'.$search.'%')
-                ->getQuery()
-                ->getResult();
-        }
+//        if(!$userList){
+//            return $this->createQueryBuilder('users')
+//                ->where('users.email LIKE :email')
+//                ->setParameter('email', '%'.$search.'%')
+//                ->getQuery()
+//                ->getResult();
+//        }
         return $this->createQueryBuilder('users')
-            ->where('users.id NOT IN (:tournament)')
+            ->where('users.email NOT IN (:userList)')
             ->andWhere('users.email LIKE :email')
-            ->setParameter('tournament', $tournament->getPlayers()->toArray())
+            ->setParameter('userList', $userList)
             ->setParameter('email', '%'.$search.'%')
             ->getQuery()
             ->getResult();

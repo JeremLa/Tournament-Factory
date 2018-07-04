@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 
 
 class TournamentController extends Controller
@@ -76,21 +77,26 @@ class TournamentController extends Controller
         $form = $this->createForm('App\Form\Type\TFTournamentType', $tournament);
 
         $form->handleRequest($request);
-
         if($form->isSubmitted() && $form->isValid()) {
-            $tournament->setOwner($this->getUser()->getTFUser());
+            $values = \explode(',',$request->get('hidden-tf_tournament')['participant']['tags']);
+            if($this->tournamentService->updateTournamentParticipant($values, $tournament)) {
+                $tournament->setOwner($this->getUser()->getTFUser());
 
-            $this->entityManager->persist($tournament);
-            $this->entityManager->flush();
+                $this->entityManager->persist($tournament);
+                $this->entityManager->flush();
 
-            $this->addFlash('success', 'tournament.new.message');
+                $this->addFlash('success', 'tournament.new.message');
 
-            return $this->redirectToRoute('detail-tournament', ['tournamentId' => $tournament->getId()]);
+                return $this->redirectToRoute('detail-tournament', ['tournamentId' => $tournament->getId()]);
+            }
+
+            $this->addFlash('warning', 'tournament.participant.update');
         }
 
         return $this->render('tournament/new-tournament.html.twig', [
             'form' => $form->createView(),
             'type' => $type,
+            'tournament' => $tournament
         ]);
     }
 
@@ -210,49 +216,22 @@ class TournamentController extends Controller
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
+            $values = \explode(',',$request->get('hidden-tf_tournament')['participant']['tags']);
+            if($this->tournamentService->updateTournamentParticipant($values, $tournament)) {
+                $this->entityManager->persist($tournament);
+                $this->entityManager->flush();
 
-            $this->entityManager->persist($tournament);
-            $this->entityManager->flush();
+                $this->addFlash('success', 'tournament.edit.message');
 
-            $this->addFlash('success', 'tournament.edit.message');
-
-            return $this->redirectToRoute('my_tournament');
+                return $this->redirectToRoute('my_tournament');
+            }
+            $this->addFlash('warning', 'tournament.participant.update');
         }
 
         return $this->render('tournament/edit-tournament.html.twig', [
             'form' => $form->createView(),
             'name' => $tournament->getName(),
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param string $tournamentId
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     *
-     * @Route("/tournament/{tournamentId}/manageParticipant", name="manage-participant", requirements={"\s"})
-     */
-    public function manageTournament(Request $request, string $tournamentId)
-    {
-        $tournament = $this->tournamentService->checkTournamentExist($tournamentId);
-        $players = $tournament->getPlayers();
-
-        $form = $this->createForm(ManageParticipantType::class);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            $values = \explode(',',$request->get('hidden-manage_participant')['tags']);
-            if($this->tournamentService->updateTournamentParticipant($values, $tournament)){
-                $this->addFlash('success', 'tournament.participant.update');
-                return $this->redirectToRoute('my_tournament');
-            }
-
-            $this->addFlash('warning', 'tournament.participant.update');
-        }
-        return $this->render('tournament/manage-participant.html.twig', [
-            'form' => $form->createView(),
-            'tournament' => $tournament,
-            'playerNumber' => \count($players),
+            'tournament' => $tournament
         ]);
     }
 }

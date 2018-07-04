@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\VarDumper\VarDumper;
 
 class UserController extends Controller
 {
@@ -35,18 +36,17 @@ class UserController extends Controller
     }
 
     /**
- * @Route("/usersNotInTournament/{tournamentId}", name="searchNotInUsers", requirements={"\s"}))
+ * @Route("/usersNotInTournament", name="searchNotInUsers", requirements={"\s"}))
  */
-    public function searchUsersNotInTournament(Request $request, string $tournamentId)
+    public function searchUsersNotInTournament(Request $request)
     {
         $search = $request->get('search');
-        /** @var TFTournamentRepository $repo */
-        $repo = $this->entityManager->getRepository(TFTournament::class);
+        $userList = $request->get('userList')? : [''];
 
-        $tournament = $repo->find($tournamentId);
         /** @var TFUserRepository $repo */
         $repo = $this->entityManager->getRepository(TFUser::class);
-        $users = $repo->getUsersNotInTournament($tournament, $search);
+
+        $users = $repo->getUsersNotInTournament($userList, $search);
         $return = [];
         foreach ($users as $user){
             $return[] = $user->getEmail();
