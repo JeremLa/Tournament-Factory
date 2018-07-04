@@ -2,17 +2,17 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{ title }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Êtes-vous sur de vouloir surpprimer ce tournois ?
+                {{ text }}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                <a href="#" id="remove-tournament-validate" class="btn btn-danger">Supprimer</a>
+                <a href="#" id="tournament-validate-{{ modalId }}" class="btn btn-{{validButtonClass}}">{{ validButtonTitle}}</a>
             </div>
         </div>
     </div>
