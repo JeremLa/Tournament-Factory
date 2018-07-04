@@ -39,20 +39,22 @@
                     {% endif %}
                     <td>{{ tournament.players | length ~ '/' ~ tournament.maxParticipantNumber }}</td>
                     <td>
-                        {% if app.user and app.user.tfuser == tournament.owner %}
-                            {% if tournament.status == 'setup' %}
-                                <a class="btn btn-success rounded-action" title="{{ 'actions.edit' | trans }}" href="{{ path('edit-tournament', {tournamentId: tournament.id} ) }}">
-                                    <i class="fa fa-edit"></i>
-                                </a>
+                        <div class="text-right">
+                            {% if app.user and app.user.tfuser == tournament.owner %}
+                                {% if tournament.status == 'setup' %}
+                                    <a class="btn btn-success rounded-action" title="{{ 'actions.edit' | trans }}" href="{{ path('edit-tournament', {tournamentId: tournament.id} ) }}">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                {% endif %}
+                                {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
+                                    <button type="button" class="btn btn-danger rounded-action" data-toggle="modal" data-target="#remove" title="{{ 'actions.delete' | trans }}" data-id="{{ tournament.id }}" data-action="remove">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                    {% include 'includes/modal.html.twig'  with {'modalId' : 'remove', 'text' : 'Êtes-vous sur de vouloir surpprimer ce tournoi ?', 'title' : 'Supprimer', 'validButtonTitle' : 'Supprimer', 'validButtonClass' : 'danger'} %}
+                                {% endif %}
                             {% endif %}
-                            {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
-                                <button type="button" class="btn btn-danger rounded-action" data-toggle="modal" data-target="#remove" title="{{ 'actions.delete' | trans }}" data-id="{{ tournament.id }}" data-action="remove">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                                {% include 'includes/modal.html.twig'  with {'modalId' : 'remove', 'text' : 'Êtes-vous sur de vouloir surpprimer ce tournoi ?', 'title' : 'Supprimer', 'validButtonTitle' : 'Supprimer', 'validButtonClass' : 'danger'} %}
-                            {% endif %}
-                        {% endif %}
-                        <a class="btn btn-info rounded-action" title="{{ 'actions.detail' | trans }}" href="{{ path('detail-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-eye"></i> </a>
+                            <a class="btn btn-info rounded-action" title="{{ 'actions.detail' | trans }}" href="{{ path('detail-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-eye"></i> </a>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}
