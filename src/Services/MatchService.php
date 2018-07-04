@@ -220,8 +220,6 @@ class MatchService
             $this->addFlashMessage('match.singleElimination.over.update', true, 'danger');
         }
 
-
-
         return $match;
     }
 
