@@ -3,6 +3,7 @@ namespace App\Repository;
 
 
 use App\Entity\TFTournament;
+use App\Entity\TFUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -17,5 +18,16 @@ class TFTournamentRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, TFTournament::class);
+    }
+
+    public function getMyTournaments (TFUser $user) {
+        return $this->createQueryBuilder('tournament')
+                ->leftJoin('tournament.players', 'p', 'p = :user')
+                ->where('tournament.owner = :user')
+                ->orWhere('p = :user')
+                ->setParameter('user', $user)
+                ->orderBy('tournament.id', 'DESC')
+                ->getQuery()
+                ->getResult();
     }
 }

@@ -5,20 +5,21 @@
 {% block body %}
 
 <div class="container mt-5">
-    <h1>Tournament list</h1>
+    <h1>{{ 'tournament.list.myTournaments.title' | trans }}</h1>
     {% include 'includes/flash-messages.html.twig' %}
-    <table class="table table-hover">
-        <thead class="text-align-center">
-        <tr>
-            <th>{{ 'tournament.status.title' | trans }}</th>
-            <th>{{ 'tournament.name' | trans }}</th>
-            <th>{{ 'tournament.type' | trans }}</th>
-            <th>{{ 'tournament.owner.title' | trans }}</th>
-            <th>{{ 'tournament.nb_participant' | trans }}</th>
-            <th>{{ 'tournament.action' | trans }}</th>
-        </tr>
-        </thead>
-        <tbody class="text-align-center">
+    {% if tournaments | length > 0 %}
+        <table class="table table-hover">
+            <thead class="text-align-center">
+            <tr>
+                <th>{{ 'tournament.status.title' | trans }}</th>
+                <th>{{ 'tournament.name' | trans }}</th>
+                <th>{{ 'tournament.type' | trans }}</th>
+                <th>{{ 'tournament.owner.title' | trans }}</th>
+                <th>{{ 'tournament.nb_participant' | trans }}</th>
+                <th>{{ 'tournament.action' | trans }}</th>
+            </tr>
+            </thead>
+            <tbody class="text-align-center">
             {% for tournament in tournaments %}
                 <tr>
                     <td><i class="{{ tournament.status | transClass }}"></i></td>
@@ -33,31 +34,38 @@
                     <td>
                         {% if app.user and app.user.tfuser == tournament.owner %}
                             {% if tournament.status == 'setup' %}
-                                <a class="btn btn-info button-icon" href="{{ path('add-participant', {tournamentId: tournament.id} ) }}">
+                                <a class="btn btn-info rounded-action" title="{{ 'actions.manageParticipant' | trans }}" href="{{ path('manage-participant', {tournamentId: tournament.id} ) }}">
                                     <i class="fa fa-user-plus"></i>
+                                </a>
+                                <a class="btn btn-success rounded-action" title="{{ 'actions.edit' | trans }}" href="{{ path('edit-tournament', {tournamentId: tournament.id} ) }}">
+                                    <i class="fa fa-edit"></i>
                                 </a>
                             {% endif %}
 
                             {%  if (tournamentRule.canBeCancelled(tournament, app.getUser.getTFUser, false))  %}
-                                <a class="btn btn-success button-icon" href="{{ path('cancel-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-ban"></i> </a>
+                                <a class="btn btn-success rounded-action" title="{{ 'actions.cancel' | trans }}" href="{{ path('cancel-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-ban"></i> </a>
                             {% endif %}
                             {%  if (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false))  %}
-                                <a class="btn btn-success button-icon" href="{{ path('start-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-play-circle"></i> </a>
+                                <a class="btn btn-success rounded-action" title="{{ 'actions.start' | trans }}" href="{{ path('start-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-play-circle"></i> </a>
                             {% endif %}
                             {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
-                                <button type="button" class="btn btn-danger button-icon" data-toggle="modal" data-target="#remove-tournament" data-id="{{ tournament.id }}">
+                                <button type="button" class="btn btn-danger rounded-action" data-toggle="modal" data-target="#remove-tournament" title="{{ 'actions.delete' | trans }}" data-id="{{ tournament.id }}">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             {% endif %}
                         {% endif %}
+                        <a class="btn btn-info rounded-action" title="{{ 'actions.detail' | trans }}" href="{{ path('detail-tournament',  {tournamentId: tournament.id} ) }}"><i class="fa fa-eye"></i> </a>
                     </td>
                 </tr>
             {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    {% else %}
+        <b>{{ 'tournament.list.myTournaments.empty' | trans}}</b>
+    {% endif %}
 </div>
 
-    {% include 'includes/modal.html.twig' %}
+    {% include 'includes/modal.html.twig'  with {'modalId' : 'remove-tournament'} %}
 {% endblock %}
 
 {% block javascripts %}

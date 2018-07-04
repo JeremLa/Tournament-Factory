@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'tournament.menu.list' | trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="row">{{ tournament.name | capitalize }}</h1>
+    {% if (matchesPerTurn | length) > 0 %}
+    <nav class="row nav nav-tabs">
+        {% for key, tfmatches in matchesPerTurn | reverse %}
+            {% if key == 0 %}
+                {% set active = 'active' %}
+                {% else %}
+                {% set active = '' %}
+            {% endif %}
+            <a class="nav-item nav-link {{ active }}" href="#p{{ key }}" data-toggle="tab">
+                {{ 'tournament.turn.tab' | transchoice(tfmatches | length) }}
+            </a>
+        {% endfor %}
+    </nav>
+
+    <div class="tab-content">
+        {% for key, tfmatches in matchesPerTurn | reverse %}
+            {% if key == 0 %}
+                {% set active = 'active' %}
+            {% else %}
+                {% set active = '' %}
+            {% endif %}
+            <div class="tab-pane fade show {{ active }}" id="p{{ key }}" style="line-height: 40px;">
+            {% for match in tfmatches %}
+                {% include 'includes/match.html.twig' %}
+            {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <b>
+            {{ 'tournament.turn.notGenerated' | trans }}
+        </b>
+    {% endif %}
+{% endblock %}
