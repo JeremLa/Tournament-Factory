@@ -86,6 +86,12 @@ class MatchServiceTest extends KernelTestCase
     {
         $this->matchSevice->generateMatches($this->tournament);
         $this->assertEquals(15, $this->tournament->getMatches()->count());
+        foreach ($this->tournament->getMatches() as $match){
+            if($match->getTurn() == $this->matchSevice->getMaxTurnInTournament($this->tournament)){
+                $this->assertNotNull($match->getPlayers()->get(0));
+                $this->assertNotNull($match->getPlayers()->get(1));
+            }
+        }
     }
 
     public function testGetMatchPerRound()
@@ -248,6 +254,10 @@ class MatchServiceTest extends KernelTestCase
         $match->setTurn(0);
         $this->tournament->addMatch($match);
         $match->setTournament($this->tournament);
+        $bol = $this->matchSevice->canHaveEquality($match);
+        $this->assertFalse($bol);
+
+        $this->tournament->setType(TournamentTypeEnum::TYPE_CHAMP);
         $bol = $this->matchSevice->canHaveEquality($match);
         $this->assertFalse($bol);
     }
