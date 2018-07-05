@@ -48,13 +48,13 @@
                 </div>
             </div>
         </div>
+        {% include 'includes/flash-messages.html.twig' %}
+
         {% if not (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false)) and tournament.status == 'setup' %}
             <div class="alert alert-warning col-sm-12">
                 {{ 'tournament.started.warning' | trans }}
             </div>
         {% endif %}
-
-        {% include 'includes/flash-messages.html.twig' %}
 
         {% if (matchesPerTurn | length) > 0 %}
             <nav class="nav nav-tabs col">
@@ -86,9 +86,9 @@
             </div>
         {% else %}
             <div class="row px-3">
-                <b>
+                <div class="alert alert-info col-sm-12">
                     {{ 'tournament.turn.notGenerated' | trans }}
-                </b>
+                </div>
             </div>
         {% endif %}
 
