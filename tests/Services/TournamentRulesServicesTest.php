@@ -64,13 +64,16 @@ class TournamentRulesServicesTest extends KernelTestCase
 
     public function testCanBeDeleted()
     {
+        $owner = new TFUser();
+        $this->tournament->setOwner($owner);
         $this->tournament->setStatus(TournamentStatusEnum::STATUS_SETUP);
 
-        $this->assertTrue($this->service->canBeDeleted($this->tournament));
+        $this->assertTrue($this->service->canBeDeleted($this->tournament, $owner));
+        $randomUser = new TFUser();
+        $this->assertFalse($this->service->canBeDeleted($this->tournament, $randomUser));
 
         $this->tournament->setStatus(TournamentStatusEnum::STATUS_STARTED);
-
-        $this->assertFalse($this->service->canBeDeleted($this->tournament));
+        $this->assertFalse($this->service->canBeDeleted($this->tournament, $owner));
     }
 
     public function testHasMinParticipantRequired()
