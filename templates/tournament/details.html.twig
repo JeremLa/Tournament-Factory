@@ -102,7 +102,7 @@
             {% endif %}
             {% if (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false)) %}
                 {% include 'includes/modal.html.twig'  with {'modalId' : 'start',
-                    'text' : 'Êtes-vous sur de vouloir démarrer ce tournois ?\nCette action va générer les matchs et assigner les joueurs.\nCette action est irreversible.',
+                    'text' : 'Êtes-vous sur de vouloir démarrer ce tournoi ?\nCette action va générer les matchs et assigner les joueurs.\nCette action est irreversible.',
                     'title' : 'Démarrer',
                     'validButtonTitle' : 'Démarrer',
                     'validButtonClass' : 'success'} %}
