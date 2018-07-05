@@ -11,9 +11,13 @@
 {% endblock %}
 
 {% block body %}
-    <h2>{{ "tournament.form.title.edit" | trans({ '%name%' : name | lower } ) }}</h2>
-    {% include 'includes/flash-messages.html.twig' %}
-    {% include 'includes/tournamentForm.html.twig' %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <h1 class="col-sm-12 col-md-6">{{ "tournament.form.title.edit" | trans({ '%name%' : name | lower } ) }}</h1>
+        </div>
+        {% include 'includes/flash-messages.html.twig' %}
+        {% include 'includes/tournamentForm.html.twig' %}
+    </div>
 {% endblock %}
 
 {% block javascripts %}

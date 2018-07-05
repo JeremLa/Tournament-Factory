@@ -1,7 +1,7 @@
-{%  set participant1 = match.players.toArray[0] is defined ? match.players[0].nicknames[0] : '-' %}
+{%  set participant1 = match.players.toArray[0] is defined ? match.players[0].nicknames[0] : '??' %}
 {%  set id1 = match.players.toArray[0] is defined ? match.players[0].id : '-' %}
 
-{%  set participant2 = match.players.toArray[1] is defined ? match.players[1].nicknames[0] : '-' %}
+{%  set participant2 = match.players.toArray[1] is defined ? match.players[1].nicknames[0] : '??' %}
 {%  set id2 = match.players.toArray[1] is defined ? match.players[1].id : '-' %}
 
 {%  set score1 = match.score[id1] is defined ? match.score[id1] : '0' %}
@@ -21,7 +21,7 @@
 {% endif %}
 <div class="row border b-2 rounded p-3 mt-3 show-match">
     <div class="col-sm-1 text-align-center">
-        <a href="{{ path('match-details', {'identifier':match.id}) }}" class="btn btn-info text-white rounded-action">
+        <a href="{{ path('match-details', {'identifier':match.id}) }}" class="bg-info text-white rounded-action p-2">
             <i class="fa fa-eye"></i>
         </a>
     </div>

@@ -21,8 +21,8 @@ tournament:
     finished: Ce tournois est terminé
     form:
         title:
-            new: 'Nouveau tournois : %type%'
-            edit: 'Modification du tournoi : %name%'
+            new: 'Nouveau tournois (%type%)'
+            edit: 'Modifier : %name%'
         name: Nom
         maxParticipant: Nombre de joueurs maximum
     create: 'Nouveau tournoi'

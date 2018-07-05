@@ -3,100 +3,110 @@
 {% block title %}{{ 'tournament.menu.list' | trans }}{% endblock %}
 
 {% block body %}
-    <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
-        <div class="col-sm-12 px-0">
-            <div class="row">
-                {% if tournament.status == 'finished' %}
-                    <h1 class="col-sm-6">{{ tournament.name | capitalize }}</h1>
-                    <h1 class="col-sm-6 text-right"> 🏆 {{ victor.nicknames[0] | capitalize }}</h1>
+    <div class="container mt-5">
+        <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
+            <div class="col-sm-12 px-0">
+                <div class="row">
+                    {% if tournament.status == 'finished' %}
+                        <h1 class="col-sm-6">{{ tournament.name | capitalize }}</h1>
+                        <h1 class="col-sm-6 text-right"> 🏆 {{ victor.nicknames[0] | capitalize }}</h1>
                     {% else %}
                         <h1 class="col-sm-12">{{ tournament.name | capitalize }}</h1>
-                {% endif %}
-                <div class="col">
-                    {% if app.user and app.user.tfuser == tournament.owner %}
-                        {% if tournament.status == 'setup' %}
-                            <a class="btn btn-info" title="{{ 'actions.edit' | trans }}" href="{{ path('edit-tournament', {tournamentId: tournament.id} ) }}">
-                                <i class="fa fa-edit"></i> {{ 'actions.edit' | trans }}
-                            </a>
-                        {% endif %}
-
-                        {%  if (tournamentRule.canBeCancelled(tournament, app.getUser.getTFUser, false))  %}
-                            <button type="button" class="btn btn-success" title="{{ 'actions.cancel' | trans }}" data-toggle="modal" data-target="#cancel" data-id="{{ tournament.id }}" data-action="cancel">
-                                <i class="fa fa-ban"></i> {{ 'actions.cancel' | trans }}
-                            </button>
-                        {% endif %}
-                        {%  if (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false))  %}
-                            <button type="button" class="btn btn-success" title="{{ 'actions.start' | trans }}" data-toggle="modal" data-target="#start" data-id="{{ tournament.id }}" data-action="start">
-                                <i class="fa fa-play-circle"></i> {{ 'actions.start' | trans }}
-                            </button>
-                        {% endif %}
-                        {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove" title="{{ 'actions.delete' | trans }}" data-id="{{ tournament.id }}" data-action="remove">
-                                <i class="fa fa-trash"></i> {{ 'actions.delete' | trans }}
-                            </button>
-                        {% endif %}
                     {% endif %}
-                    {% if tournament.players.count > 0 %}
-                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#players" data-action="players" data-id="{{ tournament.id }}">
-                            <i class="fa fa-user-friends"></i> {{ 'form.players' | trans }} {{ tournament.players | length ~ '/' ~ tournament.maxParticipantNumber }}
-                        </button>
-                    {% else %}
+                    <div class="col">
+                        {% if app.user and app.user.tfuser == tournament.owner %}
+                            {% if tournament.status == 'setup' %}
+                                <a class="btn btn-info" title="{{ 'actions.edit' | trans }}" href="{{ path('edit-tournament', {tournamentId: tournament.id} ) }}">
+                                    <i class="fa fa-edit"></i> {{ 'actions.edit' | trans }}
+                                </a>
+                            {% endif %}
 
-                    {% endif %}
+                            {%  if (tournamentRule.canBeCancelled(tournament, app.getUser.getTFUser, false))  %}
+                                <button type="button" class="btn btn-success" title="{{ 'actions.cancel' | trans }}" data-toggle="modal" data-target="#cancel" data-id="{{ tournament.id }}" data-action="cancel">
+                                    <i class="fa fa-ban"></i> {{ 'actions.cancel' | trans }}
+                                </button>
+                            {% endif %}
+                            {%  if (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false))  %}
+                                <button type="button" class="btn btn-success" title="{{ 'actions.start' | trans }}" data-toggle="modal" data-target="#start" data-id="{{ tournament.id }}" data-action="start">
+                                    <i class="fa fa-play-circle"></i> {{ 'actions.start' | trans }}
+                                </button>
+                            {% endif %}
+                            {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove" title="{{ 'actions.delete' | trans }}" data-id="{{ tournament.id }}" data-action="remove">
+                                    <i class="fa fa-trash"></i> {{ 'actions.delete' | trans }}
+                                </button>
+                            {% endif %}
+                        {% endif %}
+                        {% if tournament.players.count > 0 %}
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#players" data-action="players" data-id="{{ tournament.id }}">
+                                <i class="fa fa-user-friends"></i> {{ 'form.players' | trans }} {{ tournament.players | length ~ '/' ~ tournament.maxParticipantNumber }}
+                            </button>
+                        {% else %}
+
+                        {% endif %}
+                    </div>
+                    {{ tournament.type | transEnum('type') }}
                 </div>
-                {{ tournament.type | transEnum('type') }}
             </div>
         </div>
-    </div>
-    {% include 'includes/flash-messages.html.twig' %}
-    {% if (matchesPerTurn | length) > 0 %}
-    <nav class="row nav nav-tabs">
-        {% for key, tfmatches in matchesPerTurn | reverse %}
-            {% if key == 0 %}
-                {% set active = 'active' %}
-                {% else %}
-                {% set active = '' %}
-            {% endif %}
-            <a class="nav-item nav-link {{ active }}" href="#p{{ key }}" data-toggle="tab">
-                {{ 'tournament.turn.tab' | transchoice(tfmatches | length) }}
-            </a>
-        {% endfor %}
-    </nav>
 
-    <div class="tab-content">
-        {% for key, tfmatches in matchesPerTurn | reverse %}
-            {% if key == 0 %}
-                {% set active = 'active' %}
-            {% else %}
-                {% set active = '' %}
-            {% endif %}
-            <div class="tab-pane fade show {{ active }}" id="p{{ key }}" style="line-height: 40px;">
-            {% for match in tfmatches %}
-                {% include 'includes/match.html.twig' %}
-            {% endfor %}
+        {% include 'includes/flash-messages.html.twig' %}
+
+        {% if (matchesPerTurn | length) > 0 %}
+            <div class="row px-3">
+                <nav class="nav nav-tabs col">
+                    {% for key, tfmatches in matchesPerTurn | reverse %}
+                        {% if key == 0 %}
+                            {% set active = 'active' %}
+                        {% else %}
+                            {% set active = '' %}
+                        {% endif %}
+                        <a class="nav-item nav-link {{ active }}" href="#p{{ key }}" data-toggle="tab">
+                            {{ 'tournament.turn.tab' | transchoice(tfmatches | length) }}
+                        </a>
+                    {% endfor %}
+                </nav>
             </div>
-        {% endfor %}
+
+            <div class="row px-3">
+                <div class="tab-content col">
+                    {% for key, tfmatches in matchesPerTurn | reverse %}
+                        {% if key == 0 %}
+                            {% set active = 'active' %}
+                        {% else %}
+                            {% set active = '' %}
+                        {% endif %}
+                        <div class="tab-pane fade show {{ active }}" id="p{{ key }}" style="line-height: 40px;">
+                            {% for match in tfmatches %}
+                                {% include 'includes/match.html.twig' %}
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="row px-3">
+                <b>
+                    {{ 'tournament.turn.notGenerated' | trans }}
+                </b>
+            </div>
+        {% endif %}
+
+        {% if app.user and app.user.tfuser == tournament.owner %}
+            {%  if (tournamentRule.canBeCancelled(tournament, app.getUser.getTFUser, false))  %}
+                {% include 'includes/modal.html.twig'  with {'modalId' : 'cancel', 'text' : 'Êtes-vous sur de vouloir annuler ce tournoi ?', 'title' : 'Annuler', 'validButtonTitle' : 'Valider', 'validButtonClass' : 'success'} %}
+            {% endif %}
+            {%  if (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false))  %}
+                {% include 'includes/modal.html.twig'  with {'modalId' : 'start', 'text' : 'Êtes-vous sur de vouloir démarrer ce tournois ?', 'title' : 'Démarrer', 'validButtonTitle' : 'Démarrer', 'validButtonClass' : 'success'} %}
+            {% endif %}
+            {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
+                {% include 'includes/modal.html.twig'  with {'modalId' : 'remove', 'text' : 'Êtes-vous sur de vouloir surpprimer ce tournois ?', 'title' : 'Supprimer', 'validButtonTitle' : 'Supprimer', 'validButtonClass' : 'danger'} %}
+            {% endif %}
+        {% endif %}
+
+        {% include 'includes/modal.html.twig'  with {'modalId' : 'players', 'text' : playerText, 'title' : 'Participants', 'validButtonTitle' : 'Ok', 'validButtonClass' : 'success'} %}
+
     </div>
-    {% else %}
-        <b>
-            {{ 'tournament.turn.notGenerated' | trans }}
-        </b>
-    {% endif %}
-
-    {% if app.user and app.user.tfuser == tournament.owner %}
-        {%  if (tournamentRule.canBeCancelled(tournament, app.getUser.getTFUser, false))  %}
-            {% include 'includes/modal.html.twig'  with {'modalId' : 'cancel', 'text' : 'Êtes-vous sur de vouloir annuler ce tournoi ?', 'title' : 'Annuler', 'validButtonTitle' : 'Valider', 'validButtonClass' : 'success'} %}
-        {% endif %}
-        {%  if (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false))  %}
-           {% include 'includes/modal.html.twig'  with {'modalId' : 'start', 'text' : 'Êtes-vous sur de vouloir démarrer ce tournois ?', 'title' : 'Démarrer', 'validButtonTitle' : 'Démarrer', 'validButtonClass' : 'success'} %}
-        {% endif %}
-        {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
-           {% include 'includes/modal.html.twig'  with {'modalId' : 'remove', 'text' : 'Êtes-vous sur de vouloir surpprimer ce tournois ?', 'title' : 'Supprimer', 'validButtonTitle' : 'Supprimer', 'validButtonClass' : 'danger'} %}
-        {% endif %}
-    {% endif %}
-
-    {% include 'includes/modal.html.twig'  with {'modalId' : 'players', 'text' : playerText, 'title' : 'Participants', 'validButtonTitle' : 'Ok', 'validButtonClass' : 'success'} %}
-
 {% endblock %}
 
 {% block javascripts %}
