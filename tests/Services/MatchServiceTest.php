@@ -8,13 +8,19 @@
 
 namespace App\Tests\Services;
 
+use App\Entity\TFMatch;
+use App\Entity\TFTeam;
 use App\Entity\TFTournament;
 use App\Entity\TFUser;
+use App\Form\Type\ScoreType;
 use App\Services\Enum\TournamentTypeEnum;
 use App\Services\MatchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\VarDumper\VarDumper;
 
 class MatchServiceTest extends KernelTestCase
 {
@@ -96,6 +102,162 @@ class MatchServiceTest extends KernelTestCase
         $arr = $this->matchSevice->getMatchPerRound($this->tournament);
         $this->assertEquals([], $arr);
     }
+
+    public function testFindOr404Exception()
+    {
+        $this->expectException(NotFoundHttpException::class);
+        $this->matchSevice->findOr404(999);
+    }
+
+    public function testFindOr404()
+    {
+        $this->matchSevice->generateMatches($this->tournament);
+        $matches = $this->tournament->getMatches();
+        $match = $this->matchSevice->findOr404($matches[0]->getId());
+        $this->assertEquals($matches[0], $match);
+    }
+
+
+    public function testAssignParticipant()
+    {
+        $this->tournament->setMaxParticipantNumber(2);
+        $this->matchSevice->generateMatches($this->tournament,false);
+
+        /** @var TFMatch $match */
+        $match = $this->tournament->getMatches()->get(0);
+        $players =  $match->getPlayers();
+        $this->assertNull($players->get(0));
+        $this->assertNull($players->get(1));
+        $this->matchSevice->assignParticipants($this->tournament);
+
+        $match = $this->tournament->getMatches()->get(0);
+        $players =  $match->getPlayers();
+        $this->assertNotNull($players->get(0));
+        $this->assertNotNull($players->get(1));
+    }
+
+    public function testAssignPlayers()
+    {
+        $match = new TFMatch();
+        $this->matchSevice->assignPlayers($match, $this->user, $this->user2);
+
+        $this->assertContains($this->user, $match->getPlayers());
+        $this->assertContains($this->user2, $match->getPlayers());
+    }
+
+    public function testAddTeams()
+    {
+        $match = new TFMatch();
+        $team1 = new TFTeam();
+        $team2 = new TFTeam();
+
+        $this->matchSevice->addTeams($match,$team1, $team2);
+        $this->assertContains($team2, $match->getTeams());
+        $this->assertContains($team1, $match->getTeams());
+    }
+
+    public function testGetScoreForForm()
+    {
+        $match = new TFMatch();
+        $result = $this->matchSevice->getScoreForForm($match);
+        $this->assertEquals([], $result);
+
+        $match->addPlayer($this->user);
+        $result = $this->matchSevice->getScoreForForm($match);
+        $this->assertEquals(['score1' => 0], $result);
+
+        $match->addPlayer($this->user2);
+        $result = $this->matchSevice->getScoreForForm($match);
+        $this->assertEquals(['score1' => 0, 'score2' => 0], $result);
+
+        $match->setScore($this->user->getId(), 5);
+        $result = $this->matchSevice->getScoreForForm($match);
+        $this->assertEquals(['score1' => 5, 'score2' => 0], $result);
+
+        $match->setScore($this->user2->getId(), 4);
+        $result = $this->matchSevice->getScoreForForm($match);
+        $this->assertEquals(['score1' => 5, 'score2' => 4], $result);
+    }
+
+    public function testUpdateScore()
+    {
+        $match = new TFMatch();
+        $next = new TFMatch();
+        $match->setOver(true);
+        $match->setTurn(1);
+        $match->setNextMatch($next);
+        $next->addPreviousMatch($match);
+        $this->tournament->addMatch($match);
+        $this->tournament->addMatch($next);
+        $match->setTournament($this->tournament);
+        $next->setTournament($this->tournament);
+        $next->setTurn(0);
+        $this->entityManager->persist($next);
+        $this->matchSevice->updateScore($match, [0,0],false);
+        self::assertEquals('match.singleElimination.over.noPlayers', $this->session->getFlashBag()->get('danger')[0]);
+
+        $this->matchSevice->assignPlayers($match, $this->user, $this->user2);
+        $this->matchSevice->updateScore($match, [0,0],false);
+        self::assertEquals('match.singleElimination.over.update', $this->session->getFlashBag()->get('danger')[0]);
+
+        $match->setOver(false);
+        $this->matchSevice->updateScore($match, [0,0],false);
+        self::assertEquals('match.singleElimination.over.notEqual', $this->session->getFlashBag()->get('warning')[0]);
+
+        $this->matchSevice->updateScore($match, [-1,0],false);
+        self::assertEquals('match.singleElimination.over.lowerThanZero', $this->session->getFlashBag()->get('warning')[0]);
+
+        $this->matchSevice->updateScore($match, [-1,-1],false);
+        self::assertEquals('match.singleElimination.over.notEqual', $this->session->getFlashBag()->get('warning')[0]);
+        $this->matchSevice->updateScore($match, [-1,-1],false);
+        self::assertEquals('match.singleElimination.over.lowerThanZero', $this->session->getFlashBag()->get('warning')[1]);
+
+        $this->matchSevice->updateScore($match, [2,1],false);
+        self::assertFalse($match->isOver());
+        self::assertEmpty($next->getPlayers());
+
+
+        $newMatch = $this->matchSevice->updateScore($match, [2,1],true);
+        self::assertTrue($match->isOver());
+        self::assertContains($this->user,$next->getPlayers());
+        self::assertEquals($match, $newMatch);
+    }
+
+    public function testHasNoNegativeScore ()
+    {
+        $bol = $this->matchSevice->hasNoNegativeScore(0,2);
+        $this->assertTrue($bol);
+
+        $bol = $this->matchSevice->hasNoNegativeScore(-1,2);
+        $this->assertFalse($bol);
+    }
+
+    public function testHasNoEquality ()
+    {
+        $bol = $this->matchSevice->hasNoEquality(0,2);
+        $this->assertTrue($bol);
+
+        $bol = $this->matchSevice->hasNoEquality(2,2);
+        $this->assertFalse($bol);
+    }
+
+    public function testCanHaveEquality ()
+    {
+        $match = new TFMatch();
+        $match->setTurn(0);
+        $this->tournament->addMatch($match);
+        $match->setTournament($this->tournament);
+        $bol = $this->matchSevice->canHaveEquality($match);
+        $this->assertFalse($bol);
+    }
+
+    public function testCanBeUpdated ()
+    {
+        $match = new TFMatch();
+        $match->setTurn(0);
+
+    }
+
 
     public function tearDown()
     {

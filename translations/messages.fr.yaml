@@ -97,6 +97,8 @@ match:
                 warning: Le match ne pourra pas être cloturé tant que le score contiendra une valeur négative.
             update:
                 danger: Un tournois ne peut être mis à jour alors qu'il est terminé.
+            noPlayers:
+                danger: Un match ne peu etre mise a jour si tout les joueurs ne sont pas présent
             validation:
                 success: Ce match est terminé.
 user:
