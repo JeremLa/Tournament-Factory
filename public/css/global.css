@@ -1,6 +1,5 @@
 body {
     padding-top: 3rem;
-    padding-bottom: 3rem;
     color: #5a5a5a;
 }
 
@@ -13,6 +12,11 @@ a.navbar-brand > small {
     width: 40px;
     border-radius: 100%;
     text-align: center;
+    display:inline-block;
+    font-size: 18px;
+    line-height: 26px;
+    color:white;
+    vertical-align: bottom;
 }
 
 .text-align-center {
@@ -25,4 +29,8 @@ a.navbar-brand > small {
 
 .show-match:hover {
     background: #dee2e6 ;
+}
+
+.text-agency {
+    color:#fed136;
 }

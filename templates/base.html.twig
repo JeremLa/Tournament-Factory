@@ -5,21 +5,16 @@
         <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ asset('css/global.css') }}">
+        <link href="{{ asset('css/theme/agency.min.css') }}" rel="stylesheet" type="text/css">
+
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>TF - {% block title %}{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <header>
-            {% include 'includes/menu.html.twig' %}
-        </header>
+        {% include 'includes/menu.html.twig' %}
 
-        <main role="main">
-            <div class="container mt-5">
-            {% block body %}
-            {% endblock %}
-            </div>
-        </main>
+        {% block body %}{% endblock %}
 
         <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>

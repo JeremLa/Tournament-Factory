@@ -1,15 +1,19 @@
-{{ form_start(form) }}
-<div class="form-group">
-    {{ form_row(form.name) }}
-</div>
+<div class="row justify-content-center">
+    <div class="col-md-6 col-sm-12 border rounded p-5 bg-dark text-agency">
+        {{ form_start(form) }}
+        <div class="form-group">
+            {{ form_row(form.name) }}
+        </div>
 
-<div class="form-group">
-    {{ form_row(form.maxParticipantNumber) }}
-</div>
+        <div class="form-group">
+            {{ form_row(form.maxParticipantNumber) }}
+        </div>
 
-<div class="form-group">
-    {{ form_row(form.participant) }}
-</div>
+        <div class="form-group">
+            {{ form_row(form.participant) }}
+        </div>
 
-<button type="submit" class="btn btn-primary btn-block">{{ 'form.save' | trans }}</button>
-{{ form_end(form) }}
+        <button type="submit" class="btn btn-primary btn-block">{{ 'form.save' | trans }}</button>
+        {{ form_end(form) }}
+    </div>
+</div>
