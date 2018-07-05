@@ -37,9 +37,6 @@ class ScoreType extends AbstractType
             ->add('save', SubmitType::class, [
                 self::KEY_LABEL => 'form.save'
             ])
-//            ->add('over', SubmitType::class, [
-//                self::KEY_LABEL => 'match.over'
-//            ])
         ;
     }
 
