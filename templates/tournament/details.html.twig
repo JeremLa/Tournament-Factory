@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        {% if not (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false)) and tournament.status != 'started' %}
+        {% if not (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false)) and tournament.status == 'setup' %}
             <div class="alert alert-warning col-sm-12">
                 {{ 'tournament.started.warning' | trans }}
             </div>

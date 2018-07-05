@@ -222,6 +222,47 @@ class TournamentControllerTest extends  WebTestCase
         );
     }
 
+    public function testCancelTournamentNotOwner ()
+    {
+        $this->connect();
+        $url = "/tournament/cancel?tournament-id=".$this->tournament->getId();
+
+        $crawler = $this->client->request('GET', $url);
+        $crawler = $this->client->followRedirect();
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("L\'état du tournois ne permet pas cette action.")')->count()
+        );
+
+        $this->tournament->setStatus(TournamentStatusEnum::STATUS_STARTED);
+        $this->tournament->setOwner($this->user->getTfUser());
+        $this->entityManager->persist($this->tournament);
+        $this->entityManager->flush();
+
+        $crawler = $this->client->request('GET', $url);
+
+        $crawler = $this->client->followRedirect();
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Vous devez être propriétaire du tournois pour réaliser cette action.")')->count()
+
+        );
+    }
+
+    public function testCancelTournament ()
+    {
+        $this->connect();
+        $url = "/tournament/cancel?tournament-id=".$this->tournament->getId();
+        $this->tournament->setStatus(TournamentStatusEnum::STATUS_STARTED);
+        $this->entityManager->persist($this->tournament);
+        $this->entityManager->flush();
+        $crawler = $this->client->request('GET', $url);
+        $crawler = $this->client->followRedirect();
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Le tournoi est annulé")')->count()
+        );
+    }
 
 
     public function testRemoveTournament ()
