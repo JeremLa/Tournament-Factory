@@ -29,7 +29,7 @@
                     <tbody class="text-align-center">
                     {% for tournament in tournaments %}
                         <tr>
-                            <td><i class="{{ tournament.status | transClass }}"></i></td>
+                            <td title="{{ tournament.status | hint }}"><i class="{{ tournament.status | transClass }}"></i></td>
                             <td>{{ tournament.name }}</td>
                             <td>{{ tournament.type | transEnum('type') }}</td>
                             {% if tournament.owner.nicknames | length > 0 %}
