@@ -57,8 +57,8 @@
                     <div class="col text-left">{{ winner2 | trans }}</div>
                 </div>
                 <div class="row">
-                    {% if match.previousMatch | length > 0 %}
-                        <div class="col-6 text-left">
+                    <div class="col-6 text-left">
+                        {% if match.previousMatch | length > 0 %}
                             {% for pmatch in match.previousMatch %}
                                 <a href="{{ path('match-details', {'identifier' : pmatch.id}) }}" class="d-block">
                                     {% set player1 = pmatch.players[0] is defined ? pmatch.players[0].nicknames[0] : '??' %}
@@ -66,16 +66,16 @@
                                     Match précédent : {{ player1 ~ ' VS ' ~ player2 }}
                                 </a>
                             {% endfor %}
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
 
-                    {% if match.nextMatch is not null %}
-                        <div class="col-6 text-right">
+                    <div class="col-6 text-right">
+                        {% if match.nextMatch is not null %}
                             <a href="{{ path('match-details', {'identifier' : match.nextMatch.id}) }}">
                                 Match suivant
                             </a>
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
