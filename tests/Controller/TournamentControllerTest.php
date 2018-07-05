@@ -137,7 +137,7 @@ class TournamentControllerTest extends  WebTestCase
         $crawler = $this->client->request('GET', $url);
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Nouveau tournois (Elimination directe)")')->count()
+            $crawler->filter('html:contains("Nouveau tournoi (Elimination directe)")')->count()
         );
 
         $form = $crawler->selectButton('Enregistrer')->form();
@@ -197,7 +197,7 @@ class TournamentControllerTest extends  WebTestCase
         $crawler = $this->client->followRedirect();
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Vous n\'avez pas le nombre minimum de participant dans ce tournois.")')->count()
+            $crawler->filter('html:contains("Vous n\'avez pas le nombre minimum de participant dans ce tournoi.")')->count()
         );
 
         $newUser = new TFUser();
@@ -217,7 +217,7 @@ class TournamentControllerTest extends  WebTestCase
         $crawler = $this->client->followRedirect();
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Vous devez être propriétaire du tournois pour réaliser cette action.")')->count()
+            $crawler->filter('html:contains("Vous devez être propriétaire du tournoi pour réaliser cette action.")')->count()
 
         );
     }
@@ -231,7 +231,7 @@ class TournamentControllerTest extends  WebTestCase
         $crawler = $this->client->followRedirect();
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("L\'état du tournois ne permet pas cette action.")')->count()
+            $crawler->filter('html:contains("L\'état du tournoi ne permet pas cette action.")')->count()
         );
 
         $this->tournament->setStatus(TournamentStatusEnum::STATUS_STARTED);
@@ -244,7 +244,7 @@ class TournamentControllerTest extends  WebTestCase
         $crawler = $this->client->followRedirect();
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Vous devez être propriétaire du tournois pour réaliser cette action.")')->count()
+            $crawler->filter('html:contains("Vous devez être propriétaire du tournoi pour réaliser cette action.")')->count()
 
         );
     }
@@ -275,7 +275,7 @@ class TournamentControllerTest extends  WebTestCase
         $crawler = $this->client->followRedirect();
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Le tournois n\'existe pas")')->count()
+            $crawler->filter('html:contains("Le tournoi n\'existe pas")')->count()
         );
 
         $url = "/tournament/remove?tournament-id=".$this->tournament->getId();
@@ -288,7 +288,7 @@ class TournamentControllerTest extends  WebTestCase
         $crawler = $this->client->followRedirect();
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("L\'état du tournois ne permet pas cette action.")')->count()
+            $crawler->filter('html:contains("L\'état du tournoi ne permet pas cette action.")')->count()
         );
 
         $this->tournament->setStatus(TournamentStatusEnum::STATUS_SETUP);
@@ -301,7 +301,7 @@ class TournamentControllerTest extends  WebTestCase
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Le tournois a été supprimé")')->count()
+            $crawler->filter('html:contains("Le tournoi a été supprimé")')->count()
         );
     }
 
