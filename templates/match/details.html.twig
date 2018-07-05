@@ -128,14 +128,11 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            {% if match.turn != 0 %}
                                 Attention, si vous décidez de terminer ce match, vous ne pourrez plus modifier le score.<br>
-                                Ce choix est irréversible.
-                            {% else %}
-                                Attention, si vous décidez de terminer ce match, vous ne pourrez plus modifier le score.<br>
+                            {% if match.turn == 0 %}
                                 Une fois le match terminé, le tournoi le sera aussi et ne sera plus modifiable.<br>
-                                Ce choix est irréversible.
                             {% endif %}
+                                Ce choix est irréversible.
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>

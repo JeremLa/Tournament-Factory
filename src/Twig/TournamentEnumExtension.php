@@ -15,6 +15,7 @@ class TournamentEnumExtension extends AbstractExtension
         return [
             new TwigFilter('transEnum', [$this, 'transEnumFilter'], ['is_safe' => ['html']]),
             new TwigFilter('transClass', [$this, 'transClassFilter'], ['is_safe' => ['html']]),
+            new TwigFilter('hint', [$this, 'hintFilter'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -48,6 +49,10 @@ class TournamentEnumExtension extends AbstractExtension
                     TournamentStatusEnum::STATUS_CANCELED => 'fa fa-ban'
             ];
         return $class[$value];
+    }
+
+    public function hintFilter($value){
+        return TournamentStatusEnum::getTypeName($value);
     }
 
 }

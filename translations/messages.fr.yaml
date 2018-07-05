@@ -68,6 +68,7 @@ tournament:
             warning: Le tournois n'existe pas
     started:
         success: 'Le tournoi est démarré'
+        warning: 'Pour démarrer le tournoi: tout les participants doivent être présent et vous devez être le manager du tournoi'
     canceled:
         success: 'Le tournoi est annulé'
     list:
