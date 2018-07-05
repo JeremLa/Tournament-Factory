@@ -13,6 +13,7 @@ use App\Entity\TFTeam;
 use App\Entity\TFTournament;
 use App\Entity\TFUser;
 use App\Form\Type\ScoreType;
+use App\Services\Enum\TournamentStatusEnum;
 use App\Services\Enum\TournamentTypeEnum;
 use App\Services\MatchService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -255,9 +256,50 @@ class MatchServiceTest extends KernelTestCase
     {
         $match = new TFMatch();
         $match->setTurn(0);
+        $this->matchSevice->canBeUpdated($match);
+        self::assertEquals('match.singleElimination.over.noPlayers', $this->session->getFlashBag()->get('danger')[0]);
+
+        $this->matchSevice->assignPlayers($match, $this->user, $this->user2);
+        $match->setOver(true);
+        $this->matchSevice->canBeUpdated($match);
+        self::assertEquals('match.singleElimination.over.update', $this->session->getFlashBag()->get('danger')[0]);
+    }
+
+    public function testUpdateNextMatch ()
+    {
+        $match = new TFMatch();
+        $match->setTurn(1);
+        $this->tournament->addMatch($match);
+        $match->setTournament($this->tournament);
+        $match->setScore($this->user->getId(), 1);
+        $match->setScore($this->user2->getId(), 0);
+        $this->matchSevice->assignPlayers($match, $this->user, $this->user2);
+
+        $this->matchSevice->updateNextMatch($match);
+        self::assertEquals(TournamentStatusEnum::STATUS_FINISHED, $this->tournament->getStatus());
+
+        $next = new TFMatch();
+        $next->setTurn(0);
+        $this->tournament->addMatch($next);
+        $next->setTournament($this->tournament);
+        $match->setNextMatch($next);
+        $next->addPreviousMatch($match);
+        $this->matchSevice->updateNextMatch($match);
+        self::assertContains($this->user, $next->getPlayers());
 
     }
 
+    public function testInitScore ()
+    {
+        $match = new TFMatch();
+        $match->setTurn(0);
+        $this->matchSevice->initScores($match);
+        self::assertEquals([], $match->getScore());
+
+        $this->matchSevice->assignPlayers($match, $this->user, $this->user2);
+        $this->matchSevice->initScores($match);
+        self::assertEquals([$this->user->getId() => 0, $this->user2->getId() => 0], $match->getScore());
+    }
 
     public function tearDown()
     {

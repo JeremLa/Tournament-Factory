@@ -40,7 +40,7 @@ class MatchController extends AbstractController
         $scoreForm->handleRequest($request);
 
         if($scoreForm->isSubmitted()) {
-            $this->matchService->updateScore($match, $scoreForm->get('score1')->getData(), $scoreForm->get('score2')->getData(), $scoreForm->get('isOver')->getData());
+            $this->matchService->updateScore($match, [$scoreForm->get('score1')->getData(), $scoreForm->get('score2')->getData()], $scoreForm->get('isOver')->getData());
         }
 
         return $this->render('match/details.html.twig', [

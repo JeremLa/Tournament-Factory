@@ -323,14 +323,12 @@ class MatchService
         $userId = array_search(max($match->getScore()), $match->getScore());
 
         $user = null;
-
         foreach ($match->getPlayers() as $player) {
             if ($player->getId() == $userId) {
                 $user = $player;
                 break;
             }
         }
-
         if($user) {
             $nextMatch->addPlayer($user);
             $this->initScores($nextMatch);
