@@ -9,27 +9,30 @@
 {% endblock %}
 
 {% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <h1 class="col-sm-12 col-md-6">Connexion</h1>
+        </div>
 
-    <div class="container mt-3">
-        {% if errors %}
-            <div class="alert alert-danger">{{ errors.messageKey|trans(errors.messageData, 'security') }}</div>
-        {% endif %}
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-sm-12 border rounded p-5 bg-dark">
+                {% if errors %}
+                    <div class="alert alert-danger">{{ errors.messageKey|trans(errors.messageData, 'security') }}</div>
+                {% endif %}
 
-        <form action="{{ path('login') }}" method="post" class="form-signin">
-            <label for="username">{{ "form.login" | trans }}</label>
-            <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}"/>
+                <form action="{{ path('login') }}" method="post" class="form-signin">
+                    <label for="username" class="text-agency">{{ "form.login" | trans }}</label>
+                    <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}"/>
 
-            <label for="password">{{ "form.password.name" | trans }}</label>
-            <input type="password" class="form-control mb-4" id="password" name="_password"/>
+                    <label for="password" class="mt-1 text-agency">{{ "form.password.name" | trans }}</label>
+                    <input type="password" class="form-control mb-4" id="password" name="_password"/>
 
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" value="remember-me" name="_remember_me"> {{ "form.remember_me" | trans }}
-                </label>
+                    <div class="row justify-content-center align-content-center">
+                        <button class="btn btn-lg btn-primary btn-block col-5" type="submit">{{ "security.login" | trans }}</button>
+                        <a href="{{ path('signup') }}" class="p-3">Créer un compte</a>
+                    </div>
+                </form>
             </div>
-
-            <button class="btn btn-lg btn-primary btn-block" type="submit">{{ "security.login" | trans }}</button>
-            <a href="{{ path('signup') }}">Créer un compte</a>
-        </form>
+        </div>
     </div>
 {% endblock %}

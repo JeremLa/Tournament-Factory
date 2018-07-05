@@ -7,68 +7,102 @@
 {% block title %}Détail du match{% endblock %}
 
 {% block body %}
-    <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
-        <div class="col-sm-12 px-0">
-            <div class="row">
-                <h1 class="col">
-                    {{ 'tournament.turn.tab' | transchoice(2 ** match.turn) }}
-                </h1>
-                <div class="col text-right align-bottom">
-                    <a href="{{ path('detail-tournament', {'tournamentId' : match.tournament.id}) }}">{{ match.tournament.name }}</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-5 display-4 match-align-middle">{{ match.players[0] is defined ? match.players[0].nicknames[0] : '??' }}</div>
-                <div class="col-2 text-center display-2">VS</div>
-                <div class="col-5 text-right display-4 match-align-middle">{{ match.players[1] is defined ? match.players[1].nicknames[0] : '??' }}</div>
-            </div>
-            <div class="row">
-                <div class="col text-center">
-                    <small>{{ match.players[0] is defined ? match.score[match.players[0].id] : '' }} - {{  match.players[1] is defined ? match.score[match.players[1].id] : '' }}</small>
-                </div>
-            </div>
-            <div class="row">
+    {% set player1 = match.players[0] is defined ? match.players[0] : null %}
+    {% set nickname1 = player1 is not null ? player1.nicknames[0] : '??' %}
+    {% set score1 = player1 is not null ? match.score[player1.id] : '' %}
 
-                {% if match.previousMatch | length > 0 %}
-                    <div class="col text-left">
-                        {% for pmatch in match.previousMatch %}
-                            <a href="{{ path('match-details', {'identifier' : pmatch.id}) }}" class="d-block">
-                                {% set player1 = pmatch.players[0] is defined ? pmatch.players[0].nicknames[0] : '??' %}
-                                {% set player2 = pmatch.players[1] is defined ? pmatch.players[1].nicknames[0] : '??' %}
-                                Match précédent : {{ player1 ~ ' VS ' ~ player2 }}
-                            </a>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+    {% set player2 = match.players[1] is defined ? match.players[1] : null %}
+    {% set nickname2 = player2 is not null ? player2.nicknames[0] : '??' %}
+    {% set score2 = player2 is not null ? match.score[player2.id] : '' %}
 
-                {% if match.nextMatch is not null %}
-                    <div class="col text-right">
-                        <a href="{{ path('match-details', {'identifier' : match.nextMatch.id}) }}">
-                            Match suivant
-                        </a>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+
+    {% set winner1 = ' ' %}
+    {% set winner2 = ' ' %}
 
     {% if match.over %}
-        <div class="alert alert-success col-sm-12">
-            {{ 'match.singleElimination.over.validation.success' | trans }}
-        </div>
+        {% if score1 > score2 %}
+            {% set winner1 = 'match.victor' %}
+        {% endif %}
+
+        {% if score2 > score1 %}
+            {% set winner2 = 'match.victor' %}
+        {% endif %}
     {% endif %}
 
-    {% if match.tournament.owner == app.user.tfuser %}
-        {% include 'includes/flash-messages.html.twig' %}
+    <div class="container mt-5">
+        <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
+            <div class="col-sm-12 px-0">
+                <div class="row">
+                    <h1 class="col">
+                        {{ 'tournament.turn.tab' | transchoice(2 ** match.turn) }}
+                    </h1>
+                    <div class="col text-right align-bottom">
+                        <a href="{{ path('detail-tournament', {'tournamentId' : match.tournament.id}) }}">{{ match.tournament.name }}</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5 display-4 match-align-middle">
+                        {{ nickname1 }}
+                    </div>
+                    <div class="col-2 text-center display-2">VS</div>
+                    <div class="col-5 text-right display-4 match-align-middle">
+                        {{ nickname2 }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-right">{{ winner1 | trans }}</div>
+                    <div class="text-center">
+                        <small>{{score1}} - {{score2}}</small>
+                    </div>
+                    <div class="col text-left">{{ winner2 | trans }}</div>
+                </div>
+                <div class="row">
+                    {% if match.previousMatch | length > 0 %}
+                        <div class="col-6 text-left">
+                            {% for pmatch in match.previousMatch %}
+                                <a href="{{ path('match-details', {'identifier' : pmatch.id}) }}" class="d-block">
+                                    {% set player1 = pmatch.players[0] is defined ? pmatch.players[0].nicknames[0] : '??' %}
+                                    {% set player2 = pmatch.players[1] is defined ? pmatch.players[1].nicknames[0] : '??' %}
+                                    Match précédent : {{ player1 ~ ' VS ' ~ player2 }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
-        {% if not match.over and match.players | length == 2 %}
-            {{ form_start(scoreForm, {'attr' : {'id' : 'match-update-form'}}) }}
+                    {% if match.nextMatch is not null %}
+                        <div class="col-6 text-right">
+                            <a href="{{ path('match-details', {'identifier' : match.nextMatch.id}) }}">
+                                Match suivant
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if match.over %}
+            <div class="alert alert-success col-sm-12">
+                {{ 'match.singleElimination.over.validation.success' | trans }}
+            </div>
+        {% endif %}
+
+        {% if match.tournament.status == 'finished' %}
+            <div class="alert alert-success col-sm-12">
+                {{ 'tournament.finished' | trans }}
+            </div>
+        {% endif %}
+
+        {% if match.tournament.owner == app.user.tfuser %}
+            {% include 'includes/flash-messages.html.twig' %}
+
+            {% if not match.over and match.players | length == 2 %}
+                {{ form_start(scoreForm, {'attr' : {'id' : 'match-update-form'}}) }}
                 <div class="row p-1 mb-2">
-                   <div class="col match-align-middle"><strong>{{ match.players[0].nicknames[0] }}</strong></div>
-                   <div class="col-1 text-center">{{ form_widget(scoreForm.score1) }}</div>
-                   <div class="match-align-middle"><strong>-</strong></div>
-                   <div class="col-1 text-center">{{ form_widget(scoreForm.score2) }}</div>
-                   <div class="col text-right match-align-middle"><strong>{{ match.players[1].nicknames[0] }}</strong></div>
+                    <div class="col match-align-middle"><strong>{{ match.players[0].nicknames[0] }}</strong></div>
+                    <div class="col-1 text-center">{{ form_widget(scoreForm.score1) }}</div>
+                    <div class="match-align-middle"><strong>-</strong></div>
+                    <div class="col-1 text-center">{{ form_widget(scoreForm.score2) }}</div>
+                    <div class="col text-right match-align-middle"><strong>{{ match.players[1].nicknames[0] }}</strong></div>
                 </div>
                 <div class="row justify-content-md-center">
                     <div class="col-md-6">
@@ -83,36 +117,40 @@
                         {{ form_widget(scoreForm.save, { 'attr': {'class': 'btn btn-primary btn-lg col m-1'}}) }}
                     </div>
                 </div>
-            {{ form_end(scoreForm) }}
+                {{ form_end(scoreForm) }}
 
-            <div class="modal fade" id="match-over-confirm" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Confirmer</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            Attention, si vous décidez de terminer ce match, vous ne pourrez plus modifier le score.
-                            Ce choix est irréversible.
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                            <button type="button" id="match-over-validate" class="btn btn-primary">Terminer le match</button>
+                <div class="modal fade" id="match-over-confirm" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirmer</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Attention, si vous décidez de terminer ce match, vous ne pourrez plus modifier le score.<br>
+                                {% if match.turn == 0 %}
+                                    Une fois le match terminé, le tournoi le sera aussi et ne sera plus modifiable.<br>
+                                {% endif %}
+                                Ce choix est irréversible.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                <button type="button" id="match-over-validate" class="btn btn-primary">Terminer le match</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% else %}
-            {% if not (match.players | length == 2) %}
-                <div class="alert alert-warning col-sm-12">
-                    {{ 'match.owner.update.warning' | trans }}
-                </div>
+            {% else %}
+                {% if not (match.players | length == 2) %}
+                    <div class="alert alert-warning col-sm-12">
+                        {{ 'match.owner.update.warning' | trans }}
+                    </div>
+                {% endif %}
             {% endif %}
         {% endif %}
-    {% endif %}
+    </div>
 {% endblock %}
 
 {% block javascripts %}

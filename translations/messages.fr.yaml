@@ -15,13 +15,14 @@ form:
     nickname: Surnom
     country: Pays
     remember_me: 'Se souvenir de moi'
-    players: 'Participant'
+    players: 'Participants'
 
 tournament:
+    finished: Ce tournois est terminé
     form:
         title:
-            new: 'Nouveau tournois : %type%'
-            edit: 'Modification du tournoi : %name%'
+            new: 'Nouveau tournois (%type%)'
+            edit: 'Modifier : %name%'
         name: Nom
         maxParticipant: Nombre de joueurs maximum
     create: 'Nouveau tournoi'
@@ -67,6 +68,7 @@ tournament:
             warning: Le tournois n'existe pas
     started:
         success: 'Le tournoi est démarré'
+        warning: 'Pour démarrer le tournoi: tout les participants doivent être présent et vous devez être le manager du tournoi'
     canceled:
         success: 'Le tournoi est annulé'
     list:
@@ -75,6 +77,7 @@ tournament:
             empty: Vous ne possédez et ne participez à aucun tournois
 
 match:
+    victor: 🏆
     list:
         title: Mes matchs
         over: Terminés
