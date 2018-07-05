@@ -46,7 +46,7 @@
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                         {% endif %}
-                                        {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
+                                        {%  if (tournamentRule.canBeDeleted(tournament,app.getUser.getTFUser, false))  %}
                                             <a class="bg-danger text-white rounded-action p-2" data-toggle="modal" data-target="#remove" title="{{ 'actions.delete' | trans }}" href="#" data-id="{{ tournament.id }}" data-action="remove">
                                                 <i class="fa fa-trash"></i>
                                             </a>

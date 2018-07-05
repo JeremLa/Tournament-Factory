@@ -26,18 +26,24 @@ class TournamentRulesServices
      * Return if Tournament can be delete and push flash message if it is false
      *
      * @param TFTournament $TFTournament
+     * @param TFUser $user
      * @param bool $withMessage
      * @return bool
      */
-    public function canBeDeleted (TFTournament $TFTournament, bool $withMessage = true) : bool
+    public function canBeDeleted (TFTournament $TFTournament, TFUser $user, bool $withMessage = true) : bool
     {
         $result = $this->isInSetup($TFTournament);
+        $isOwner = $this->isOwner($TFTournament, $user);
 
         if (!$result) {
             $this->addFlashMessage(self::MESSAGE_STATUS_DENIED, $withMessage);
         }
 
-        return $result;
+        if (!$isOwner) {
+            $this->addFlashMessage( 'tournament.owner.denied', $withMessage);
+        }
+
+        return $result && $isOwner;
     }
 
     /**

@@ -31,7 +31,7 @@
                                     <i class="fa fa-play-circle"></i> {{ 'actions.start' | trans }}
                                 </button>
                             {% endif %}
-                            {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
+                            {%  if (tournamentRule.canBeDeleted(tournament, app.getUser.getTFUser, false))  %}
                                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove" title="{{ 'actions.delete' | trans }}" data-id="{{ tournament.id }}" data-action="remove">
                                     <i class="fa fa-trash"></i> {{ 'actions.delete' | trans }}
                                 </button>
@@ -107,7 +107,7 @@
                     'validButtonTitle' : 'Démarrer',
                     'validButtonClass' : 'success'} %}
             {% endif %}
-            {% if (tournamentRule.canBeDeleted(tournament, false)) %}
+            {% if (tournamentRule.canBeDeleted(tournament, app.getUser.getTFUser, false)) %}
                 {% include 'includes/modal.html.twig'  with {'modalId' : 'remove',
                     'text' : 'En suprimmant le tournoi, il ne sera plus accessible.\n Etes-vous sur de continuer ?',
                     'title' : 'Supprimer',

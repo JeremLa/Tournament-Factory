@@ -111,7 +111,7 @@ class TournamentController extends Controller
 
 
         if($tournament){
-            if(!$this->ruleServices->canBeDeleted($tournament)) {
+            if(!$this->ruleServices->canBeDeleted($tournament, $this->getUser()->getTFUser())) {
                 return $this->redirectToRoute($redirectRoute);
             }
 
