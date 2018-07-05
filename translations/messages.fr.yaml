@@ -18,10 +18,10 @@ form:
     players: 'Participants'
 
 tournament:
-    finished: Ce tournois est terminé
+    finished: Ce tournoi est terminé
     form:
         title:
-            new: 'Nouveau tournois (%type%)'
+            new: 'Nouveau tournoi (%type%)'
             edit: 'Modifier : %name%'
         name: Nom
         maxParticipant: Nombre de joueurs maximum
@@ -38,15 +38,15 @@ tournament:
     status:
         title: 'Statut'
         denied:
-            warning: L'état du tournois ne permet pas cette action.
+            warning: L'état du tournoi ne permet pas cette action.
     owner:
         title: 'Manager'
         denied:
-            warning: Vous devez être propriétaire du tournois pour réaliser cette action.
+            warning: Vous devez être propriétaire du tournoi pour réaliser cette action.
     action: 'Actions'
     new:
         message:
-            success: Un nouveau tournois a été créé.
+            success: Un nouveau tournoi a été créé.
     edit:
         title: 'Modifier un tournoi'
         message:
@@ -57,15 +57,15 @@ tournament:
             warning: 'Vous ne pouvez pas choisir plus de participant que le maximum possible pour ce tournoi'
         add:
             maxed:
-                warning: Le nombre maximum de participant a déjà été atteind pour ce tournois.
+                warning: Le nombre maximum de participant a déjà été atteind pour ce tournoi.
             denied:
-                warning: L'état du tournois ne permet pas sa suppression.
+                warning: L'état du tournoi ne permet pas sa suppression.
         min:
-            warning: Vous n'avez pas le nombre minimum de participant dans ce tournois.
+            warning: Vous n'avez pas le nombre minimum de participant dans ce tournoi.
     remove:
         message:
-            success: Le tournois a été supprimé
-            warning: Le tournois n'existe pas
+            success: Le tournoi a été supprimé
+            warning: Le tournoi n'existe pas
     started:
         success: 'Le tournoi est démarré'
         warning: 'Pour démarrer le tournoi: tout les participants doivent être présent et vous devez être le manager du tournoi'
@@ -92,11 +92,13 @@ match:
     singleElimination:
         over:
             notEqual:
-                warning: Lors d'un tournois à élimination directe, il n'est pas possible de mettre fin à un match sur une égalité.
+                warning: Lors d'un tournoi à élimination directe, il n'est pas possible de mettre fin à un match sur une égalité.
             lowerThanZero:
                 warning: Le match ne pourra pas être cloturé tant que le score contiendra une valeur négative.
             update:
-                danger: Un tournois ne peut être mis à jour alors qu'il est terminé.
+                danger: Un tournoi ne peut être mis à jour alors qu'il est terminé.
+            noPlayers:
+                danger: Un match ne peu etre mise a jour si tout les joueurs ne sont pas présent
             validation:
                 success: Ce match est terminé.
 user:

@@ -31,7 +31,7 @@
                                     <i class="fa fa-play-circle"></i> {{ 'actions.start' | trans }}
                                 </button>
                             {% endif %}
-                            {%  if (tournamentRule.canBeDeleted(tournament, false))  %}
+                            {%  if (tournamentRule.canBeDeleted(tournament, app.getUser.getTFUser, false))  %}
                                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove" title="{{ 'actions.delete' | trans }}" data-id="{{ tournament.id }}" data-action="remove">
                                     <i class="fa fa-trash"></i> {{ 'actions.delete' | trans }}
                                 </button>
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        {% if not (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false)) and tournament.status != 'started' %}
+        {% if not (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false)) and tournament.status == 'setup' %}
             <div class="alert alert-warning col-sm-12">
                 {{ 'tournament.started.warning' | trans }}
             </div>
@@ -102,12 +102,12 @@
             {% endif %}
             {% if (tournamentRule.canBeStarted(tournament, app.getUser.getTFUser, false)) %}
                 {% include 'includes/modal.html.twig'  with {'modalId' : 'start',
-                    'text' : 'Êtes-vous sur de vouloir démarrer ce tournois ?\nCette action va générer les matchs et assigner les joueurs.\nCette action est irreversible.',
+                    'text' : 'Êtes-vous sur de vouloir démarrer ce tournoi ?\nCette action va générer les matchs et assigner les joueurs.\nCette action est irreversible.',
                     'title' : 'Démarrer',
                     'validButtonTitle' : 'Démarrer',
                     'validButtonClass' : 'success'} %}
             {% endif %}
-            {% if (tournamentRule.canBeDeleted(tournament, false)) %}
+            {% if (tournamentRule.canBeDeleted(tournament, app.getUser.getTFUser, false)) %}
                 {% include 'includes/modal.html.twig'  with {'modalId' : 'remove',
                     'text' : 'En suprimmant le tournoi, il ne sera plus accessible.\n Etes-vous sur de continuer ?',
                     'title' : 'Supprimer',

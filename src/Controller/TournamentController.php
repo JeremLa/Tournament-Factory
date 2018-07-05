@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 
 
 class TournamentController extends Controller
@@ -110,7 +111,7 @@ class TournamentController extends Controller
 
 
         if($tournament){
-            if(!$this->ruleServices->canBeDeleted($tournament)) {
+            if(!$this->ruleServices->canBeDeleted($tournament, $this->getUser()->getTFUser())) {
                 return $this->redirectToRoute($redirectRoute);
             }
 

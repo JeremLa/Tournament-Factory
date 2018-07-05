@@ -41,7 +41,6 @@ class MatchService
     public function findOr404 ($id) : TFMatch
     {
         $match = $this->entityManager->getRepository('App:TFMatch')->find($id);
-
         if(!$match) {
             throw new NotFoundHttpException('Ce match n\'existe pas.');
         }
@@ -181,47 +180,42 @@ class MatchService
 
     /**
      * @param TFMatch $match
-     * @param Form $scoreForm
+     * @param array $score
+     * @param bool $isOver
      * @return TFMatch
      */
-    public function updateScore(TFMatch $match, Form $scoreForm)
+    public function updateScore(TFMatch $match,array $score, bool $isOver)
     {
-        if(!$match->isOver()){
-            $hasNoEquality = $this->hasNoEquality($scoreForm);
-            if(!$hasNoEquality)
-            {
-                $canHaveEquality = $this->canHaveEquality($match);
-                if (!$canHaveEquality) {
-                    $this->addFlashMessage('match.singleElimination.over.notEqual');
+            if ($this->canBeUpdated($match)) {
+                $hasNoEquality = $this->hasNoEquality($score[0], $score[1]);
+                if (!$hasNoEquality) {
+                    $canHaveEquality = $this->canHaveEquality($match);
+                    if (!$canHaveEquality) {
+                        $this->addFlashMessage('match.singleElimination.over.notEqual');
+                    }
                 }
+
+                $hasNoNegativeScore = $this->hasNoNegativeScore($score[0], $score[1]);
+                if (!$hasNoNegativeScore) {
+                    $this->addFlashMessage('match.singleElimination.over.lowerThanZero');
+                }
+
+                $index = 0;
+
+                foreach ($match->getPlayers() as $player) {
+                    $match->setScore($player->getId(), $score[$index]);
+
+                    $index++;
+                }
+
+                if ($isOver && $hasNoEquality && $hasNoNegativeScore) {
+                    $this->updateNextMatch($match);
+                    $match->setOver(true);
+                }
+
+                $this->entityManager->persist($match);
+                $this->entityManager->flush();
             }
-
-            $hasNoNegativeScore = $this->hasNoNegativeScore($scoreForm);
-            if(!$hasNoNegativeScore) {
-                $this->addFlashMessage('match.singleElimination.over.lowerThanZero');
-            }
-
-            $index = 1;
-
-            foreach ($match->getPlayers() as $player) {
-                $score = $scoreForm->get(self::SCORE.$index)->getData() ?: 0;
-                $match->setScore($player->getId(), $score);
-
-                $index++;
-            }
-
-            if($scoreForm->get('isOver')->getData() && $hasNoEquality && $hasNoNegativeScore){
-                $this->updateNextMatch($match);
-                $match->setOver(true);
-            }
-
-            $this->entityManager->persist($match);
-            $this->entityManager->flush();
-        }else{
-            $this->addFlashMessage('match.singleElimination.over.update', true, 'danger');
-        }
-
-
 
         return $match;
     }
@@ -251,36 +245,31 @@ class MatchService
     }
 
     /**
-     * @param Form $form
+     * @param int $score1
+     * @param int $score2
      * @return bool
      */
-    public function hasNoNegativeScore (Form $form) : bool
+    public function hasNoNegativeScore (int $score1, int $score2) : bool
     {
         $return = false;
 
-        if($form->get('score1') !== null && $form->get('score2') !== null)
-        {
-            if($form->get('score1')->getData() >= 0 && $form->get('score2')->getData() >= 0) {
-                $return = true;
-            }
+        if($score1 >= 0 && $score2 >= 0) {
+            $return = true;
         }
 
         return $return;
     }
 
     /**
-     * @param Form $form
+     * @param int $score1
+     * @param int $score2
      * @return bool
      */
-    public function hasNoEquality (Form $form) : bool
+    public function hasNoEquality (int $score1, int $score2) : bool
     {
         $return = false;
-
-        if($form->get('score1') !== null && $form->get('score2') !== null)
-        {
-            if($form->get('score1')->getData() !== $form->get('score2')->getData()) {
-                $return = true;
-            }
+        if($score1 !== $score2) {
+            $return = true;
         }
 
         return $return;
@@ -304,6 +293,24 @@ class MatchService
         }
     }
 
+    /**
+     * @param TFMatch $match
+     * @return bool
+     */
+    public function canBeUpdated (TFMatch $match) : bool
+    {
+        if(!$match->getPlayers()->isEmpty()) {
+            if (!$match->isOver()) {
+                return true;
+            }else{
+                $this->addFlashMessage('match.singleElimination.over.update', true, 'danger');
+            }
+        }else{
+            $this->addFlashMessage('match.singleElimination.over.noPlayers', true, 'danger');
+        }
+        return false;
+    }
+
     public function updateNextMatch (TFMatch $match)
     {
         $nextMatch = $match->getNextMatch();
@@ -316,14 +323,12 @@ class MatchService
         $userId = array_search(max($match->getScore()), $match->getScore());
 
         $user = null;
-
         foreach ($match->getPlayers() as $player) {
             if ($player->getId() == $userId) {
                 $user = $player;
                 break;
             }
         }
-
         if($user) {
             $nextMatch->addPlayer($user);
             $this->initScores($nextMatch);

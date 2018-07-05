@@ -6,11 +6,12 @@ namespace App\Services\Enum;
 abstract class TournamentTypeEnum
 {
     const TYPE_SINGLE = "single-elimination";
-
+    const TYPE_CHAMP = "champ";
 
     /* @var array  $typeName */
     protected static $typeName = [
-        self::TYPE_SINGLE    => 'Elimination directe'
+        self::TYPE_SINGLE    => 'Elimination directe',
+        self::TYPE_CHAMP    => 'Championnat',
     ];
 
 
@@ -34,7 +35,8 @@ abstract class TournamentTypeEnum
     public static function getAvailableTypes()
     {
         return [
-            self::TYPE_SINGLE
+            self::TYPE_SINGLE,
+            self::TYPE_CHAMP,
         ];
     }
 }
