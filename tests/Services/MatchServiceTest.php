@@ -204,6 +204,7 @@ class MatchServiceTest extends KernelTestCase
         self::assertEquals('match.singleElimination.over.noPlayers', $this->session->getFlashBag()->get('danger')[0]);
 
         $this->matchSevice->assignPlayers($match, $this->user, $this->user2);
+        $this->tournament->setStatus('started');
         $this->matchSevice->updateScore($match, [0,0],false);
         self::assertEquals('match.singleElimination.over.update', $this->session->getFlashBag()->get('danger')[0]);
 
@@ -270,6 +271,9 @@ class MatchServiceTest extends KernelTestCase
         self::assertEquals('match.singleElimination.over.noPlayers', $this->session->getFlashBag()->get('danger')[0]);
 
         $this->matchSevice->assignPlayers($match, $this->user, $this->user2);
+        $this->tournament->setStatus('started');
+        $match->setTournament($this->tournament);
+        $this->tournament->addMatch($match);
         $match->setOver(true);
         $this->matchSevice->canBeUpdated($match);
         self::assertEquals('match.singleElimination.over.update', $this->session->getFlashBag()->get('danger')[0]);

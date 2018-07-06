@@ -57,8 +57,8 @@
                     <div class="col text-left">{{ winner2 | trans }}</div>
                 </div>
                 <div class="row">
-                    {% if match.previousMatch | length > 0 %}
-                        <div class="col-6 text-left">
+                    <div class="col-6 text-left">
+                        {% if match.previousMatch | length > 0 %}
                             {% for pmatch in match.previousMatch %}
                                 <a href="{{ path('match-details', {'identifier' : pmatch.id}) }}" class="d-block">
                                     {% set player1 = pmatch.players[0] is defined ? pmatch.players[0].nicknames[0] : '??' %}
@@ -66,16 +66,16 @@
                                     Match précédent : {{ player1 ~ ' VS ' ~ player2 }}
                                 </a>
                             {% endfor %}
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
 
-                    {% if match.nextMatch is not null %}
-                        <div class="col-6 text-right">
+                    <div class="col-6 text-right">
+                        {% if match.nextMatch is not null %}
                             <a href="{{ path('match-details', {'identifier' : match.nextMatch.id}) }}">
                                 Match suivant
                             </a>
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -95,7 +95,7 @@
         {% if match.tournament.owner == app.user.tfuser %}
             {% include 'includes/flash-messages.html.twig' %}
 
-            {% if not match.over and match.players | length == 2 %}
+            {% if not match.over and match.players | length == 2 and match.tournament.status != 'canceled' %}
                 {{ form_start(scoreForm, {'attr' : {'id' : 'match-update-form'}}) }}
                 <div class="row p-1 mb-2">
                     <div class="col match-align-middle"><strong>{{ match.players[0].nicknames[0] }}</strong></div>
@@ -146,6 +146,12 @@
                 {% if not (match.players | length == 2) %}
                     <div class="alert alert-warning col-sm-12">
                         {{ 'match.owner.update.warning' | trans }}
+                    </div>
+                {% endif %}
+
+                {% if match.tournament.status == 'canceled' %}
+                    <div class="alert alert-danger col-sm-12">
+                        {{ 'tournament.canceled.danger' | trans }}
                     </div>
                 {% endif %}
             {% endif %}

@@ -299,12 +299,12 @@ class MatchService
      */
     public function canBeUpdated (TFMatch $match) : bool
     {
-        if(!$match->getPlayers()->isEmpty()) {
+        if(!$match->getPlayers()->isEmpty() && $match->getTournament()->getStatus() === 'started') {
             if (!$match->isOver()) {
                 return true;
-            }else{
-                $this->addFlashMessage('match.singleElimination.over.update', true, 'danger');
             }
+            $this->addFlashMessage('match.singleElimination.over.update', true, 'danger');
+
         }else{
             $this->addFlashMessage('match.singleElimination.over.noPlayers', true, 'danger');
         }
