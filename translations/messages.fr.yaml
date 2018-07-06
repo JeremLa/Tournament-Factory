@@ -71,6 +71,7 @@ tournament:
         warning: 'Pour démarrer le tournoi: tout les participants doivent être présent et vous devez être le manager du tournoi'
     canceled:
         success: 'Le tournoi est annulé'
+        danger: 'Le tournoi a été annulé'
     list:
         myTournaments:
             title: Mes tournois
